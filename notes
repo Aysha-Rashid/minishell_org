@@ -1,0 +1,60 @@
+// new built-in functions:
+// - readline
+// - rl_clear_history
+// rl_on_new_line
+// rl_replace_line
+// rl_redisplay
+// add_history
+// wait3
+// wait4
+// signal
+// sigaction
+// sigemptyset
+// sigaddset
+// getcwd
+// chdir
+// stat
+// lstat
+// fstat
+// unlink
+// opendir
+// readdir
+// closedir
+// isatty
+// ttyname
+// ttyslot
+// ioctl
+// getenv
+// tcsetattr
+// tcgetattr
+// tgetent
+// tgetflag
+// tgetnum
+// tgetstr
+// tgoto
+// tputs
+
+// -------- handling ---
+// -readline
+// -Not interpret unclosed quotes or special characters which are not required by the
+// subject such as \ (backslash) or ; (semicolon).
+// -handling pipes
+// -handle (') that should prevent the shell from interpreting the meta-characters in the qouted sequence
+// -handle ("") ,,    ,,    ,,      ,,   ,,,   ,,  ,,           ,,   ,,            ,,  ,,   ,,       ,,  except
+// except for $ (dollar sign).
+// -handle environment variables ($ followed by a sequence of characters) which should expand to their values.
+// handle $? which should expand to the exit status for recently executed foreground pipeline.
+// handle ctrl-C, ctrl-D and ctrl-\ which should behanve like in bash.
+
+// --------implementing the commands---
+// -redirections : <, >, << and >>
+// -interective mode : ctrl-C, ctrl-D, ctrl-\ // signal
+// -pipes 
+// -built-in: 
+// 1.echo -n
+// 2.cd
+// 3.pwd
+// 4.export
+// 5.unset
+// 6.env
+// 7.exit
