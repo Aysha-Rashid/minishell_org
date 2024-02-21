@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/20 22:23:12 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:16:03 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int g_sig_interrupt;
 
 int	main(int argc, char **argv, char **env)
 {
@@ -35,7 +37,9 @@ void	prompt_loop(char *str, t_data *data)
 
 	while (1)
 	{
+		ft_signals();
         str = readline("\033[96mminishell$ \033[0m");
+		check_signal(str, data);
         data->cmd = ft_strdup(str);
         trimmed_cmd = ft_strtrim(str, " ");
 		free(str);

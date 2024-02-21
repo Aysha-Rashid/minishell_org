@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/20 22:24:08 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:14:04 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_data
 	t_env			*envp;
 	t_commands		*commands;
 	struct s_data	*next;
+	int				status_code;
 }				t_data;
 
 // typedef struct s_pipex
@@ -97,3 +98,11 @@ int		validate_input(char **token, t_env *current, char *name);
 // int		*builtin_arr(char *str);
 // void	init_signal(void);
 // void	sigint_handler(int sig);
+
+//signals
+void	sigint_handler(int signum);
+int		handle_eof(char *str);
+void	ft_signals(void);
+void	check_signal(char *input, t_data *data);
+
+extern int g_sig_interrupt;

@@ -9,7 +9,7 @@ SRC = main.c\
 		builtins/export.c\
 		builtins/cd.c\
 		builtins/unset.c\
-
+		signals/signals.c\
 
 
 OBJ = $(SRC:.c=.o)
