@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:27:38 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/20 19:41:00 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/22 19:50:25 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ t_env	*duplicate_env(t_env *env)
 	return (head);
 }
 
-void	free_env_list(t_env *head)
+int	free_env_list(t_env *head)
 {
 	t_env	*temp;
 
@@ -127,4 +127,5 @@ void	free_env_list(t_env *head)
 		free(temp->value);
 		free(temp);
 	}
+	return (0);
 }

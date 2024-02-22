@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/21 15:14:04 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/02/22 19:50:11 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 
 typedef struct s_commands
 {
-	char	**cmd;
 	char	**path;
 
 }				t_commands;
@@ -68,12 +67,12 @@ typedef struct s_data
 int		parse_env(t_data *data, char **env);
 void	prompt_loop(char *str, t_data *data);
 t_env	*allocate_env(char **env);
-void	free_array(char **str);
+int		free_array(char **str);
 int		find_pwd(t_data *data);
 int		ft_env(t_data *data);
 int		ft_pwd(t_data *data);
 int		ft_export(char *str, t_data *data);
-void	declare_sorted(t_env *head);
+int		declare_sorted(t_env *head, int flag);
 int		ft_echo(char *argv);
 int		ft_cd(char *str, t_data *data);
 char	**find_paths_and_split(char **envp);
@@ -81,17 +80,20 @@ int		find_current_path(t_data *data, char *str);
 void	add_pwd_to_env(t_data *data, char *str);
 int		ft_unset(char *str, t_data *data);
 t_env	*search_env_variable(t_env *envp, char *key);
+char	*ft_strndup(const char *src, size_t n);
+int		check_unset_arg(char *str, char *token, t_data *data, int size_of_env);
 
 void	change_pwd(t_data *tools);
 t_env	*duplicate_node(char *str);
 t_env	*duplicate_env(t_env *env);
-void	free_env_list(t_env *head);
+int		free_env_list(t_env *head);
 size_t	len_of_values(t_env *lst);
 char	*env_str(t_env *env);
 int		valid_command(char *str, t_data *data);
 size_t	size_of_env(char **head);
 void	name_error(char *name);
 int		validate_input(char **token, t_env *current, char *name);
+int		already_there(char *variable, t_env	*env);
 // int		invalid_identifier(char **str_arr);
 
 // int		count_arg(char **str);

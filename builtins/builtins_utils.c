@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Builtins_utils.c                                   :+:      :+:    :+:   */
+/*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:47:18 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/20 22:00:50 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/22 19:47:32 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,14 @@ t_env	*search_env_variable(t_env *envp, char *key)
 		if (ft_strcmp(envp->key, key) == 0)
 			return (envp);
 		envp = envp->next;
+		// write(1, "1", 1);
+		// ft_putstr_fd(envp->key, 1);
+		// ft_putstr_fd("\n", 1);
 	}
 	return (NULL);
 }
 
-void	free_array(char **str)
+int	free_array(char **str)
 {
 	int	i;
 
@@ -31,6 +34,7 @@ void	free_array(char **str)
 	while (str[i])
 		free(str[i++]);
 	free(str);
+	return (0);
 }
 
 size_t	len_of_values(t_env *lst)

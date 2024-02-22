@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 21:03:21 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/20 22:13:29 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/22 20:36:26 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,23 @@
 int	invalid_identifier(char **str_arr, char *name)
 {
 	char	*str;
+	int		error;
 
+	error = 0;
 	while (*str_arr != NULL)
 	{
 		str = *str_arr;
-		while (*str != '\0')
+		if (!ft_isalpha(str[0]) && str[0] != '_')
 		{
-			if (*str != '_' && (!ft_isalnum(*str) || !ft_isalpha(*str)))
-			{
-				if (*str == '_' && (ft_isalnum(*str) || ft_isalpha(*str)))
-					str_arr++;
-				else
-				{
-					name_error(name);
-					ft_putstr_fd(str, STDERR_FILENO);
-					ft_putendl_fd(": not a valid identifier", STDERR_FILENO);
-					return (1);
-				}
-			}
-			str++;
+			name_error(name);
+			ft_putstr_fd(str, STDERR_FILENO);
+			ft_putendl_fd(": not a valid identifier", STDERR_FILENO);
+			error = 1;
 		}
 		str_arr++;
 	}
+	if (error != 0)
+		return (1);
 	return (0);
 }
 
@@ -58,12 +53,22 @@ int	validate_input(char **token, t_env *current, char *name)
 	if (ft_strcmp(name, "unset"))
 	{
 		if (!token[1] || invalid_identifier(token, name) || !current)
+		{
+			free_array(token);
+			free_env_list(current);
 			return (0);
+		}
 	}
 	else
 	{
+		// if (alread_there(token, current))
+		// 	retrun (0);
 		if (invalid_identifier(token, name) || !current)
+		{
+			free_array(token);
+			free_env_list(current);
 			return (0);
+		}
 	}
 	return (1);
 }

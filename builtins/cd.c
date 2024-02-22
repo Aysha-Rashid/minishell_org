@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 14:42:46 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/17 19:09:59 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/22 13:21:20 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ int	ft_cd(char *str, t_data *data)
 	}
 	change_pwd(data);
 	add_pwd_to_env(data, temp[1]);
-	if (changed != 0)
-		return (1);
 	return (0);
 }
 
