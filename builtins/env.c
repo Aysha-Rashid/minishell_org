@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:27:38 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/22 19:50:25 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/26 18:30:11 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,24 @@ t_env	*duplicate_node(char *str)
 	size_t	key_length;
 	char	*equal_sign_position;
 
+	equal_sign_position = ft_strchr(str, '=');
+	if (!equal_sign_position || equal_sign_position == str)
+		return (NULL);
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)
 		return (NULL);
-	equal_sign_position = ft_strchr(str, '=');
-	if (!equal_sign_position || equal_sign_position == str)
-		return (free(new_node), NULL);
 	key_length = equal_sign_position - str;
 	new_node->key = malloc(key_length + 1);
 	if (!new_node->key)
 		return (free(new_node), NULL);
+	new_node->value = ft_strdup(str);
+	if (!new_node->value) {
+		free(new_node->key);
+		free(new_node);
+		return NULL;
+	}
 	ft_strncpy(new_node->key, str, key_length);
 	new_node->key[key_length] = '\0';
-	new_node->value = ft_strdup(str);
 	new_node->next = NULL;
 	return (new_node);
 }
@@ -45,6 +50,7 @@ t_env	*allocate_env(char **env)
 	i = 0;
 	temp = NULL;
 	head = NULL;
+	node = NULL;
 	while (env[i])
 	{
 		node = duplicate_node(env[i]);
@@ -60,58 +66,7 @@ t_env	*allocate_env(char **env)
 		temp = node;
 		i++;
 	}
-	return (head);
-}
-
-int	ft_env(t_data *data)
-{
-	t_env	*temp;
-
-	if (!data->envp)
-	{
-		ft_putstr_fd("minishell: env: ", STDERR_FILENO);
-		ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
-		return (0);
-	}
-	temp = data->envp;
-	if (temp)
-	{
-		while (temp != NULL)
-		{
-			ft_putendl_fd(temp->value, 1);
-			temp = temp->next;
-		}
-		return (EXIT_SUCCESS);
-	}
-	else
-		return (EXIT_FAILURE);
-}
-
-t_env	*duplicate_env(t_env *env)
-{
-	t_env	*head;
-	t_env	*temp;
-
-	temp = NULL;
-	head = NULL;
-	while (env != NULL)
-	{
-		if (head == NULL)
-		{
-			head = malloc(sizeof(t_env));
-			temp = head;
-		}
-		else
-		{
-			temp->next = malloc(sizeof(t_env));
-			temp = temp->next;
-		}
-		if (temp == NULL)
-			return (NULL);
-		temp->value = ft_strdup(env->value);
-		temp->next = NULL;
-		env = env->next;
-	}
+	free(temp);
 	return (head);
 }
 
@@ -128,4 +83,49 @@ int	free_env_list(t_env *head)
 		free(temp);
 	}
 	return (0);
+}
+
+int	ft_env(t_data *data)
+{
+	t_env	*temp;
+
+	temp = data->envp;
+	if (!data->envp || data->no_path)
+	{
+		name_error("env", NULL,
+			"No such file or directory");
+		return (0);
+	}
+	if (temp)
+	{
+		while (temp != NULL)
+		{
+			ft_putendl_fd(temp->value, 1);
+			temp = temp->next;
+		}
+		return (0);
+	}
+	else
+		return (1);
+}
+
+void	free_data(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	free_env_list(data->envp);
+	if (data->commands && data->commands->path)
+	{
+		while (data->commands->path[i])
+		{
+			free(data->commands->path[i]);
+			i++;
+		}
+		free(data->commands->path);
+	}
+	free(data->commands);
+	free(data->pwd);
+	free(data->old_pwd);
+	free(data);
 }

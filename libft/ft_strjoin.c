@@ -6,38 +6,66 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 16:28:29 by ayal-ras          #+#    #+#             */
-/*   Updated: 2023/12/30 16:34:55 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/26 15:50:13 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stddef.h>
+#include <string.h>
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_str_init(void)
 {
-	size_t	i;
-	size_t	len1;
-	size_t	len2;
-	char	*s3;
+	char	*str;
 
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	if (s1 == NULL)
-		return ((char *)s2);
-	if (s2 == NULL)
-		return ((char *)s1);
-	s3 = (char *) malloc(sizeof(*s1) * (len1 + len2 + 1));
-	if (!s3)
-		return (NULL);
-	i = 0;
-	while (i < (len1 + len2))
-	{
-		if (i < len1)
-			s3[i] = s1[i];
-		else
-			s3[i] = s2[i - len1];
-		i++;
-	}
-	s3[len1 + len2] = '\0';
-	return (s3);
+	str = (char *)malloc(1 * sizeof(char));
+	str[0] = 0;
+	return (str);
+}
+
+// char	*ft_strjoin(char const *s1, char const *s2)
+// {
+// 	char	*result;
+// 	size_t	i;
+// 	size_t	length1;
+// 	size_t	length2;
+
+// 	i = 0;
+// 	length1 = 0;
+// 	length2 = 0;
+// 	if (s1)
+// 		length1 = ft_strlen(s1);
+// 	if (s2)
+// 		length1 = ft_strlen(s2);
+// 	result = (char *)malloc((length1 + length2 + 1) * sizeof(char));
+// 	if (!result)
+// 		return (NULL);
+// 	if (s1 && s2)
+// 	{
+// 		while (s1 && *s1)
+// 			result[i++] = *s1++;
+// 		while (s2 && *s2)
+// 			result[i++] = *s2++;
+// 	}
+// 	result[i] = '\0';
+// 	return (result);
+// }
+
+// #include <string.h>
+
+char *ft_strjoin(const char *s1, const char *s2) {
+    size_t len1 = (s1 != NULL) ? strlen(s1) : 0;
+    size_t len2 = (s2 != NULL) ? strlen(s2) : 0;
+    char *s3 = (char *)malloc((len1 + len2 + 1) * sizeof(char)); // Allocate memory for both strings and the null terminator
+    if (!s3)
+        return NULL;
+
+    size_t i = 0;
+    for (size_t j = 0; j < len1; ++j)
+        s3[i++] = s1[j];
+    for (size_t j = 0; j < len2; ++j)
+        s3[i++] = s2[j];
+    s3[i] = '\0'; // Null-terminate the concatenated string
+
+    return s3;
 }

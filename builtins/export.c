@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/22 22:08:58 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/26 17:22:34 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,77 +38,86 @@ void	sorted_env(char **env, size_t env_len)
 	}
 }
 
-int	already_there(char *variable, t_env	*env)
+int	already_there(char *variable, t_data *data)
 {
-	int	i;
+	t_env	*current;
 
-	i = 0;
-	if (!env)
+	current = data->envp;
+	if (!data->envp)
 		return (0);
-	while (env)
+	while (current)
 	{
-		if (ft_strncmp(variable, env->value, ft_strlen(env->key)) == 0)
+		if (ft_strncmp(variable, current->key, ft_strlen(current->key)) == 0)
 		{
-			free(env->value);
-			free(env->key);
-			env->value = ft_strdup(variable);
-			env->key = ft_strndup(variable,
+			if (!ft_strncmp("PATH=", variable, ft_strlen(current->key)))
+				data->no_path = 1;
+			free(current->key);
+			free(current->value);
+			current->value = ft_strdup(variable);
+			if (!current->value)
+				return (free(current->value), 1);
+			current->key = ft_strndup(variable,
 					ft_strchr(variable, '=') - variable);
+			if (!current->key)
+				return (free(current->key), 1);
 			return (1);
 		}
-		env = env->next;
+		current = current->next;
 	}
 	return (0);
 }
 
-int env_add(char *variable, t_env *env)
+int	env_add(char *variable, t_data *env)
 {
 	char	*key;
 	char	*value;
 	t_env	*new;
+	t_env	*temp;
 
-	if (already_there(variable, env))
-		return (0);
-	if (!env)
+	if (!env->envp)
 		return (1);
+	value = ft_strdup(variable);
+	if (!value)
+		return (1);
+	key = ft_strndup(variable, ft_strchr(variable, '=') - variable);
+	if (!key)
+		return (free(value), 1);
 	new = malloc(sizeof(t_env));
 	if (!new)
 		return (1);
-	value = ft_strdup(variable);
-	key = ft_strndup(variable, ft_strchr(variable, '=') - variable);
-	while (env != NULL && env->next != NULL)
-		env = env->next;
 	new->key = key;
 	new->value = value;
 	new->next = NULL;
-	env->next = new;
-	return (0);
+	temp = env->envp;
+	while (temp->next != NULL)
+		temp = temp->next;
+	temp->next = new;
+	return (free(value), free(key), free(new), 0);
 }
 
-int	ft_export(char *str, t_data *data)
-{
-	// t_env	*env_duplicate;
-	char	**token;
+// int env_add(char *variable, t_env *env)
+// {
+// 	char	*key;
+// 	char	*value;
+// 	t_env	*new;
 
-	// env_duplicate = duplicate_env(data->envp);
-	token = ft_split(str, ' ');
-	if (ft_strlen(token[0]) != 6)
-	{
-		free_array(token);
-		return (1);
-	}
-	if (token[1] == NULL)
-		return (declare_sorted(data->envp, 0));
-	else
-	{
-		if (!validate_input(token, data->envp, "export"))
-			return (0);	
-		else if (!env_add(token[1], data->envp))
-			return (0);
-		return (1);
-	}
-	return (1);
-}
+// 	if (already_there(variable, env))
+// 		return (0);
+// 	if (!env)
+// 		return (1);
+// 	new = malloc(sizeof(t_env));
+// 	if (!new)
+// 		return (1);
+// 	value = ft_strdup(variable);
+// 	key = ft_strndup(variable, ft_strchr(variable, '=') - variable);
+// 	while (env != NULL && env->next != NULL)
+// 		env = env->next;
+// 	new->key = key;
+// 	new->value = value;
+// 	new->next = NULL;
+// 	env->next = new;
+// 	return (0);
+// }
 
 int	declare_sorted(t_env *head, int flag)
 {
@@ -117,9 +126,16 @@ int	declare_sorted(t_env *head, int flag)
 	int		i;
 	size_t	env_len;
 
+	if (!head->value && head->next == NULL)
+		return (0);
 	str = env_str(head);
+	if (!str)
+		return(1);
 	temp = ft_split(str, '\n');
-	free(str);
+	if (!temp)
+		return(1);
+	// write(1, "1", 1);
+	// free(str);
 	env_len = size_of_env(temp);
 	sorted_env(temp, env_len);
 	i = 0;
@@ -132,33 +148,29 @@ int	declare_sorted(t_env *head, int flag)
 			i++;
 		}
 	}
+	free(str);
 	free_array(temp);
 	return (0);
 }
 
-char *env_str(t_env *env)
+int	ft_export(char *str, t_data *data)
 {
-	char *str;
-	int i;
-	int j;
+	char	**token;
 
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * len_of_values(env) + 1);
-	if (!str)
-		return (NULL);
-	while (env)
+	token = ft_split(str, ' ');
+	if (ft_strlen(token[0]) != 6)
 	{
-		if (env->value != NULL)
-		{
-			while (env->value[j])
-				str[i++] = env->value[j++];
-		}
-		if (env->next != NULL)
-			str[i++] = '\n';
-		env = env->next;
-		j = 0;
+		free_array(token);
+		return (1);
 	}
-	str[i] = '\0';
-	return (str);
+	if (token[1] == NULL)
+		return (declare_sorted(data->envp, 0));
+	else if (!validate_input(token, data->envp, "export"))
+		return (0);
+	else if (already_there(token[1], data))
+		return (free_array(token));
+	else if (!env_add(token[1], data))
+		return (free_array(token));
+	free_array(token);
+	return (1);
 }

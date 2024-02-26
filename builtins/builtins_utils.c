@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:47:18 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/22 19:47:32 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/23 19:43:43 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@ t_env	*search_env_variable(t_env *envp, char *key)
 		if (ft_strcmp(envp->key, key) == 0)
 			return (envp);
 		envp = envp->next;
-		// write(1, "1", 1);
-		// ft_putstr_fd(envp->key, 1);
-		// ft_putstr_fd("\n", 1);
 	}
 	return (NULL);
 }
@@ -64,9 +61,12 @@ size_t	size_of_env(char **head)
 	return (i);
 }
 
-void	name_error(char *name)
+int	name_error(char *name, char *str, char *message)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(name, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putendl_fd(message, STDERR_FILENO);
+	return (0);
 }

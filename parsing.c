@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/20 22:24:05 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/25 19:46:47 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,12 @@ int	parse_env(t_data *data, char **env)
 	int		i;
 	char	*temp;
 
-	data->commands->path = find_paths_and_split(env);
+	if (!env)
+		return (0);
+	data->no_path = 0;
 	data->envp = allocate_env(env);
+	data->commands->path = NULL;
+	data->commands->path = find_paths_and_split(env);
 	i = 0;
 	while (data->commands->path[i])
 	{
@@ -28,9 +32,12 @@ int	parse_env(t_data *data, char **env)
 			temp = ft_strjoin(data->commands->path[i], "/");
 			free(data->commands->path[i]);
 			data->commands->path[i] = temp;
+			free(temp);
 		}
 		i++;
 	}
+	if (!data->commands->path)
+		return (free_array(data->commands->path), 1);
 	return (0);
 }
 
@@ -53,12 +60,38 @@ char	**find_paths_and_split(char **envp)
 		}
 		i++;
 	}
-	paths = ft_split(envp_path, ':');
-	free(envp_path);
-	if (!paths)
-	{
-		free(paths);
+	if (!envp_path)
 		return (NULL);
-	}
+	paths = ft_split(envp_path, ':');
+	if (!paths)
+		return (NULL);	
+	free(envp_path);
 	return (paths);
+}
+
+char	*env_str(t_env *env)
+{
+	char	*str;
+	int		i;
+	int		j;
+
+	str = malloc(sizeof(char) * ((sizeof(size_t)) * len_of_values(env)) + 1);
+	if (!str)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (env)
+	{
+		if (env->value != NULL)
+		{
+			while (env->value[j])
+				str[i++] = env->value[j++];
+		}
+		if (env->next != NULL)
+			str[i++] = '\n';
+		env = env->next;
+		j = 0;
+	}
+	str[i] = '\0';
+	return (str);
 }
