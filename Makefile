@@ -10,7 +10,11 @@ SRC = main.c\
 		builtins/cd.c\
 		builtins/unset.c\
 		signals/signals.c\
-
+		errors.c\
+		lexer/handle_quotes.c\
+		lexer/lexer_utils.c\
+		lexer/token_reader.c\
+		lexer/token_utils.c\
 
 OBJ = $(SRC:.c=.o)
 
