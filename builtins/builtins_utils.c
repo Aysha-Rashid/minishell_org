@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:47:18 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/23 19:43:43 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/27 13:56:37 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,22 @@ int	free_array(char **str)
 
 size_t	len_of_values(t_env *lst)
 {
-	size_t	lst_len;
+	t_env	*current;
+	int		total_length;
 
-	lst_len = 0;
-	while (lst && lst->next != NULL)
+
+
+	total_length = 0;
+	current = lst;
+	while (current)
 	{
-		if (lst->value != NULL)
-		{
-			lst_len += ft_strlen(lst->value);
-			lst_len++;
-		}
-		lst = lst->next;
+		if (current->value)
+			total_length += ft_strlen(current->value);
+		if (current->next)
+			total_length++;
+		current = current->next;
 	}
-	return (lst_len);
+	return (total_length);
 }
 
 size_t	size_of_env(char **head)

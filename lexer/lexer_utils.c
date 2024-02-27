@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 09:01:45 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/02/27 09:22:24 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/02/27 10:53:14 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 t_lexer	*ft_lexernew(char *str, int token)
 {

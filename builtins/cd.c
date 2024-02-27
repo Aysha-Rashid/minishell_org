@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 14:42:46 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/26 17:16:24 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/27 10:30:03 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,8 @@ void	add_pwd_to_env(t_data *data, char *str)
 		if (!ft_strncmp(temp_env->value, "PWD=", 4))
 		{
 			tmp = ft_strjoin("PWD=", data->pwd);
-			write(1, "1", 1);
 			free(temp_env->value);
 			temp_env->value = tmp;
-			// free(tmp);
 		}
 		else if (!ft_strncmp(temp_env->value, "OLDPWD=", 7))
 		{

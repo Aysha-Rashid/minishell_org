@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   handle_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:57:05 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/02/27 09:18:42 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/02/27 10:53:05 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	handle_quotes(int i, char *str, char del)
 {

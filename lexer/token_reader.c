@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   token_reader.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:35:24 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/02/27 09:09:20 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/02/27 14:02:05 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	is_whitespace(char c)
 {

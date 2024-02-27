@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/26 17:22:34 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/27 14:04:52 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,12 @@ int	env_add(char *variable, t_data *env)
 	new->key = key;
 	new->value = value;
 	new->next = NULL;
+	new->path = NULL;
 	temp = env->envp;
 	while (temp->next != NULL)
 		temp = temp->next;
 	temp->next = new;
-	return (free(value), free(key), free(new), 0);
+	return (0);
 }
 
 // int env_add(char *variable, t_env *env)
@@ -130,12 +131,10 @@ int	declare_sorted(t_env *head, int flag)
 		return (0);
 	str = env_str(head);
 	if (!str)
-		return(1);
+		return (1);
 	temp = ft_split(str, '\n');
 	if (!temp)
-		return(1);
-	// write(1, "1", 1);
-	// free(str);
+		return (1);
 	env_len = size_of_env(temp);
 	sorted_env(temp, env_len);
 	i = 0;
@@ -164,7 +163,7 @@ int	ft_export(char *str, t_data *data)
 		return (1);
 	}
 	if (token[1] == NULL)
-		return (declare_sorted(data->envp, 0));
+		return (declare_sorted(data->envp, 0), free_array(token));
 	else if (!validate_input(token, data->envp, "export"))
 		return (0);
 	else if (already_there(token[1], data))

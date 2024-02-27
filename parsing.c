@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/25 19:46:47 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/27 14:33:16 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,31 @@ int	parse_env(t_data *data, char **env)
 
 	if (!env)
 		return (0);
-	data->no_path = 0;
 	data->envp = allocate_env(env);
-	data->commands->path = NULL;
-	data->commands->path = find_paths_and_split(env);
+	temp = find_paths_and_split(env);
+	data->envp->path = ft_split(temp, ':');
+	free(temp);
 	i = 0;
-	while (data->commands->path[i])
+	if (!data->envp || !data->envp->path)
+		return (1);
+	while (data->envp->path[i])
 	{
-		if (ft_strncmp(&data->commands->path[i]
-				[ft_strlen(data->commands->path[i]) - 1], "/", 1) != 1)
+		if (data->envp->path[i][ft_strlen(data->envp->path[i]) - 1] != '/')
 		{
-			temp = ft_strjoin(data->commands->path[i], "/");
-			free(data->commands->path[i]);
-			data->commands->path[i] = temp;
-			free(temp);
+			temp = ft_strjoin(data->envp->path[i], "/");
+			free(data->envp->path[i]);
+			data->envp->path[i] = temp;
 		}
 		i++;
 	}
-	if (!data->commands->path)
-		return (free_array(data->commands->path), 1);
-	return (0);
+	if (!data->envp->path)
+		return (1);
+	return (free(temp), 0);
 }
 
-char	**find_paths_and_split(char **envp)
+char	*find_paths_and_split(char **envp)
 {
 	char	*envp_path;
-	char	**paths;
 	int		i;
 
 	if (!envp)
@@ -62,11 +61,7 @@ char	**find_paths_and_split(char **envp)
 	}
 	if (!envp_path)
 		return (NULL);
-	paths = ft_split(envp_path, ':');
-	if (!paths)
-		return (NULL);	
-	free(envp_path);
-	return (paths);
+	return (envp_path);
 }
 
 char	*env_str(t_env *env)
@@ -75,7 +70,7 @@ char	*env_str(t_env *env)
 	int		i;
 	int		j;
 
-	str = malloc(sizeof(char) * ((sizeof(size_t)) * len_of_values(env)) + 1);
+	str = malloc(len_of_values(env) + 1);
 	if (!str)
 		return (NULL);
 	i = 0;

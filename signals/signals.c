@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:37 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/02/26 19:08:51 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/27 10:55:20 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	sigint_handler(int signum)
 	{
 		g_sig_interrupt = 1;
 		ft_putstr_fd("\n", 2);
-		rl_replace_line("", 0);
+		// rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}

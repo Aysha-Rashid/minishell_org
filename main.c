@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/27 08:38:04 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/02/27 15:34:19 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,17 @@ void	prompt_loop(char *str, t_data *data)
 		check_signal(str, data);
 		data->cmd = ft_strdup(str);
 		trimmed_cmd = ft_strtrim(str, " ");
+		if (!token_reader(data))
+			ft_error(3);
 		free(str);
 		if (trimmed_cmd && ft_strncmp(trimmed_cmd, "exit", 5) == 0)
 		{
 			ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 			ft_putendl_fd("exit", 1);
 			free(trimmed_cmd);
-			free_env_list(data->envp);
 			exit(0);
 		}
 		valid_command(trimmed_cmd, data);
-		if (!token_reader(data))
-			ft_error(3);
 		add_history(trimmed_cmd);
 		free(trimmed_cmd);
 	}
@@ -72,7 +71,6 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	*data;
 
-	// (void)env;
 	if (argv[1] || argc != 1)
 	{
 		ft_putendl_fd("invalid arguments", 2);
@@ -81,11 +79,8 @@ int	main(int argc, char **argv, char **env)
 	data = (t_data *)malloc(sizeof(t_data));
 	if (data == NULL)
 		exit(EXIT_FAILURE);
-	data->commands = (t_commands *)malloc(sizeof(t_commands));
-	if (data->commands == NULL)
-		exit(EXIT_FAILURE);
 	parse_env(data, env);
-	// find_pwd(data);
+	data->no_path = 0;
 	prompt_loop(*argv, data);
 	free_data(data);
 	return (0);

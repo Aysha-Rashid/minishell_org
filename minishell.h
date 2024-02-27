@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/27 10:26:17 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/02/27 13:46:30 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,14 @@ typedef enum s_tokens
 	HEREDOC,
 }	t_tokens;
 
-typedef struct s_commands
-{
-	char	**path;
-}				t_commands;
+// typedef struct s_commands
+// {
+// 	char	**path;
+// }				t_commands;
 
 typedef struct s_env
 {
+	char			**path;
 	char			*value;
 	char			*key;
 	struct s_env	*next;
@@ -66,7 +67,7 @@ typedef struct s_data
 	char			*old_pwd;
 	int				no_path;
 	t_env			*envp;
-	t_commands		*commands;
+	// t_commands		*commands;
 	struct s_data	*next;
 	int				status_code;
 	t_lexer			*lexer_list;
@@ -92,7 +93,7 @@ int			ft_pwd(t_data *data);
 int			ft_export(char *str, t_data *data);
 int			ft_echo(char *argv);
 int			ft_cd(char *str, t_data *data);
-char		**find_paths_and_split(char **envp);
+char		*find_paths_and_split(char **env);
 // int		find_current_path(t_data *data, char *str);
 // void	add_pwd_to_env(t_data *data, char *str);
 int			ft_unset(char *str, t_data *data);
@@ -102,7 +103,7 @@ int			check_unset_arg(char *str, char *token, t_data *data, int size_of_env);
 
 void	change_pwd(t_data *tools);
 // t_env	*duplicate_node(char *str);
-t_env		*duplicate_env(t_env *env);
+// t_env		*duplicate_env(t_env *env);
 int			free_env_list(t_env *head);
 size_t		len_of_values(t_env *lst);
 char		*env_str(t_env *env);
