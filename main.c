@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/26 17:06:31 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/27 08:38:04 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int g_sig_interrupt;
 
 int	valid_command(char *str, t_data *data)
 {
+	if (!quote(str))
+		return (ft_error(1));
 	if (str && (!ft_strncmp(str, "env", 4)
 			|| !ft_strncmp(str, "ENV", 4)))
 		return (ft_env(data));
@@ -35,7 +37,7 @@ int	valid_command(char *str, t_data *data)
 	else if (!*str)
 		return (0);
 	// free(str);
-	return (1);
+	return (ft_error(2));
 }
 
 void	prompt_loop(char *str, t_data *data)
@@ -47,7 +49,7 @@ void	prompt_loop(char *str, t_data *data)
 		ft_signals();
 		str = readline("\033[96mminishell$ \033[0m");
 		check_signal(str, data);
-		// data->cmd = ft_strdup(str);
+		data->cmd = ft_strdup(str);
 		trimmed_cmd = ft_strtrim(str, " ");
 		free(str);
 		if (trimmed_cmd && ft_strncmp(trimmed_cmd, "exit", 5) == 0)
@@ -58,8 +60,9 @@ void	prompt_loop(char *str, t_data *data)
 			free_env_list(data->envp);
 			exit(0);
 		}
-		if (valid_command(trimmed_cmd, data) == 1)
-			ft_putendl_fd("\033[31mERROR HANDLING", 2);
+		valid_command(trimmed_cmd, data);
+		if (!token_reader(data))
+			ft_error(3);
 		add_history(trimmed_cmd);
 		free(trimmed_cmd);
 	}
