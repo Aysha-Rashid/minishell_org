@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/27 14:04:52 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/28 13:07:57 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ int	ft_export(char *str, t_data *data)
 	if (ft_strlen(token[0]) != 6)
 	{
 		free_array(token);
-		return (1);
+		return (name_error(str, NULL, "command not found"));
 	}
 	if (token[1] == NULL)
 		return (declare_sorted(data->envp, 0), free_array(token));

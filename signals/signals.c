@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:37 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/02/27 10:55:20 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/28 14:54:05 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,17 @@ void	sigint_handler(int signum)
 	{
 		g_sig_interrupt = 1;
 		ft_putstr_fd("\n", 2);
-		// rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}
 }
 
-int	handle_eof(char *str)
+int	handle_eof(char *str, t_data *data)
 {
 	if (str == NULL)
 	{
+		free_env_list(data->envp);
 		ft_putstr_fd("exit\n", 2);
 		return (1);
 	}
@@ -36,7 +37,7 @@ int	handle_eof(char *str)
 
 void	check_signal(char *input, t_data *data)
 {
-	if (handle_eof(input))
+	if (handle_eof(input, data))
 		exit(0);
 	if (g_sig_interrupt == 1)
 		data->status_code = 1;

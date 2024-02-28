@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:27:38 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/27 13:45:58 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/28 13:21:16 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,17 @@ t_env	*allocate_env(char **env)
 	return (head);
 }
 
-int	ft_env(t_data *data)
+int	ft_env(t_data *data, char *str)
 {
 	t_env	*temp;
 
 	temp = data->envp;
+	if (ft_strlen(str) != 3)
+		return (name_error(str, NULL, "command not found"));
 	if (!data->envp || data->no_path)
 	{
-		name_error("env", NULL,
-			"No such file or directory");
-		return (0);
+		return (name_error("env", NULL,
+				"No such file or directory"));
 	}
 	if (temp)
 	{
@@ -93,6 +94,8 @@ int	free_env_list(t_env *head)
 {
 	t_env	*temp;
 
+	temp = head;
+	free_array(temp->path);
 	while (head)
 	{
 		temp = head;

@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/27 14:33:16 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/28 13:20:20 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	parse_env(t_data *data, char **env)
 	}
 	if (!data->envp->path)
 		return (1);
-	return (free(temp), 0);
+	return (0);
 }
 
 char	*find_paths_and_split(char **envp)

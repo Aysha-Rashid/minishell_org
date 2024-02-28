@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:47:18 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/27 13:56:37 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/28 13:06:06 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ size_t	len_of_values(t_env *lst)
 {
 	t_env	*current;
 	int		total_length;
-
-
 
 	total_length = 0;
 	current = lst;
