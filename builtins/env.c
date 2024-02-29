@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:27:38 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/28 13:21:16 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/28 18:57:39 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ int	ft_env(t_data *data, char *str)
 	t_env	*temp;
 
 	temp = data->envp;
-	if (ft_strlen(str) != 3)
-		return (name_error(str, NULL, "command not found"));
 	if (!data->envp || data->no_path)
 	{
 		return (name_error("env", NULL,
 				"No such file or directory"));
 	}
+	if (ft_strlen(str) != 3)
+		return (name_error(str, NULL, "command not found"));
 	if (temp)
 	{
 		while (temp)

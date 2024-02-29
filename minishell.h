@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/28 13:44:21 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/29 14:00:26 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,8 @@ typedef struct s_executor
 	int		*pid;
 	int		pipes;
 	int		heredoc;
-	char	**cmd;
-	// char	**cmd2;
-	char	*cmd_path;
-	// char	*cmd_path2;
-	// int		infile;
-	// int		outfile;
+	// char	**cmd;
+	// char	*cmd_path;
 }				t_executor;
 
 typedef struct s_data
@@ -82,34 +78,40 @@ typedef struct s_data
 	char			*pwd;
 	char			*old_pwd;
 	t_env			*envp;
-	// t_executor		*executor;
+	t_executor		*executor;
 	t_lexer			*lexer_list;
 }				t_data;
 
-int		parse_env(t_data *data, char **env);
-t_env		*allocate_env(char **env);
-int			free_array(char **str);
-int			find_pwd(t_data *data);
 int			ft_env(t_data *data, char *str);
-int			ft_pwd(t_data *data);
-int			ft_export(char *str, t_data *data);
-int			ft_echo(char *argv);
-int			ft_cd(char *str, t_data *data);
+int			parse_env(t_data *data, char **env);
+t_env		*allocate_env(char **env);
 char		*find_paths_and_split(char **env);
+
+int			find_pwd(t_data *data);
+int			ft_pwd(t_data *data);
+
+int			ft_export(char *str, t_data *data);
+char		*env_str(t_env *env);
+int			env_add(char *variable, t_data *env);
+
+int			ft_cd(char *str, t_data *data);
+void		change_pwd(t_data *tools);
+
 int			ft_unset(char *str, t_data *data);
 t_env		*search_env_variable(t_env *envp, char *key);
-char		*ft_strndup(const char *src, size_t n);
-int			check_unset_arg(char *str, char *token, t_data *data, int size_of_env);
 
-void	change_pwd(t_data *tools);
+int			check_unset_arg(char *str, char *token, t_data *data,
+				int size_of_env);
+
+int			free_array(char **str);
 int			free_env_list(t_env *head);
-size_t		len_of_values(t_env *lst);
-char		*env_str(t_env *env);
-size_t		size_of_env(char **head);
 int			name_error(char *name, char *str, char *message);
-int			validate_input(char **token, t_env *current, char *name);
 void		free_data(t_data *data);
-int			env_add(char *variable, t_data *env);
+int			validate_input(char **token, t_env *current, char *name);
+
+size_t		len_of_values(t_env *lst);
+size_t		size_of_env(char **head);
+
 // int		count_arg(char **str);
 // int		*builtin_arr(char *str);
 // void	init_signal(void);
@@ -127,7 +129,7 @@ void		check_and_write(char *str);
 
 //parse
 int			quote(char *l);
-int 		ft_error(int i);
+int			ft_error(int i);
 
 //lexer
 int			token_reader(t_data *data);
@@ -140,6 +142,12 @@ void		ft_lexeradd_back(t_lexer **list, t_lexer *new);
 int			handle_quotes(int i, char *str, char del);
 t_tokens	check_token(int n);
 int			handle_token(char *str, int i, t_lexer **lexer_list);
+
+//execution
+void		check_n_execute(char *str, t_data *data);
+void		check_pipes_n_execute(t_data *data);
+int			execution(char *str, t_data	*data);
+int			buitin_command(char *str, t_data *data);
 
 extern int g_sig_interrupt;
 

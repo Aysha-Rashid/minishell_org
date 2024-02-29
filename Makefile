@@ -15,6 +15,7 @@ SRC = main.c\
 		lexer/lexer_utils.c\
 		lexer/token_reader.c\
 		lexer/token_utils.c\
+		execution/pipes.c\
 
 OBJ = $(SRC:.c=.o)
 

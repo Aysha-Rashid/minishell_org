@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 20:12:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/26 12:27:29 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/28 17:09:59 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ char	*ft_strchr(const char	*s, int c);
 char	*ft_strnstr(const char *s1, const char *s2, size_t n);
 char	*ft_strrchr(const char *str, int c);
 char	*ft_strdup(const char	*s1);
+char	*ft_strndup(const char *src, size_t n);
 char	*ft_substr(char	const	*s, unsigned int start, size_t	len);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s1, char const *set);

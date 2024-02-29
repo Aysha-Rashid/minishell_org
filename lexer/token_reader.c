@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:35:24 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/02/27 14:02:05 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/29 15:20:01 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	token_reader(t_data *data)
 	int	j;
 
 	i = 0;
+	data->lexer_list = NULL;
 	while (data->cmd[i])
 	{
 		j = 0;
@@ -71,6 +72,8 @@ int	token_reader(t_data *data)
 			j = handle_token(data->cmd, i, &data->lexer_list);
 		else
 			j = read_words(i, data->cmd, &data->lexer_list);
+		// removed it because we need to differentiate between executable command 
+		// and buitin commands, also we dont really need to tokenize the other commands.
 		if (j < 0)
 			return (0);
 		i = i + j;

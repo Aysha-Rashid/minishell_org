@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/28 13:07:57 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/29 14:17:18 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	already_there(char *variable, t_data *data)
 	{
 		if (ft_strncmp(variable, current->key, ft_strlen(current->key)) == 0)
 		{
-			if (!ft_strncmp("PATH=", variable, ft_strlen(current->key)))
+			if (!ft_strncmp("PATH=", variable, ft_strlen(current->value)))
 				data->no_path = 1;
 			free(current->key);
 			free(current->value);
@@ -96,30 +96,6 @@ int	env_add(char *variable, t_data *env)
 	return (0);
 }
 
-// int env_add(char *variable, t_env *env)
-// {
-// 	char	*key;
-// 	char	*value;
-// 	t_env	*new;
-
-// 	if (already_there(variable, env))
-// 		return (0);
-// 	if (!env)
-// 		return (1);
-// 	new = malloc(sizeof(t_env));
-// 	if (!new)
-// 		return (1);
-// 	value = ft_strdup(variable);
-// 	key = ft_strndup(variable, ft_strchr(variable, '=') - variable);
-// 	while (env != NULL && env->next != NULL)
-// 		env = env->next;
-// 	new->key = key;
-// 	new->value = value;
-// 	new->next = NULL;
-// 	env->next = new;
-// 	return (0);
-// }
-
 int	declare_sorted(t_env *head, int flag)
 {
 	char	**temp;
@@ -155,21 +131,26 @@ int	declare_sorted(t_env *head, int flag)
 int	ft_export(char *str, t_data *data)
 {
 	char	**token;
+	int		len;
+	int		i;
 
 	token = ft_split(str, ' ');
 	if (ft_strlen(token[0]) != 6)
-	{
-		free_array(token);
-		return (name_error(str, NULL, "command not found"));
-	}
+		return (free_array(token), name_error(str, NULL, "command not found"));
+	len = size_of_env(token);
+	i = 1;
 	if (token[1] == NULL)
 		return (declare_sorted(data->envp, 0), free_array(token));
 	else if (!validate_input(token, data->envp, "export"))
 		return (0);
-	else if (already_there(token[1], data))
-		return (free_array(token));
-	else if (!env_add(token[1], data))
-		return (free_array(token));
+	while (len > i)
+	{
+		if (already_there(token[i], data))
+			i++;
+		else
+			env_add(token[i], data);
+		i++;
+	}
 	free_array(token);
 	return (1);
 }
