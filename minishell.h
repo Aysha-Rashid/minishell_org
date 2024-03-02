@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/01 19:48:03 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/02 20:03:00 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int			ft_pwd(t_data *data);
 int			ft_export(char *str, t_data *data);
 char		*env_str(t_env *env);
 int			env_add(char *variable, t_data *env);
+int			already_there(char *variable, t_data *data);
 
 int			ft_cd(char *str, t_data *data);
 void		change_pwd(t_data *tools);
@@ -126,7 +127,7 @@ void		check_and_write(char *str);
 
 //parse
 int			quote(char *l);
-int			ft_error(int i);
+int			ft_error(int i, char *str, t_data *data);
 
 //lexer
 int			token_reader(t_data *data);

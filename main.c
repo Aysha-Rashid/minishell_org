@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/01 19:46:47 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/02 19:57:48 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ int	execution(char *str, t_data	*data)
 {
 	(void)data;
 	(void)str;
-	if (!*str)
-		return (0);
 	ft_putstr_fd("hello there, ready for execution?", 1);
 	return (1);
 }
@@ -27,7 +25,7 @@ int	execution(char *str, t_data	*data)
 int	buitin_command(char *str, t_data *data)
 {
 	if (!quote(str))
-		return (ft_error(1));
+		return (ft_error(1, NULL, data));
 	if (str && (!ft_strncmp(str, "env", 3)
 			|| !ft_strncmp(str, "ENV", 3)))
 		return (ft_env(data, str));
@@ -46,7 +44,7 @@ int	buitin_command(char *str, t_data *data)
 		return (ft_unset(str, data));
 	else if (!*str)
 		return (0);
-	return (ft_error(2));
+	return (ft_error(2, str, data));
 }
 
 void	prompt_loop(char *str, t_data *data)
@@ -62,8 +60,6 @@ void	prompt_loop(char *str, t_data *data)
 		data->cmd = ft_strdup(trimmed_cmd);
 		free(trimmed_cmd);
 		free(str);
-		if (!token_reader(data))
-			ft_error(3);
 		check_n_execute(data->cmd, data);
 		add_history(data->cmd);
 		free(data->cmd);
@@ -80,8 +76,11 @@ int	main(int argc, char **argv, char **env)
 		exit(0);
 	}
 	parse_env(&data, env);
+	data.pwd = NULL;
+	data.old_pwd = NULL;
 	data.no_path = 0;
 	data.status_code = 0;
+	find_pwd(&data);
 	prompt_loop(*argv, &data);
 	free_data(&data);
 	free(data.cmd);

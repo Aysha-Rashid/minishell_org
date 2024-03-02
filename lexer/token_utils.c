@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:41:59 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/01 19:07:10 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/02 15:06:07 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	handle_token(char *str, int i, t_lexer **lexer_list)
 	token = check_token(str[i]);
 	if (token == OUTFILE && check_token(str[i + 1] == OUTFILE))
 	{
-		// if (str[i] && ft_strlen(str[i]))
 		if (!add_node(NULL, OUTEOF, lexer_list))
 			return (-1);
 		return (2);

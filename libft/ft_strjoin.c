@@ -6,13 +6,13 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/21 16:28:29 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/01 12:25:31 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/02 15:05:48 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char    *ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*result;
 	size_t	i;

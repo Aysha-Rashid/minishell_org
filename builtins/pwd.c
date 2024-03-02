@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 20:31:16 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/01 12:30:30 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/02 20:52:36 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,16 @@ int	find_pwd(t_data *data)
 {
 	t_env	*temp;
 
-	data->pwd = NULL;
-	data->old_pwd = NULL;
 	temp = data->envp;
 	while (temp)
 	{
-		if (!ft_strncmp(temp->value, "PWD=", 4))
+		if (!(ft_strncmp(temp->value, "PWD=", 4)))
 		{
 			if (data->pwd == NULL)
 				data->pwd = ft_substr(temp->value, 4,
 						ft_strlen(temp->value) - 4);
 		}
-		if (!ft_strncmp(temp->value, "OLDPWD=", 7))
+		else if (!(ft_strncmp(temp->value, "OLDPWD=", 7)))
 		{
 			if (data->old_pwd == NULL)
 				data->old_pwd = ft_substr(temp->value, 7,
@@ -54,21 +52,40 @@ int	ft_pwd(t_data *data)
 		return (1);
 }
 
+// void	change_pwd(t_data *tools)
+// {
+// 	char	cwd[1024];
+// 	char	*OLDPWD;
+
+// 	if (getcwd(cwd, 1024) == NULL)
+// 		return ;
+// 	OLDPWD = ft_strjoin("OLDPWD=", cwd);
+// 	if (!(OLDPWD))
+// 		return ;
+// 	if (!already_there(OLDPWD, tools))
+// 	{
+// 		free(OLDPWD);
+// 		return ;
+// 	}
+// 	if (!already_there(ft_pwd(), tools))
+// 	{
+// 		free(OLDPWD);
+// 		return ;
+// 	}
+// 	free(OLDPWD);
+// 	return ;
+// }
+
 void	change_pwd(t_data *tools)
 {
-	char	cwd[1024];
-	char	*oldpwd;
+	char	*tmp;
 
-	if (getcwd(cwd, 1024) == NULL)
+	find_pwd(tools);
+	tmp = ft_strdup(tools->pwd);
+	if (!tmp)
 		return ;
-	oldpwd = ft_strjoin("OLDPWD=", cwd);
-	if (!(oldpwd))
-		return ;
-	if (!env_add(oldpwd, tools))
-	{
-		free(oldpwd);
-		return ;
-	}
-	free(oldpwd);
-	return ;
+	free(tools->old_pwd);
+	tools->old_pwd = tmp;
+	free(tools->pwd);
+	tools->pwd = getcwd(NULL, sizeof(NULL));
 }

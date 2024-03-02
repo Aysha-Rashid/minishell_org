@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 21:03:21 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/29 21:15:29 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/02 15:30:49 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ int	invalid_identifier(char **str_arr, char *name)
 		str = *str_arr;
 		if (!ft_isalpha(str[0]) && str[0] != '_')
 		{
-			name_error(name, str, " : not a valid identifier");
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(name, 2);
+			ft_putstr_fd(": `", 2);
+			ft_putstr_fd(str, 2);
+			ft_putendl_fd("': not a valid identifier", 2);
 			error = 1;
 		}
 		str_arr++;
@@ -38,20 +42,12 @@ int	validate_input(char **token, t_env *current, char *name)
 	if (ft_strcmp(name, "unset"))
 	{
 		if (!token[1] || invalid_identifier(token, name) || !current)
-		{
-			free_array(token);
-			free_env_list(current);
-			return (0);
-		}
+			return (free_array(token));
 	}
 	else
 	{
 		if (invalid_identifier(token, name) || !current)
-		{
-			free_array(token);
-			free_env_list(current);
-			return (0);
-		}
+			return (free_array(token));
 	}
 	return (1);
 }
@@ -66,8 +62,8 @@ int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 			data->envp = to_remove->next;
 		if (data->envp && !data->envp->key)
 			return (1);
-		free(to_remove->value);
 		free(to_remove->key);
+		free(to_remove->value);
 		free(to_remove);
 		return (1);
 	}
@@ -99,7 +95,6 @@ int	unset_loop(t_data *data, t_env *current, int len, char **token)
 	t_env	*prev;
 
 	i = 1;
-	prev = NULL;
 	while (len > i)
 	{
 		remove = search_env_variable(data->envp, token[i]);
@@ -112,11 +107,11 @@ int	unset_loop(t_data *data, t_env *current, int len, char **token)
 			prev = current;
 			current = current->next;
 		}
-		if (!(remove_env_variable(data, remove, prev))
+		if ((remove_env_variable(data, remove, prev))
 			|| (remove && ft_strncmp(remove->key, token[i],
 					len_of_values(data->envp))))
-			return (0);
+			return (free_array(token));
 		i++;
 	}
-	return (1);
+	return (free_array(token), 1);
 }

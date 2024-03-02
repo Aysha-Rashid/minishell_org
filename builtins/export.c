@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/29 21:54:07 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/02 21:10:01 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,43 @@ int	already_there(char *variable, t_data *data)
 	return (0);
 }
 
+t_env	*duplicate_env(t_env *env)
+{
+	t_env	*head;
+	t_env	*temp;
+
+	temp = NULL;
+	head = NULL;
+	while (env != NULL)
+	{
+		if (head == NULL)
+		{
+			head = malloc(sizeof(t_env));
+			temp = head;
+		}
+		else
+		{
+			temp->next = malloc(sizeof(t_env));
+			temp = temp->next;
+		}
+		if (temp == NULL)
+			return (NULL);
+		temp->value = ft_strdup(env->value);
+		temp->next = NULL;
+		env = env->next;
+	}
+	return (head);
+}
+
 int	env_add(char *variable, t_data *env)
 {
 	char	*key;
 	char	*value;
 	t_env	*new;
 	t_env	*temp;
+	// t_env	*copy_env;
 
+	// copy_env = duplicate_env(env->envp);
 	if (!env->envp)
 		return (1);
 	value = ft_strdup(variable);
@@ -84,14 +114,17 @@ int	env_add(char *variable, t_data *env)
 	new = malloc(sizeof(t_env));
 	if (!new)
 		return (1);
-	new->key = key;
-	new->value = value;
-	new->next = NULL;
-	new->path = NULL;
-	temp = env->envp;
-	while (temp->next != NULL)
-		temp = temp->next;
-	temp->next = new;
+	if (ft_strchr(variable, '='))
+	{
+		new->key = key;
+		new->value = value;
+		new->next = NULL;
+		new->path = NULL;
+		temp = env->envp;
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = new;
+	}
 	return (0);
 }
 
@@ -129,10 +162,12 @@ int	ft_export(char *str, t_data *data)
 	char	**token;
 	int		len;
 	int		i;
+	// t_env	*copy_env;
 
+	// copy_env = duplicate_env(data->envp);
 	token = ft_split(str, ' ');
 	if (ft_strlen(token[0]) != 6)
-		return (free_array(token), name_error(str, NULL, "command not found"));
+		return (free_array(token), ft_error(2, str, NULL));
 	len = size_of_env(token);
 	i = 1;
 	if (token[1] == NULL)
