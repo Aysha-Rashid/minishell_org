@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/29 14:17:18 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/29 21:54:07 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,18 @@ int	already_there(char *variable, t_data *data)
 		return (0);
 	while (current)
 	{
-		if (ft_strncmp(variable, current->key, ft_strlen(current->key)) == 0)
+		if (!(ft_strncmp(variable, current->key, ft_strlen(current->key))))
 		{
-			if (!ft_strncmp("PATH=", variable, ft_strlen(current->value)))
-				data->no_path = 1;
-			free(current->key);
-			free(current->value);
-			current->value = ft_strdup(variable);
-			if (!current->value)
-				return (free(current->value), 1);
-			current->key = ft_strndup(variable,
-					ft_strchr(variable, '=') - variable);
-			if (!current->key)
-				return (free(current->key), 1);
+			if (ft_strchr(variable, '='))
+			{
+				if (!(ft_strncmp("PATH=", variable, ft_strlen(current->value))))
+					data->no_path = 1;
+				free(current->key);
+				free(current->value);
+				current->value = ft_strdup(variable);
+				current->key = ft_strndup(variable,
+						ft_strchr(variable, '=') - variable);
+			}
 			return (1);
 		}
 		current = current->next;
@@ -119,13 +118,10 @@ int	declare_sorted(t_env *head, int flag)
 		while (temp[i])
 		{
 			ft_putstr_fd("declare -x ", 1);
-			ft_putendl_fd(temp[i], 1);
-			i++;
+			ft_putendl_fd(temp[i++], 1);
 		}
 	}
-	free(str);
-	free_array(temp);
-	return (0);
+	return (free(str), free_array(temp), 1);
 }
 
 int	ft_export(char *str, t_data *data)
@@ -148,9 +144,10 @@ int	ft_export(char *str, t_data *data)
 		if (already_there(token[i], data))
 			i++;
 		else
+		{
 			env_add(token[i], data);
-		i++;
+			i++;
+		}
 	}
-	free_array(token);
-	return (1);
+	return (free_array(token), 1);
 }

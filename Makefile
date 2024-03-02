@@ -3,6 +3,7 @@ NAME = minishell
 SRC = main.c\
 		parsing.c\
 		builtins/builtins_utils.c\
+		builtins/builtins_utils2.c\
 		builtins/env.c\
 		builtins/pwd.c\
 		builtins/echo.c\

@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 14:42:46 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/27 10:30:03 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/29 22:05:28 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 int	find_current_path(t_data *data, char *str)
 {
 	t_env	*temp_env;
-	char	*temp = NULL;
-	int		ret = -1;
+	char	*temp;
+	int		ret;
 
+	ret = -1;
+	temp = NULL;
 	if (data->no_path)
 		return (0);
 	temp_env = data->envp;
@@ -72,9 +74,10 @@ int	ft_cd(char *str, t_data *data)
 	int		changed;
 
 	changed = 0;
-	temp = ft_split(str, ' ');
-	if (!temp)
+	if (!(temp = ft_split(str, ' ')))
 		return (1);
+	if (ft_strlen(temp[0]) != 2)
+		return (free_array(temp), 1);
 	if (temp[1] == NULL)
 		changed = find_current_path(data, "HOME=");
 	else if (!ft_strncmp(temp[1], "-", 1))
@@ -87,10 +90,8 @@ int	ft_cd(char *str, t_data *data)
 		{
 			name_error("cd", temp[1],
 				": No such file or directory ");
-			free_array(temp);
-			return (0);
+			return (free_array(temp), 0);
 		}
 	}
-	free_array(temp);
-	return (0);
+	return (free_array(temp), 0);
 }

@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:47:18 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/29 15:50:56 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/02/29 21:10:23 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ t_env	*search_env_variable(t_env *envp, char *key)
 			return (envp);
 		envp = envp->next;
 	}
-	// ft_putstr_fd // to check if path came here? or the segmentation in bexause of this 
 	return (NULL);
 }
 

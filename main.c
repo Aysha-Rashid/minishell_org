@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/29 15:23:24 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/01 19:46:47 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	execution(char *str, t_data	*data)
 {
 	(void)data;
 	(void)str;
+	if (!*str)
+		return (0);
 	ft_putstr_fd("hello there, ready for execution?", 1);
 	return (1);
 }
@@ -63,13 +65,6 @@ void	prompt_loop(char *str, t_data *data)
 		if (!token_reader(data))
 			ft_error(3);
 		check_n_execute(data->cmd, data);
-		// if (!data->executor->pipes)
-		// 	valid_command(data->cmd, data);
-		// else if (data->executor->pipes)
-		// {
-		// 	ft_putnbr_fd(1, 1);
-		// }
-			// execution(data->cmd, data);
 		add_history(data->cmd);
 		free(data->cmd);
 	}

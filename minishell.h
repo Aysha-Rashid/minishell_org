@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/29 14:00:26 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/01 19:48:03 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,6 @@ typedef enum s_tokens
 	HEREDOC,
 }	t_tokens;
 
-// typedef struct s_commands
-// {
-// 	char	**path;
-// }				t_commands;
-
 typedef struct s_env
 {
 	char			**path;
@@ -63,7 +58,7 @@ typedef struct s_lexer
 
 typedef struct s_executor
 {
-	int		*pid;
+	int		*pid; // use g_sig to access this member.
 	int		pipes;
 	int		heredoc;
 	// char	**cmd;
@@ -98,6 +93,7 @@ int			ft_cd(char *str, t_data *data);
 void		change_pwd(t_data *tools);
 
 int			ft_unset(char *str, t_data *data);
+int			unset_loop(t_data *data, t_env *current, int len, char **token);
 t_env		*search_env_variable(t_env *envp, char *key);
 
 int			check_unset_arg(char *str, char *token, t_data *data,
@@ -105,6 +101,7 @@ int			check_unset_arg(char *str, char *token, t_data *data,
 
 int			free_array(char **str);
 int			free_env_list(t_env *head);
+void		free_lexer_list(t_lexer **list);
 int			name_error(char *name, char *str, char *message);
 void		free_data(t_data *data);
 int			validate_input(char **token, t_env *current, char *name);
@@ -145,9 +142,10 @@ int			handle_token(char *str, int i, t_lexer **lexer_list);
 
 //execution
 void		check_n_execute(char *str, t_data *data);
-void		check_pipes_n_execute(t_data *data);
+int			check_pipes_n_execute(t_data *data);
 int			execution(char *str, t_data	*data);
 int			buitin_command(char *str, t_data *data);
+void		prompt_loop(char *str, t_data *data);
 
 extern int g_sig_interrupt;
 

@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:35:24 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/02/29 15:20:01 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/01 19:27:21 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,18 @@ int	add_node(char *str, t_tokens token, t_lexer **lexer_list)
 	if (!node)
 		return (0);
 	ft_lexeradd_back(lexer_list, node);
+	if (!lexer_list)
+	{
+		free(node);
+		free_lexer_list(lexer_list);
+	}
 	return (1);
 }
 
 int	read_words(int i, char *str, t_lexer **lexer_list)
 {
-	int	j;
+	char	*temp;
+	int		j;
 
 	j = 0;
 	while (str[i + j] && !(check_token(str[i + j])))
@@ -52,8 +58,12 @@ int	read_words(int i, char *str, t_lexer **lexer_list)
 		else
 			j++;
 	}
-	if (!add_node(ft_substr(str, i, j), 0, lexer_list))
-		return (-1);
+	temp = ft_substr(str, i, j);
+	if (!temp)
+		return (0);
+	if (!(add_node(temp, 0, lexer_list)))
+		return (free(temp), free_lexer_list(lexer_list), 0);
+	free(temp);
 	return (j);
 }
 
@@ -72,10 +82,11 @@ int	token_reader(t_data *data)
 			j = handle_token(data->cmd, i, &data->lexer_list);
 		else
 			j = read_words(i, data->cmd, &data->lexer_list);
-		// removed it because we need to differentiate between executable command 
-		// and buitin commands, also we dont really need to tokenize the other commands.
 		if (j < 0)
+		{
+			free_lexer_list(&data->lexer_list);
 			return (0);
+		}
 		i = i + j;
 	}
 	return (1);
