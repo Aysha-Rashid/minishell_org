@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:27:38 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/02 15:46:02 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/04 14:47:51 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,18 @@ t_env	*duplicate_node(char *str)
 		return (free(new_node), NULL);
 	ft_strncpy(new_node->key, str, key_length);
 	new_node->key[key_length] = '\0';
+	new_node->value = ft_strdup(str);
+	new_node->next = NULL;
+	return (new_node);
+}
+
+t_dupenv	*env_duplicate_node(char *str)
+{
+	t_dupenv	*new_node;
+
+	new_node = malloc(sizeof(t_dupenv));
+	if (!new_node)
+		return (NULL);
 	new_node->value = ft_strdup(str);
 	new_node->next = NULL;
 	return (new_node);
@@ -64,22 +76,50 @@ t_env	*allocate_env(char **env)
 	return (head);
 }
 
+// t_dupenv	*dup_allocate_env(char **env)
+// {
+// 	t_dupenv	*head;
+// 	t_dupenv	*temp;
+// 	t_dupenv	*node;
+// 	int				i;
+
+// 	i = 0;
+// 	temp = NULL;
+// 	head = NULL;
+// 	node = NULL;
+// 	while (env[i])
+// 	{
+// 		node = env_duplicate_node(env[i]);
+// 		if (!node)
+// 		{
+// 			// free_env_list(head);
+// 			return (NULL);
+// 		}
+// 		if (!head)
+// 			head = node;
+// 		else
+// 			temp->next = node;
+// 		temp = node;
+// 		i++;
+// 	}
+// 	return (head);
+// }
+
 int	ft_env(t_data *data, char *str)
 {
 	t_env	*temp;
 
 	temp = data->envp;
 	if (!data->envp || data->no_path)
-	{
-		return (ft_error(2, str, NULL));
-	}
+		return (name_error(str, NULL, "No such file or directory"), 1);
 	if (ft_strlen(str) != 3)
 		return (name_error(str, NULL, "command not found"));
 	if (temp)
 	{
 		while (temp)
 		{
-			ft_putendl_fd(temp->value, 1);
+			if (ft_strchr(temp->value, '='))
+				ft_putendl_fd(temp->value, 1);
 			temp = temp->next;
 		}
 		return (0);
@@ -105,23 +145,23 @@ int	free_env_list(t_env *head)
 	return (0);
 }
 
-void	free_data(t_data *data)
-{
-	int	i;
+// void	free_data(t_data *data)
+// {
+// 	int	i;
 
-	i = 0;
-	free_env_list(data->envp);
-	if (data->envp && data->envp->path)
-	{
-		while (data->envp->path[i])
-		{
-			free(data->envp->path[i]);
-			i++;
-		}
-		free(data->envp->path);
-	}
-	free(data->envp);
-	free(data->pwd);
-	free(data->old_pwd);
-	free(data);
-}
+// 	i = 0;
+// 	free_env_list(data->envp);
+// 	if (data->envp && data->envp->path)
+// 	{
+// 		while (data->envp->path[i])
+// 		{
+// 			free(data->envp->path[i]);
+// 			i++;
+// 		}
+// 		free(data->envp->path);
+// 	}
+// 	free(data->envp);
+// 	free(data->pwd);
+// 	free(data->old_pwd);
+// 	free(data);
+// }

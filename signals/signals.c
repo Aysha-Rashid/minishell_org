@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:37 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/02/28 15:56:20 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/03 19:31:54 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int	handle_eof(char *str, t_data *data)
 	if (str == NULL)
 	{
 		free_env_list(data->envp);
+		free(data->pwd);
+		free(data->old_pwd);
 		ft_putstr_fd("exit\n", 2);
 		return (1);
 	}

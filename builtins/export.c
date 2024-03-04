@@ -6,19 +6,21 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/02 21:10:01 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/03 17:47:24 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	sorted_env(char **env, size_t env_len)
+void	sorted_env(char **env)
 {
-	int		ordered;
 	size_t	i;
+	size_t	env_len;
+	int		ordered;
 	char	*tmp;
 
 	ordered = 0;
+	env_len = size_of_env(env);
 	while (env && ordered == 0)
 	{
 		ordered = 1;
@@ -66,43 +68,13 @@ int	already_there(char *variable, t_data *data)
 	return (0);
 }
 
-t_env	*duplicate_env(t_env *env)
-{
-	t_env	*head;
-	t_env	*temp;
-
-	temp = NULL;
-	head = NULL;
-	while (env != NULL)
-	{
-		if (head == NULL)
-		{
-			head = malloc(sizeof(t_env));
-			temp = head;
-		}
-		else
-		{
-			temp->next = malloc(sizeof(t_env));
-			temp = temp->next;
-		}
-		if (temp == NULL)
-			return (NULL);
-		temp->value = ft_strdup(env->value);
-		temp->next = NULL;
-		env = env->next;
-	}
-	return (head);
-}
-
 int	env_add(char *variable, t_data *env)
 {
 	char	*key;
 	char	*value;
 	t_env	*new;
 	t_env	*temp;
-	// t_env	*copy_env;
 
-	// copy_env = duplicate_env(env->envp);
 	if (!env->envp)
 		return (1);
 	value = ft_strdup(variable);
@@ -114,45 +86,37 @@ int	env_add(char *variable, t_data *env)
 	new = malloc(sizeof(t_env));
 	if (!new)
 		return (1);
-	if (ft_strchr(variable, '='))
-	{
-		new->key = key;
-		new->value = value;
-		new->next = NULL;
-		new->path = NULL;
-		temp = env->envp;
-		while (temp->next != NULL)
-			temp = temp->next;
-		temp->next = new;
-	}
+	new->key = key;
+	new->value = value;
+	new->next = NULL;
+	new->path = NULL;
+	temp = env->envp;
+	while (temp->next != NULL)
+		temp = temp->next;
+	temp->next = new;
 	return (0);
 }
 
-int	declare_sorted(t_env *head, int flag)
+int	declare_sorted(t_env *head)
 {
 	char	**temp;
 	char	*str;
 	int		i;
-	size_t	env_len;
 
-	if (!head->value && head->next == NULL)
-		return (0);
 	str = env_str(head);
-	if (!str)
-		return (1);
 	temp = ft_split(str, '\n');
-	if (!temp)
+	if (!temp || !str)
 		return (1);
-	env_len = size_of_env(temp);
-	sorted_env(temp, env_len);
+	sorted_env(temp);
 	i = 0;
-	if (flag == 0)
+	while (temp[i])
 	{
-		while (temp[i])
-		{
-			ft_putstr_fd("declare -x ", 1);
-			ft_putendl_fd(temp[i++], 1);
-		}
+		ft_putstr_fd("declare -x ", 1);
+		if (ft_strchr(temp[i], '='))
+			print_after_equal(temp[i]);
+		else
+			ft_putendl_fd(temp[i], 1);
+		i++;
 	}
 	return (free(str), free_array(temp), 1);
 }
@@ -162,16 +126,16 @@ int	ft_export(char *str, t_data *data)
 	char	**token;
 	int		len;
 	int		i;
-	// t_env	*copy_env;
 
-	// copy_env = duplicate_env(data->envp);
+	if (!data->envp->value && data->envp->next == NULL)
+		return (0);
 	token = ft_split(str, ' ');
 	if (ft_strlen(token[0]) != 6)
 		return (free_array(token), ft_error(2, str, NULL));
 	len = size_of_env(token);
 	i = 1;
 	if (token[1] == NULL)
-		return (declare_sorted(data->envp, 0), free_array(token));
+		return (declare_sorted(data->envp), free_array(token));
 	else if (!validate_input(token, data->envp, "export"))
 		return (0);
 	while (len > i)
@@ -179,10 +143,8 @@ int	ft_export(char *str, t_data *data)
 		if (already_there(token[i], data))
 			i++;
 		else
-		{
 			env_add(token[i], data);
-			i++;
-		}
+		i++;
 	}
 	return (free_array(token), 1);
 }

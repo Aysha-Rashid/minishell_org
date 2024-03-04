@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 14:52:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/02 15:46:17 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/03 19:03:17 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	check_and_write(char *str)
 		i = 1;
 	while (str[i])
 	{
+		// if (str[i] == '\"' && str[i])
+		// 	i++;
 		while (str[i] && (i < (len - 1)))
 		{
 			ft_putchar_fd(str[i], 1);

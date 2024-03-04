@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/02 20:03:00 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/03 20:33:50 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,13 @@ typedef enum s_tokens
 	HEREDOC,
 }	t_tokens;
 
+typedef struct s_dupenv
+{
+	char			*value;
+	// char			*key;
+	struct s_dupenv	*next;
+}				t_dupenv;
+
 typedef struct s_env
 {
 	char			**path;
@@ -61,6 +68,8 @@ typedef struct s_executor
 	int		*pid; // use g_sig to access this member.
 	int		pipes;
 	int		heredoc;
+	int		in;
+	int		out;
 	// char	**cmd;
 	// char	*cmd_path;
 }				t_executor;
@@ -73,10 +82,15 @@ typedef struct s_data
 	char			*pwd;
 	char			*old_pwd;
 	t_env			*envp;
+	// t_dupenv		*dup_env;
 	t_executor		*executor;
 	t_lexer			*lexer_list;
 }				t_data;
 
+size_t		dup_len_of_values(t_dupenv *lst);
+void		ft_putstrn_fd(const char *str, size_t n, int fd);
+void		print_after_equal(char *temp);
+char		*dup_env_str(t_dupenv *env);
 int			ft_env(t_data *data, char *str);
 int			parse_env(t_data *data, char **env);
 t_env		*allocate_env(char **env);
@@ -89,6 +103,9 @@ int			ft_export(char *str, t_data *data);
 char		*env_str(t_env *env);
 int			env_add(char *variable, t_data *env);
 int			already_there(char *variable, t_data *data);
+int			export_only(char *variable, t_data *data);
+t_dupenv	*dup_allocate_env(char **env);
+t_dupenv	*env_duplicate_node(char *str);
 
 int			ft_cd(char *str, t_data *data);
 void		change_pwd(t_data *tools);
@@ -102,13 +119,15 @@ int			check_unset_arg(char *str, char *token, t_data *data,
 
 int			free_array(char **str);
 int			free_env_list(t_env *head);
-void		free_lexer_list(t_lexer **list);
+void		free_lexer_list(t_lexer *list);
 int			name_error(char *name, char *str, char *message);
 void		free_data(t_data *data);
 int			validate_input(char **token, t_env *current, char *name);
 
 size_t		len_of_values(t_env *lst);
 size_t		size_of_env(char **head);
+
+void	count_pipes(t_lexer *lexer, int pipes);
 
 // int		count_arg(char **str);
 // int		*builtin_arr(char *str);

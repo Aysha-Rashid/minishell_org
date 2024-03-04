@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 20:12:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/28 17:09:59 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/03 17:13:26 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,6 @@ void	ft_putendl_fd(char *s, int fd);
 void	ft_striteri(char	*s, void (*f)(unsigned	int, char*));
 int		ft_strcmp(const char	*s1, const char	*s2);
 char	*ft_strndup(const char *src, size_t n);
+// void	ft_putstrn_fd(char	*s, int nb, int fd);
+
 #endif

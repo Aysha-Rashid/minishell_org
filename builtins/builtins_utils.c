@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:47:18 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/29 21:10:23 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/03 13:55:25 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,24 @@ int	free_array(char **str)
 size_t	len_of_values(t_env *lst)
 {
 	t_env	*current;
+	int		total_length;
+
+	total_length = 0;
+	current = lst;
+	while (current)
+	{
+		if (current->value)
+			total_length += ft_strlen(current->value);
+		if (current->next)
+			total_length++;
+		current = current->next;
+	}
+	return (total_length);
+}
+
+size_t	dup_len_of_values(t_dupenv *lst)
+{
+	t_dupenv	*current;
 	int		total_length;
 
 	total_length = 0;

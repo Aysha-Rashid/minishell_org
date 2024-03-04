@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:35:24 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/01 19:27:21 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/04 14:34:33 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	add_node(char *str, t_tokens token, t_lexer **lexer_list)
 	if (!lexer_list)
 	{
 		free(node);
-		free_lexer_list(lexer_list);
+		free_lexer_list(*lexer_list);
 	}
 	return (1);
 }
@@ -62,7 +62,7 @@ int	read_words(int i, char *str, t_lexer **lexer_list)
 	if (!temp)
 		return (0);
 	if (!(add_node(temp, 0, lexer_list)))
-		return (free(temp), free_lexer_list(lexer_list), 0);
+		return (free(temp), 0);
 	free(temp);
 	return (j);
 }
@@ -84,7 +84,7 @@ int	token_reader(t_data *data)
 			j = read_words(i, data->cmd, &data->lexer_list);
 		if (j < 0)
 		{
-			free_lexer_list(&data->lexer_list);
+			free_lexer_list(data->lexer_list);
 			return (0);
 		}
 		i = i + j;

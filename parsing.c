@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/28 13:20:20 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/04 15:45:50 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,17 @@ int	parse_env(t_data *data, char **env)
 	int		i;
 	char	*temp;
 
-	if (!env)
-		return (0);
 	data->envp = allocate_env(env);
 	temp = find_paths_and_split(env);
 	data->envp->path = ft_split(temp, ':');
 	free(temp);
 	i = 0;
 	if (!data->envp || !data->envp->path)
-		return (1);
+	{
+		data->no_path = 1;
+		ft_error(2, "env", data);
+		exit(0);
+	}
 	while (data->envp->path[i])
 	{
 		if (data->envp->path[i][ft_strlen(data->envp->path[i]) - 1] != '/')
@@ -64,6 +66,33 @@ char	*find_paths_and_split(char **envp)
 	return (envp_path);
 }
 
+char	*dup_env_str(t_dupenv *env)
+{
+	char	*str;
+	int		i;
+	int		j;
+
+	str = malloc(dup_len_of_values(env) + 1);
+	if (!str)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (env)
+	{
+		if (env->value != NULL)
+		{
+			while (env->value[j])
+				str[i++] = env->value[j++];
+		}
+		if (env->next != NULL)
+			str[i++] = '\n';
+		// ft_putendl_fd(env->value, 1);
+		env = env->next;
+		j = 0;
+	}
+	str[i] = '\0';
+	return (str);
+}
 char	*env_str(t_env *env)
 {
 	char	*str;

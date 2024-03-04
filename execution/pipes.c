@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:03:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/02 20:47:20 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/04 14:34:22 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	check_n_execute(char *str, t_data *data)
 {
+	if (!token_reader(data))
+		ft_error(3, NULL, data);
 	if (str && ft_strncmp(str, "exit", 5) == 0)
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
@@ -24,18 +26,16 @@ void	check_n_execute(char *str, t_data *data)
 		free(data->cmd);
 		exit(0);
 	}
-	if (!token_reader(data))
-		ft_error(3, NULL, data);
 	if (check_pipes_n_execute(data))
 		return ;
 }
 
-void	free_lexer_list(t_lexer **list)
+void	free_lexer_list(t_lexer *list)
 {
 	t_lexer	*current;
 	t_lexer	*next;
 
-	current = *list;
+	current = list;
 	while (current != NULL)
 	{
 		next = current->next;
@@ -43,7 +43,7 @@ void	free_lexer_list(t_lexer **list)
 		free(current);
 		current = next;
 	}
-	*list = NULL;
+	list = NULL;
 }
 
 int	check_pipes_n_execute(t_data *data)
@@ -57,14 +57,11 @@ int	check_pipes_n_execute(t_data *data)
 		return (ft_error(3, NULL, data), 1);
 	executor->pipes = 0;
 	executor->heredoc = 0;
-	while (temp)
-	{
-		if (temp->token == PIPE)
-			executor->pipes++;
-		temp = temp->next;
-	}
+	executor->in = 0;
+	executor->out = 0;
+	count_pipes(temp, executor->pipes);
 	if (!*data->cmd)
-		prompt_loop(data->cmd, data);
+		return (free(executor), 0);
 	else if (data->lexer_list->token == 0)
 		buitin_command(data->cmd, data);
 	else
@@ -76,4 +73,14 @@ int	check_pipes_n_execute(t_data *data)
 		free(executor->pid);
 	}
 	return (free(executor), 0);
+}
+
+void	count_pipes(t_lexer *lexer, int pipes)
+{
+	while (lexer)
+	{
+		if (lexer->token == PIPE)
+			pipes++;
+		lexer = lexer->next;
+	}
 }
