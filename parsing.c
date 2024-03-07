@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/05 20:42:29 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/07 20:02:55 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	parse_env(t_data *data, char **env)
 			data->envp->path[i] = temp;
 		}
 		i++;
-	}
+ 	}
 	return (0);
 }
 
@@ -112,13 +112,13 @@ char	*cmd_file(char	*cmd, char **paths)
 		cmd_file = ft_strjoin(paths[i], cmd);
 		if (access(cmd_file, F_OK | X_OK) == 0)
 		{
-			free_array(paths);
+			// free_array(paths);
 			return (cmd_file);
 		}
 		free(cmd_file);
 		i++;
 	}
-	free_array(paths);
+	// free_array(paths);
 	return (NULL);
 }
 

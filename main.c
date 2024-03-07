@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/06 21:19:29 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/07 19:53:18 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,27 +37,27 @@ int	execution(char *str, t_data	*data, t_executor *executor)
 		// 	return (ft_error(3, NULL, data), free(executor), 1);
 		temp = ft_split(str, ' ');
 		// pipe(pipe_fd);
-		// executor->pid[0] = fork();
+		int hello;
+		hello = fork();
 		// write(2, "1", 1);
-		// if (executor->pid[0] == 0)
-		// {
-			// write(1, "1", 2);
+		if (hello == 0)
+		{
 			// dup2(executor->in, STDIN_FILENO);
 			// close(pipe_fd[0]);
 			// dup2(pipe_fd[1], STDOUT_FILENO);
-			// close(pipe_fd[1]);
+			// close(pipe_fd[1]); 
 			path = cmd_file(*temp, data->envp->path);
 			// i++;
 			if (!path)
 				return (ft_error(2, *temp, data));
 			if (execve(path, temp, NULL) == -1)
-				write(1, "doesnt work", 1);
-			// exit(0);
+				write(1, "doesnt work", 11);
+			exit(0);
 			// write(1, "comes", 5);
-		// }
-		// wait(NULL);
-		// exit(0);
-		// return (0);
+			// exit(0);
+		}
+		// else
+		wait(NULL);
 		// prompt_loop(str, data);
 		// check_n_execute(str, data);
 		// wait(NULL);
@@ -68,7 +68,6 @@ int	execution(char *str, t_data	*data, t_executor *executor)
 
 int	buitin_command(char *str, t_data *data)
 {
-	// write(1, "comes here", 10);
 	if (!quote(str))
 		return (ft_error(1, NULL, data));
 	if (str && (!ft_strncmp(str, "env", 3)
@@ -89,8 +88,11 @@ int	buitin_command(char *str, t_data *data)
 		return (ft_unset(str, data));
 	else if (!*str)
 		return (0);
-	execution(str, data, data->executor);
-	return (ft_error(2, str, data));
+	else if (execution(str, data, data->executor))
+		return (1);
+	// exit(0);
+	return (0);
+	// return (ft_error(2, str, data));
 }
 
 void	prompt_loop(char *str, t_data *data)

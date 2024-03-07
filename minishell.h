@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/06 21:14:11 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/07 18:08:31 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #include "libft/libft.h"
 // #include "pipex/pipex.h"
 
-
 typedef enum s_tokens
 {
 	PIPE = 1,
@@ -32,13 +31,6 @@ typedef enum s_tokens
 	INFILE,
 	HEREDOC,
 }	t_tokens;
-
-// typedef struct s_dupenv
-// {
-// 	char			*value;
-// 	// char			*key;
-// 	struct s_dupenv	*next;
-// }				t_dupenv;
 
 typedef struct s_env
 {
@@ -56,7 +48,6 @@ typedef struct s_lexer
 	struct s_lexer	*next;
 	struct s_lexer	*prev;
 }				t_lexer;
-
 
 typedef struct s_executor
 {
@@ -162,11 +153,10 @@ int			execution(char *str, t_data	*data, t_executor *executor);
 int			buitin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
 
-
-int    parsing_lexar(t_data *data, t_lexer *lexar);
-int double_token_error(t_lexer *lexar);
-void	ft_lexerclear(t_lexer **lst);
-extern int g_sig_interrupt;
+int			parsing_lexar(t_data *data, t_lexer *lexar);
+int			double_token_error(t_lexer *lexar);
+void		ft_lexerclear(t_lexer **lst);
+extern		int g_sig_interrupt;
 
 // t_env	*duplicate_env(t_env *env)
 // {

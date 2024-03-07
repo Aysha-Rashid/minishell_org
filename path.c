@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 14:03:16 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/23 12:44:09 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/07 20:01:21 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,22 @@ char	*cmd_file(char	*cmd, char **paths)
 	cmd_file = given_path(cmd);
 	if (cmd_file)
 		return (cmd_file);
-	paths = paths_add_slash(paths);
-	if (!paths)
-		return (NULL);
+	// paths = paths_add_slash(paths);
+	// if (!paths)
+	// 	return (NULL);
 	i = 0;
 	while (paths[i])
 	{
 		cmd_file = ft_strjoin(paths[i], cmd);
 		if (access(cmd_file, F_OK | X_OK) == 0)
 		{
-			free_path(paths);
+			// free_path(paths);
 			return (cmd_file);
 		}
 		free(cmd_file);
 		i++;
 	}
-	free_path(paths);
+	// free_path(paths);
 	return (NULL);
 }
 
@@ -74,7 +74,7 @@ char	**find_paths_and_split(char **envp)
 	free(envp_path);
 	if (!paths)
 	{
-		free(paths);
+		// free(paths);
 		return (NULL);
 	}
 	return (paths);
