@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:27:38 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/04 14:47:51 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/04 15:58:41 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,6 @@ t_env	*duplicate_node(char *str)
 		return (free(new_node), NULL);
 	ft_strncpy(new_node->key, str, key_length);
 	new_node->key[key_length] = '\0';
-	new_node->value = ft_strdup(str);
-	new_node->next = NULL;
-	return (new_node);
-}
-
-t_dupenv	*env_duplicate_node(char *str)
-{
-	t_dupenv	*new_node;
-
-	new_node = malloc(sizeof(t_dupenv));
-	if (!new_node)
-		return (NULL);
 	new_node->value = ft_strdup(str);
 	new_node->next = NULL;
 	return (new_node);
@@ -75,35 +63,6 @@ t_env	*allocate_env(char **env)
 	}
 	return (head);
 }
-
-// t_dupenv	*dup_allocate_env(char **env)
-// {
-// 	t_dupenv	*head;
-// 	t_dupenv	*temp;
-// 	t_dupenv	*node;
-// 	int				i;
-
-// 	i = 0;
-// 	temp = NULL;
-// 	head = NULL;
-// 	node = NULL;
-// 	while (env[i])
-// 	{
-// 		node = env_duplicate_node(env[i]);
-// 		if (!node)
-// 		{
-// 			// free_env_list(head);
-// 			return (NULL);
-// 		}
-// 		if (!head)
-// 			head = node;
-// 		else
-// 			temp->next = node;
-// 		temp = node;
-// 		i++;
-// 	}
-// 	return (head);
-// }
 
 int	ft_env(t_data *data, char *str)
 {

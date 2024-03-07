@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/03 20:33:50 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/06 21:14:11 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,6 @@
 #include "libft/libft.h"
 // #include "pipex/pipex.h"
 
-// #define	WRONG_MESSAGE "\033[31mWrong input"
-// #define PIPE 6
-// #define INFILE 5
-#define STDIN 0
-#define STDOUT 1
 
 typedef enum s_tokens
 {
@@ -38,12 +33,12 @@ typedef enum s_tokens
 	HEREDOC,
 }	t_tokens;
 
-typedef struct s_dupenv
-{
-	char			*value;
-	// char			*key;
-	struct s_dupenv	*next;
-}				t_dupenv;
+// typedef struct s_dupenv
+// {
+// 	char			*value;
+// 	// char			*key;
+// 	struct s_dupenv	*next;
+// }				t_dupenv;
 
 typedef struct s_env
 {
@@ -87,14 +82,14 @@ typedef struct s_data
 	t_lexer			*lexer_list;
 }				t_data;
 
-size_t		dup_len_of_values(t_dupenv *lst);
 void		ft_putstrn_fd(const char *str, size_t n, int fd);
 void		print_after_equal(char *temp);
-char		*dup_env_str(t_dupenv *env);
 int			ft_env(t_data *data, char *str);
 int			parse_env(t_data *data, char **env);
 t_env		*allocate_env(char **env);
 char		*find_paths_and_split(char **env);
+char		*cmd_file(char	*cmd, char **paths);
+char		*given_path(char *cmd);
 
 int			find_pwd(t_data *data);
 int			ft_pwd(t_data *data);
@@ -103,9 +98,6 @@ int			ft_export(char *str, t_data *data);
 char		*env_str(t_env *env);
 int			env_add(char *variable, t_data *env);
 int			already_there(char *variable, t_data *data);
-int			export_only(char *variable, t_data *data);
-t_dupenv	*dup_allocate_env(char **env);
-t_dupenv	*env_duplicate_node(char *str);
 
 int			ft_cd(char *str, t_data *data);
 void		change_pwd(t_data *tools);
@@ -126,8 +118,9 @@ int			validate_input(char **token, t_env *current, char *name);
 
 size_t		len_of_values(t_env *lst);
 size_t		size_of_env(char **head);
+char		*ft_strcpy(char	*dest, char *src);
 
-void	count_pipes(t_lexer *lexer, int pipes);
+void		count_pipes(t_lexer *lexer, int pipes);
 
 // int		count_arg(char **str);
 // int		*builtin_arr(char *str);
@@ -159,14 +152,20 @@ void		ft_lexeradd_back(t_lexer **list, t_lexer *new);
 int			handle_quotes(int i, char *str, char del);
 t_tokens	check_token(int n);
 int			handle_token(char *str, int i, t_lexer **lexer_list);
+char		*return_woqoutes(char *str, char del);
+char 		*remove_all_qoutes(char *str);
 
 //execution
 void		check_n_execute(char *str, t_data *data);
 int			check_pipes_n_execute(t_data *data);
-int			execution(char *str, t_data	*data);
+int			execution(char *str, t_data	*data, t_executor *executor);
 int			buitin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
 
+
+int    parsing_lexar(t_data *data, t_lexer *lexar);
+int double_token_error(t_lexer *lexar);
+void	ft_lexerclear(t_lexer **lst);
 extern int g_sig_interrupt;
 
 // t_env	*duplicate_env(t_env *env)

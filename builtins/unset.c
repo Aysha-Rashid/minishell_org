@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 21:03:21 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/04 14:44:21 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/06 13:43:22 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	invalid_identifier(char **str_arr, char *name)
 	while (*str_arr != NULL)
 	{
 		str = *str_arr;
-		if (!ft_isalpha(str[0]) && str[0] != '_')
+		if (!ft_isalpha(str[0]) && str[0] != '_' && *str != '\"' && *str != '\'')
 		{
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(name, 2);
@@ -97,6 +97,7 @@ int	unset_loop(t_data *data, t_env *current, int len, char **token)
 	i = 1;
 	while (len > i)
 	{
+		token[i] = remove_all_qoutes(token[i]);
 		remove = search_env_variable(data->envp, token[i]);
 		current = data->envp;
 		prev = NULL;

@@ -6,24 +6,69 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/04 15:40:03 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/06 21:19:29 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_sig_interrupt;
+int	g_sig_interrupt;
 
-int	execution(char *str, t_data	*data)
+int	execution(char *str, t_data	*data, t_executor *executor)
 {
-	(void)data;
-	(void)str;
-	ft_putstr_fd("hello there, ready for execution?", 1);
-	return (1);
+	// (void)data;
+	// (void)str;
+	(void)executor;
+	// int pipe_fd[2];
+	// static int i;
+	char	**temp;
+	char	*path;
+	// (void)executor;
+	// if (executor->pid == 0)
+	// 	buitin_command(data->cmd, data);
+	// else
+	// {
+		// char *argv = "ls";
+		// executor->in = STDIN_FILENO;
+		// int len = len_of_values(data->cmd);
+		// executor->pid[0] = fork();
+		// executor->pid = ft_calloc(sizeof(int), executor->pipes + 2);
+		// if (!executor->pid)
+		// 	return (ft_error(3, NULL, data), free(executor), 1);
+		temp = ft_split(str, ' ');
+		// pipe(pipe_fd);
+		// executor->pid[0] = fork();
+		// write(2, "1", 1);
+		// if (executor->pid[0] == 0)
+		// {
+			// write(1, "1", 2);
+			// dup2(executor->in, STDIN_FILENO);
+			// close(pipe_fd[0]);
+			// dup2(pipe_fd[1], STDOUT_FILENO);
+			// close(pipe_fd[1]);
+			path = cmd_file(*temp, data->envp->path);
+			// i++;
+			if (!path)
+				return (ft_error(2, *temp, data));
+			if (execve(path, temp, NULL) == -1)
+				write(1, "doesnt work", 1);
+			// exit(0);
+			// write(1, "comes", 5);
+		// }
+		// wait(NULL);
+		// exit(0);
+		// return (0);
+		// prompt_loop(str, data);
+		// check_n_execute(str, data);
+		// wait(NULL);
+		// exit(0);
+	// }
+	return (0);
 }
 
 int	buitin_command(char *str, t_data *data)
 {
+	// write(1, "comes here", 10);
 	if (!quote(str))
 		return (ft_error(1, NULL, data));
 	if (str && (!ft_strncmp(str, "env", 3)
@@ -44,6 +89,7 @@ int	buitin_command(char *str, t_data *data)
 		return (ft_unset(str, data));
 	else if (!*str)
 		return (0);
+	execution(str, data, data->executor);
 	return (ft_error(2, str, data));
 }
 
@@ -70,7 +116,7 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
 
-	if (env[0] == NULL || !env )
+	if (env[0] == NULL || !env)
 	{
 		ft_putendl_fd("minishell: env: no such file or directory", 2);
 		exit(0);

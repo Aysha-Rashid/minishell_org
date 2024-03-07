@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 21:11:04 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/03 17:46:28 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/06 15:12:50 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,21 @@ void	print_after_equal(char *temp)
 	equal_pos = ft_strchr(temp, '=');
 	ft_putstrn_fd(temp, equal_pos - temp + 1, 1);
 	ft_putchar_fd('"', 1);
-    ft_putstr_fd(equal_pos+ 1, 1);
-    ft_putendl_fd("\"", 1);
+	ft_putstr_fd(equal_pos + 1, 1);
+	ft_putendl_fd("\"", 1);
+}
+
+char	*ft_strcpy(char	*dest, char *src)
+{
+	int	i;
+
+	i = 0;
+
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }

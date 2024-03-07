@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:03:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/04 14:34:22 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/07 12:08:29 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,19 @@
 
 void	check_n_execute(char *str, t_data *data)
 {
-	if (!token_reader(data))
-		ft_error(3, NULL, data);
-	if (str && ft_strncmp(str, "exit", 5) == 0)
+	if (str && (!ft_strncmp(str, "exit", 5)))
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 		ft_putendl_fd("exit", 1);
 		free(data->pwd);
 		free(data->old_pwd);
 		free_env_list(data->envp);
+		// free_lexer_list(data->lexer_list);
 		free(data->cmd);
 		exit(0);
 	}
+	if (!token_reader(data))
+		ft_error(3, NULL, data);
 	if (check_pipes_n_execute(data))
 		return ;
 }
@@ -60,18 +61,24 @@ int	check_pipes_n_execute(t_data *data)
 	executor->in = 0;
 	executor->out = 0;
 	count_pipes(temp, executor->pipes);
+	// if (parsing_lexar(data, temp))
+	// 	return (0);
+	executor->pid = ft_calloc(sizeof(int), executor->pipes + 2);
+	if (!executor->pid)
+		return (ft_error(3, NULL, data), free(executor), 1);
 	if (!*data->cmd)
 		return (free(executor), 0);
-	else if (data->lexer_list->token == 0)
+	if (data->lexer_list->token == 0)
 		buitin_command(data->cmd, data);
-	else
+	if (data->lexer_list->token)
 	{
-		executor->pid = ft_calloc(sizeof(int), executor->pipes + 2);
-		if (!executor->pid)
-			return (ft_error(3, NULL, data), free(executor), 1);
-		execution (data->cmd, data);
-		free(executor->pid);
+		// write(1, "comeshere", 9);
+		execution (data->cmd, data, executor);
+		// write(1, "comes", 5);
+		// exit(0);
+		// wait(NULL);
 	}
+	free(executor->pid);
 	return (free(executor), 0);
 }
 

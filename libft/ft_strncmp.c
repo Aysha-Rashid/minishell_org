@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:54:42 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/02/18 12:36:36 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/04 18:01:32 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ int	ft_strncmp(const char	*s1, const char	*s2, unsigned int n)
 		{
 			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		}
-		else if ((unsigned char)s1[i] < (unsigned char)s2[i])
-		{
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		}
+		// else if ((unsigned char)s1[i] < (unsigned char)s2[i])
+		// {
+		// 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		// }
 		i++;
 	}
 	return (0);

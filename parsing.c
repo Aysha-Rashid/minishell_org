@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/04 15:54:27 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/05 20:42:29 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,33 +64,6 @@ char	*find_paths_and_split(char **envp)
 	return (envp_path);
 }
 
-char	*dup_env_str(t_dupenv *env)
-{
-	char	*str;
-	int		i;
-	int		j;
-
-	str = malloc(dup_len_of_values(env) + 1);
-	if (!str)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (env)
-	{
-		if (env->value != NULL)
-		{
-			while (env->value[j])
-				str[i++] = env->value[j++];
-		}
-		if (env->next != NULL)
-			str[i++] = '\n';
-		// ft_putendl_fd(env->value, 1);
-		env = env->next;
-		j = 0;
-	}
-	str[i] = '\0';
-	return (str);
-}
 char	*env_str(t_env *env)
 {
 	char	*str;
@@ -116,4 +89,52 @@ char	*env_str(t_env *env)
 	}
 	str[i] = '\0';
 	return (str);
+}
+
+char	*cmd_file(char	*cmd, char **paths)
+{
+	char	*cmd_file;
+	int		i;
+
+	if (!cmd)
+		return (NULL);
+	// cmd_file = given_path(cmd);
+	// if (cmd_file)
+	// 	return (cmd_file);
+	// paths = paths_add_slash(paths);
+	// if (!paths)
+	// 	return (NULL);
+	// write(1, "hello", 5);
+	// ft_putendl_fd(*paths, 2);
+	i = 0;
+	while (paths[i])
+	{
+		cmd_file = ft_strjoin(paths[i], cmd);
+		if (access(cmd_file, F_OK | X_OK) == 0)
+		{
+			free_array(paths);
+			return (cmd_file);
+		}
+		free(cmd_file);
+		i++;
+	}
+	free_array(paths);
+	return (NULL);
+}
+
+char	*given_path(char *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i++])
+	{
+		if (cmd[i] == '/')
+		{
+			if (access(cmd, F_OK | X_OK) == 0)
+				return (cmd);
+			return (NULL);
+		}
+	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/03 17:47:24 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/06 12:25:51 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	already_there(char *variable, t_data *data)
 		return (0);
 	while (current)
 	{
-		if (!(ft_strncmp(variable, current->key, ft_strlen(current->key))))
+		if (!(ft_strncmp(current->value, variable, ft_strlen(current->value))))
 		{
 			if (ft_strchr(variable, '='))
 			{
@@ -138,11 +138,10 @@ int	ft_export(char *str, t_data *data)
 		return (declare_sorted(data->envp), free_array(token));
 	else if (!validate_input(token, data->envp, "export"))
 		return (0);
-	while (len > i)
+	while (token[i])
 	{
-		if (already_there(token[i], data))
-			i++;
-		else
+		token[i] = remove_all_qoutes(token[i]);
+		if (!already_there(token[i], data))
 			env_add(token[i], data);
 		i++;
 	}
