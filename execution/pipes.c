@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:03:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 12:08:29 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/07 19:42:57 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	check_n_execute(char *str, t_data *data)
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 		ft_putendl_fd("exit", 1);
-		free(data->pwd);
 		free(data->old_pwd);
+		free(data->pwd);
 		free_env_list(data->envp);
 		// free_lexer_list(data->lexer_list);
 		free(data->cmd);
@@ -49,37 +49,38 @@ void	free_lexer_list(t_lexer *list)
 
 int	check_pipes_n_execute(t_data *data)
 {
-	t_executor	*executor;
+	// t_executor	*executor;
 	t_lexer		*temp;
 
 	temp = data->lexer_list;
-	executor = (t_executor *)malloc(sizeof(t_executor));
-	if (!executor)
+	data->executor = (t_executor *)malloc(sizeof(t_executor));
+	if (!data->executor)
 		return (ft_error(3, NULL, data), 1);
-	executor->pipes = 0;
-	executor->heredoc = 0;
-	executor->in = 0;
-	executor->out = 0;
-	count_pipes(temp, executor->pipes);
-	// if (parsing_lexar(data, temp))
-	// 	return (0);
-	executor->pid = ft_calloc(sizeof(int), executor->pipes + 2);
-	if (!executor->pid)
-		return (ft_error(3, NULL, data), free(executor), 1);
+	data->executor->pipes = 0;
+	data->executor->heredoc = 0;
+	data->executor->in = 0;
+	data->executor->out = 0;
+	count_pipes(temp, data->executor->pipes);
+	if (parsing_lexar(data, temp))
+		return (0);
+	data->executor->pid = ft_calloc(sizeof(int), data->executor->pipes + 2);
+	if (!data->executor->pid)
+		return (ft_error(3, NULL, data), free(data->executor), 1);
 	if (!*data->cmd)
-		return (free(executor), 0);
+		return (free(data->executor), 0);
 	if (data->lexer_list->token == 0)
 		buitin_command(data->cmd, data);
-	if (data->lexer_list->token)
+	else if (data->lexer_list->token)
 	{
 		// write(1, "comeshere", 9);
-		execution (data->cmd, data, executor);
+		execution (data->cmd, data, data->executor);
+		// exit(0);
 		// write(1, "comes", 5);
 		// exit(0);
 		// wait(NULL);
 	}
-	free(executor->pid);
-	return (free(executor), 0);
+	free(data->executor->pid);
+	return (free(data->executor), 0);
 }
 
 void	count_pipes(t_lexer *lexer, int pipes)
