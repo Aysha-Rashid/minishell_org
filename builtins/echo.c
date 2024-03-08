@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 14:52:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 12:13:47 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/08 15:44:30 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	ft_echo(char *argv)
 	n_option = 0;
 	i = 1;
 	if ((ft_strlen(token[0]) != 4))
-		return (ft_error(2, token[0], NULL), free_array(token), 1);
+		return (ft_error(2, token[0]), free_array(token), 1);
 	while (token[i] && ft_strncmp(token[i], "-n", 7) == 0)
 	{
 		n_option = 1;

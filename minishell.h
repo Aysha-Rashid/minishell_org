@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 18:08:31 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:10:04 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void		check_and_write(char *str);
 
 //parse
 int			quote(char *l);
-int			ft_error(int i, char *str, t_data *data);
+int			ft_error(int i, char *str);
 
 //lexer
 int			token_reader(t_data *data);
@@ -150,11 +150,13 @@ char 		*remove_all_qoutes(char *str);
 void		check_n_execute(char *str, t_data *data);
 int			check_pipes_n_execute(t_data *data);
 int			execution(char *str, t_data	*data, t_executor *executor);
-int			buitin_command(char *str, t_data *data);
+int			builtin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
+int			simple_cmd(char *cmd, t_data *data);
+int			check_builtin(char *str);
 
 int			parsing_lexar(t_data *data, t_lexer *lexar);
-int			double_token_error(t_lexer *lexar);
+int			double_token_error(t_lexer *lexar, char *str);
 void		ft_lexerclear(t_lexer **lst);
 extern		int g_sig_interrupt;
 

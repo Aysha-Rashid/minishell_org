@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 21:00:41 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 20:30:25 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/08 16:45:36 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,17 @@ int    parsing_lexar(t_data *data, t_lexer *lexar)
 	len = size_of_env(str);
 	// t_lexer	*parsing_tools;
 	if (lexar->token == PIPE)
-		return (double_token_error(lexar));
+		return (double_token_error(lexar, data->cmd));
 	// while (lexar)
 	// {
+		// write(1, "before", 6);
 		// parsing_tools = init_parse(lexar, data);
 		if (lexar->token == INFILE)
 		{
-			// if (double_token_error(l))
+			// if (double_token_error(l)) 
 			data->executor->in = open(str[1], O_RDONLY);
+			if (str[1] != NULL)
+				double_token_error(lexar, str[1]);
 			if (data->executor->in == -1)
 				write(2, "no infile", 9);
 		}
@@ -39,6 +42,8 @@ int    parsing_lexar(t_data *data, t_lexer *lexar)
 			// if (double_token_error(l))
 			ft_putnbr_fd(len, 1);
 			data->executor->out = open(str[len - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+			if (str[1] != NULL)
+				double_token_error(lexar, str[1]);
 			if (data->executor->out == -1)
 				write(2, "no out", 6);
 		}
@@ -46,6 +51,8 @@ int    parsing_lexar(t_data *data, t_lexer *lexar)
 		{
 			// if (double_token_error(l))
 			data->executor->out = open(str[len - 1 ], O_CREAT | O_RDWR | O_APPEND, 0644);
+			if (double_token_error(lexar, str[1]))
+				return (1);
 			if (data->executor->out == -1)
 				write(2, "1", 1);
 		}
@@ -54,24 +61,28 @@ int    parsing_lexar(t_data *data, t_lexer *lexar)
 	return (0);
 }
 
-int	double_token_error(t_lexer *lexar)
+int	double_token_error(t_lexer *lexar, char *str)
 {
-	ft_putstr_fd("minishell: syntax error near unexpected token ",
-		2);
-	if (lexar->token == INFILE)
-		ft_putstr_fd("'>'\n", STDERR_FILENO);
-	else if (lexar->token == OUTFILE)
-		ft_putstr_fd("'<'\n", STDERR_FILENO);
-	else if (lexar->token == HEREDOC)
-		ft_putstr_fd("'>>'\n", STDERR_FILENO);
-	else if (lexar->token == OUTEOF)
-		ft_putstr_fd("'<<'\n", STDERR_FILENO);
-	else if (lexar->token == PIPE)
-		ft_putstr_fd("'|'\n", STDERR_FILENO);
-	else
-		ft_putstr_fd("\n", STDERR_FILENO);
-	ft_lexerclear(&lexar);
-	return (1);
+	// ft_putstr_fd("minishell: syntax error near unexpected token ",
+	// 	2);
+	if (str)
+	{
+		if (lexar->token == INFILE && str[0] == INFILE)
+			ft_putstr_fd("minishell: syntax error near unexpected token '>'\n", STDERR_FILENO);
+		else if (lexar->token == OUTFILE && str[0] == OUTFILE)
+			ft_putstr_fd("minishell: syntax error near unexpected token '<'\n", STDERR_FILENO);
+		else if (lexar->token == HEREDOC)
+			ft_putstr_fd("minishell: syntax error near unexpected token '>>'\n", STDERR_FILENO);
+		else if (lexar->token == OUTEOF)
+			ft_putstr_fd("minishell: syntax error near unexpected token '<<'\n", STDERR_FILENO);
+		else if (lexar->token == PIPE)
+			ft_putstr_fd("minishell: syntax error near unexpected token '|'\n", STDERR_FILENO);
+		// else
+		// 	ft_putstr_fd("\n", STDERR_FILENO);
+		return (0);
+	}
+	// ft_lexerclear(&lexar);
+	return (0);
 }
 
 void	ft_lexerclear(t_lexer **lst)

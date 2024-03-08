@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 18:24:46 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/08 15:45:21 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	ft_export(char *str, t_data *data)
 		return (0);
 	token = ft_split(str, ' ');
 	if (ft_strlen(token[0]) != 6)
-		return (free_array(token), ft_error(2, str, NULL));
+		return (free_array(token), ft_error(2, str));
 	i = 1;
 	if (token[1] == NULL)
 		return (declare_sorted(data->envp), free_array(token));

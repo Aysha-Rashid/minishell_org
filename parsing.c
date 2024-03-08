@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 20:02:55 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/08 15:45:03 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	parse_env(t_data *data, char **env)
 	if (!data->envp || !data->envp->path)
 	{
 		data->no_path = 1;
-		ft_error(2, "env", data);
+		ft_error(2, "env");
 		exit(0);
 	}
 	while (data->envp->path[i])

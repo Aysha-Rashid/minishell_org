@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:03:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 19:42:57 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:06:55 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,11 @@ void	check_n_execute(char *str, t_data *data)
 		free(data->old_pwd);
 		free(data->pwd);
 		free_env_list(data->envp);
-		// free_lexer_list(data->lexer_list);
 		free(data->cmd);
 		exit(0);
 	}
 	if (!token_reader(data))
-		ft_error(3, NULL, data);
+		ft_error(3, NULL);
 	if (check_pipes_n_execute(data))
 		return ;
 }
@@ -55,7 +54,7 @@ int	check_pipes_n_execute(t_data *data)
 	temp = data->lexer_list;
 	data->executor = (t_executor *)malloc(sizeof(t_executor));
 	if (!data->executor)
-		return (ft_error(3, NULL, data), 1);
+		return (ft_error(3, NULL), 1);
 	data->executor->pipes = 0;
 	data->executor->heredoc = 0;
 	data->executor->in = 0;
@@ -65,11 +64,11 @@ int	check_pipes_n_execute(t_data *data)
 		return (0);
 	data->executor->pid = ft_calloc(sizeof(int), data->executor->pipes + 2);
 	if (!data->executor->pid)
-		return (ft_error(3, NULL, data), free(data->executor), 1);
+		return (ft_error(3, NULL), free(data->executor), 1);
 	if (!*data->cmd)
 		return (free(data->executor), 0);
 	if (data->lexer_list->token == 0)
-		buitin_command(data->cmd, data);
+		return (simple_cmd(data->cmd, data));
 	else if (data->lexer_list->token)
 	{
 		// write(1, "comeshere", 9);

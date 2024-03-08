@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:57:05 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/06 20:07:36 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/08 13:22:47 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*return_woqoutes(char *str, char del)
 
 	i = 0;
 	j = 0;
-	ptr = (char *)malloc(strlen(str) + 1);
+	ptr = (char *)malloc(ft_strlen(str) + 1);
 	if (ptr == NULL)
 		return (NULL);
 	while (str[j])

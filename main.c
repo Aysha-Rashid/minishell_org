@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 19:53:18 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/08 19:09:53 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,24 @@ int	execution(char *str, t_data	*data, t_executor *executor)
 			path = cmd_file(*temp, data->envp->path);
 			// i++;
 			if (!path)
-				return (ft_error(2, *temp, data));
+				return (ft_error(2, *temp));
 			if (execve(path, temp, NULL) == -1)
 				write(1, "doesnt work", 11);
+			free_array(temp);
+			free_env_list(data->envp);
+			free(data->old_pwd);
+			free(data->pwd);
+			free(data->cmd);
+			free(executor->pid);
+			free(executor);
 			exit(0);
 			// write(1, "comes", 5);
 			// exit(0);
 		}
 		// else
 		wait(NULL);
+		exit(0);
+		// write(2, "comes here?", 11);
 		// prompt_loop(str, data);
 		// check_n_execute(str, data);
 		// wait(NULL);
@@ -66,10 +75,10 @@ int	execution(char *str, t_data	*data, t_executor *executor)
 	return (0);
 }
 
-int	buitin_command(char *str, t_data *data)
+int	builtin_command(char *str, t_data *data)
 {
 	if (!quote(str))
-		return (ft_error(1, NULL, data));
+		return (ft_error(1, NULL));
 	if (str && (!ft_strncmp(str, "env", 3)
 			|| !ft_strncmp(str, "ENV", 3)))
 		return (ft_env(data, str));
