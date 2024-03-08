@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/06 21:14:11 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/07 18:15:02 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,8 @@ void		prompt_loop(char *str, t_data *data);
 int    parsing_lexar(t_data *data, t_lexer *lexar);
 int double_token_error(t_lexer *lexar);
 void	ft_lexerclear(t_lexer **lst);
+
+
 extern int g_sig_interrupt;
 
 // t_env	*duplicate_env(t_env *env)

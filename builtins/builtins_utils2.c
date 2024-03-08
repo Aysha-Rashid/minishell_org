@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 21:11:04 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/06 15:12:50 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/07 19:06:11 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_env	*duplicate_env(t_env *env)
 	return (head);
 }
 
-void	print_after_equal(char *temp)
+void	print_after_equal(char *temp)//aysha
 {
 	char	*equal_pos;
 
