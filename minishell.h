@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/08 19:10:04 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/09 08:35:18 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ int			simple_cmd(char *cmd, t_data *data);
 int			check_builtin(char *str);
 
 int			parsing_lexar(t_data *data, t_lexer *lexar);
-int			double_token_error(t_lexer *lexar, char *str);
+int			double_token_error(t_lexer *lexar);
 void		ft_lexerclear(t_lexer **lst);
 extern		int g_sig_interrupt;
 

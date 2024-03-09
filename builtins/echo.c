@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 14:52:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/08 15:44:30 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/09 08:36:07 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,18 @@ void	check_and_write(char *str)
 	len = ft_strlen(str);
 	if (str[0] == '\'' || str[0] == '\"')
 		i = 1;
-	// ft_putstr_fd(str, 1);
-	while (str[i])
+	while (i < len - 1)
 	{
-		while (str[i] && (i < (len - 1)) && str[i] != '\"')
+		while (str[i] && str[i] != '\"')
 		{
 			ft_putchar_fd(str[i], 1);
 			i++;
 		}
-		while (str[i] == '\"' && i != len)
+		if (str[i] == '\"')
 			i++;
-		if ((str[len - 1] != '\'' && str[len - 1] != '\"'))
-		{
-			ft_putchar_fd(str[i], 1);
-			i++;
-		}
-		else
-			break ;
 	}
+	if (str[len - 1] != '\'' && str[len - 1] != '\"')
+		ft_putchar_fd(str[i], 1);
 }
 
 int	quote(char *l)
@@ -82,8 +76,6 @@ int	ft_echo(char *argv)
 	while (token[i])
 	{
 		check_and_write(token[i]);
-		// token[i] = remove_all_qoutes(token[i]);
-		// ft_putstr_fd(token[i], 1);
 		if (token[i + 1] && token[i][0] != '\0')
 			write(1, " ", 1);
 		i++;

@@ -6,13 +6,13 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/08 19:09:53 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/09 08:35:47 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_sig_interrupt;
+int 	g_sig_interrupt = 0;
 
 int	execution(char *str, t_data	*data, t_executor *executor)
 {
@@ -97,11 +97,8 @@ int	builtin_command(char *str, t_data *data)
 		return (ft_unset(str, data));
 	else if (!*str)
 		return (0);
-	else if (execution(str, data, data->executor))
-		return (1);
-	// exit(0);
-	return (0);
-	// return (ft_error(2, str, data));
+	execution(str, data, data->executor);
+	return (ft_error(2, str, data));
 }
 
 void	prompt_loop(char *str, t_data *data)
@@ -119,6 +116,7 @@ void	prompt_loop(char *str, t_data *data)
 		free(str);
 		check_n_execute(data->cmd, data);
 		add_history(data->cmd);
+		ft_expansion(data);
 		free(data->cmd);
 	}
 }
