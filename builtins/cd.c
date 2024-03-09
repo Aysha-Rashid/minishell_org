@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 14:42:46 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/08 15:45:11 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/09 10:54:24 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,11 @@ int	ft_cd(char *str, t_data *data)
 	changed = 0;
 	temp = ft_split(str, ' ');
 	if (!temp || ft_strlen(temp[0]) != 2)
-		return (free_array(temp), ft_error(2, str));
+		return (free_array(temp), ft_error(2, str, data->no_path));
 	temp[1] = remove_all_qoutes(temp[1]);
 	if (temp[1] == NULL)
 		changed = find_current_path(data, "HOME=");
-	else if (!(ft_strncmp(temp[1], "-", 1)))
+	else if (!(ft_strncmp(temp[1], "-", 1)) && ft_strlen(temp[1]) == 1)
 		changed = find_current_path(data, "OLDPWD=");
 	else
 	{

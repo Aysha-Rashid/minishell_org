@@ -6,33 +6,68 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:27:11 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/08 19:14:26 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/09 20:39:51 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int simple_cmd(char *cmd, t_data *data) {
-    int builtin_index = check_builtin(cmd);
-    if (builtin_index != -1)
-        return builtin_command(cmd, data);
-    return 1; // Not a builtin command
+void	init_executor(t_data *data)
+{
+	data->executor = (t_executor *)malloc(sizeof(t_executor));
+	if (!data->executor)
+		return ;
+	data->executor->pipes = 0;
+	data->executor->heredoc = 0;
+	data->executor->in = 0;
+	data->executor->out = 0;
 }
 
-int check_builtin(char *str) {
-    static char *builtins[] = {
-        "echo",
-        "cd",
-        "pwd",
-        "export",
-        "unset",
-        "env",
-        "exit"
-    };
-    int i;
-    for (i = 0; i < 7; i++) {
-        if (strcmp(builtins[i], str) == 0)
-            return i; // Return index if builtin found
-    }
-    return -1; // Not a builtin command
+int	simple_cmd(char *cmd, t_data *data)
+{
+	int	builtin_index;
+	int	pid;
+
+	pid = 0;
+	builtin_index = check_builtin(cmd);
+	if (builtin_index)
+		return (builtin_command(cmd, data));
+	else if (cmd)
+	{
+		pid = fork();
+		if (pid == -1)
+			ft_error(3, NULL, 0);
+		if (pid == 0)
+		{
+			cmd_file(data, data->envp->path);
+			free(data->lexer_list);
+			free(data->executor);
+			ft_free_all(data);
+			exit(data->status_code);
+		}
+		waitpid(pid, &data->status_code, 0);
+	}
+	return (1);
+}
+
+int	check_builtin(char *str)
+{
+	int			i;
+	static char	*builtins[] = {
+		"echo",
+		"cd",
+		"pwd",
+		"export",
+		"unset",
+		"env",
+		"exit"
+	};
+
+	i = 0;
+	while (i < 7)
+	{
+		if (ft_strcmp(builtins[i++], str) == 0)
+			return (i);
+	}
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:08:51 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/08 14:48:44 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 09:40:28 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*expander2(t_data *data, char *str)
 			free(str);
 			str = tmp;
 		}
-		if (strncmp(str, "export"), ft_strlen(str - 1) != 0)
+		if (ft_strncmp(str, "export", ft_strlen(str - 1)) != 0)
 		{
 			str = delet_quotes(str, "\"");
 			str = delete_quotes(str, "\'");

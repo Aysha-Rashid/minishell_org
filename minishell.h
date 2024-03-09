@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/09 08:35:18 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/09 20:23:52 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int			ft_env(t_data *data, char *str);
 int			parse_env(t_data *data, char **env);
 t_env		*allocate_env(char **env);
 char		*find_paths_and_split(char **env);
-char		*cmd_file(char	*cmd, char **paths);
+char		*cmd_file(t_data *data, char **paths);
 char		*given_path(char *cmd);
 
 int			find_pwd(t_data *data);
@@ -104,7 +104,7 @@ int			free_array(char **str);
 int			free_env_list(t_env *head);
 void		free_lexer_list(t_lexer *list);
 int			name_error(char *name, char *str, char *message);
-void		free_data(t_data *data);
+void		ft_free_all(t_data *data);
 int			validate_input(char **token, t_env *current, char *name);
 
 size_t		len_of_values(t_env *lst);
@@ -130,7 +130,7 @@ void		check_and_write(char *str);
 
 //parse
 int			quote(char *l);
-int			ft_error(int i, char *str);
+int			ft_error(int i, char *str, int no_path);
 
 //lexer
 int			token_reader(t_data *data);
@@ -156,8 +156,9 @@ int			simple_cmd(char *cmd, t_data *data);
 int			check_builtin(char *str);
 
 int			parsing_lexar(t_data *data, t_lexer *lexar);
-int			double_token_error(t_lexer *lexar);
+int			double_token_error(t_lexer *lexar, char *str);
 void		ft_lexerclear(t_lexer **lst);
+void		init_executor(t_data *data);
 extern		int g_sig_interrupt;
 
 // t_env	*duplicate_env(t_env *env)

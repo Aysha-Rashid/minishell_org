@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/08 15:45:21 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:39:02 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	already_there(char *variable, t_data *data)
 		return (0);
 	while (current)
 	{
-		if (!(ft_strncmp(current->value, variable, ft_strlen(current->value))))
+		if (!(ft_strncmp(current->key, variable, ft_strlen(current->key))))
 		{
 			if (ft_strchr(variable, '='))
 			{
@@ -86,14 +86,14 @@ int	env_add(char *variable, t_data *env)
 	new = malloc(sizeof(t_env));
 	if (!new)
 		return (1);
-	new->key = key;
-	new->value = value;
-	new->next = NULL;
-	new->path = NULL;
 	temp = env->envp;
 	while (temp->next != NULL)
 		temp = temp->next;
+	new->key = key;
+	new->value = value;
+	new->next = NULL;
 	temp->next = new;
+	new->path = NULL;
 	return (0);
 }
 
@@ -129,12 +129,14 @@ int	ft_export(char *str, t_data *data)
 	if (!data->envp->value && data->envp->next == NULL)
 		return (0);
 	token = ft_split(str, ' ');
+	if (!token)
+		return (1);
 	if (ft_strlen(token[0]) != 6)
-		return (free_array(token), ft_error(2, str));
+		return (free_array(token), ft_error(2, str, 0));
 	i = 1;
 	if (token[1] == NULL)
 		return (declare_sorted(data->envp), free_array(token));
-	else if (!validate_input(token, data->envp, "export"))
+	if (!validate_input(token, data->envp, "export"))
 		return (0);
 	while (token[i])
 	{
@@ -143,5 +145,5 @@ int	ft_export(char *str, t_data *data)
 			env_add(token[i], data);
 		i++;
 	}
-	return (free_array(token), 1);
+	return (free_array(token));
 }

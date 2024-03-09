@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:12:37 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/08 14:37:32 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 19:39:14 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	handle_eof(char *str, t_data *data)
 		free_env_list(data->envp);
 		free(data->pwd);
 		free(data->old_pwd);
+		// ft_free_all(data);
 		ft_putstr_fd("exit\n", 2);
 		return (1);
 	}

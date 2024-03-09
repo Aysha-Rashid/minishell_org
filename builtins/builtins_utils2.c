@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 21:11:04 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/07 19:06:11 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 19:43:31 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,12 @@ char	*ft_strcpy(char	*dest, char *src)
 	}
 	dest[i] = '\0';
 	return (dest);
+}
+
+void	ft_free_all(t_data *data)
+{
+	free(data->old_pwd);
+	free(data->pwd);
+	free_env_list(data->envp);
+	free(data->cmd);
 }

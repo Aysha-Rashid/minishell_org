@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 14:52:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/09 08:36:07 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:30:34 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,26 @@
 
 void	check_and_write(char *str)
 {
-	int	i;
-	int	len;
+	int		i;
+	int		len;
+	char	quote;
 
 	i = 0;
 	len = ft_strlen(str);
-	if (str[0] == '\'' || str[0] == '\"')
-		i = 1;
-	while (i < len - 1)
+	while (i < len)
 	{
-		while (str[i] && str[i] != '\"')
+		if (str[i] == '\'' || str[i] == '"')
 		{
-			ft_putchar_fd(str[i], 1);
+			quote = str[i];
 			i++;
+			while (i < len && str[i] != quote)
+				ft_putchar_fd(str[i++], 1);
+			if (i < len)
+				i++;
 		}
-		if (str[i] == '\"')
-			i++;
+		else
+			ft_putchar_fd(str[i++], 1);
 	}
-	if (str[len - 1] != '\'' && str[len - 1] != '\"')
-		ft_putchar_fd(str[i], 1);
 }
 
 int	quote(char *l)
@@ -67,7 +68,7 @@ int	ft_echo(char *argv)
 	n_option = 0;
 	i = 1;
 	if ((ft_strlen(token[0]) != 4))
-		return (ft_error(2, token[0]), free_array(token), 1);
+		return (ft_error(2, token[0], 0), free_array(token), 1);
 	while (token[i] && ft_strncmp(token[i], "-n", 7) == 0)
 	{
 		n_option = 1;
