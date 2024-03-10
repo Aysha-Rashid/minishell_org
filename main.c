@@ -6,76 +6,35 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/09 20:27:15 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/10 21:31:39 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int 	g_sig_interrupt = 0;
-
-int	execution(char *str, t_data	*data, t_executor *executor)
+void	child_signals(int signum)
 {
-	// (void)data;
-	// (void)str;
-	(void)executor;
-	write(1, "1", 1);
-	// int pipe_fd[2];
-	// static int i;
-	char	**temp;
-	char	*path;
-	// (void)executor;
-	// if (executor->pid == 0)
-	// 	buitin_command(data->cmd, data);
-	// else
-	// {
-		// char *argv = "ls";
-		// executor->in = STDIN_FILENO;
-		// int len = len_of_values(data->cmd);
-		// executor->pid[0] = fork();
-		// executor->pid = ft_calloc(sizeof(int), executor->pipes + 2);
-		// if (!executor->pid)
-		// 	return (ft_error(3, NULL, data), free(executor), 1);
-		temp = ft_split(str, ' ');
-		// pipe(pipe_fd);
-		int hello;
-		hello = fork();
-		// write(2, "1", 1);
-		if (hello == 0)
-		{
-			// dup2(executor->in, STDIN_FILENO);
-			// close(pipe_fd[0]);
-			// dup2(pipe_fd[1], STDOUT_FILENO);
-			// close(pipe_fd[1]); 
-			path = cmd_file(data, data->envp->path);
-			// i++;
-			if (!path)
-				return (ft_error(2, *temp, data->no_path));
-			if (execve(path, temp, NULL) == -1)
-				write(1, "doesnt work", 11);
-			// free_array(temp);
-			// free_env_list(data->envp);
-			// free(data->old_pwd);
-			// free(data->pwd);
-			// free(data->cmd);
-			// free(executor->pid);
-			// free(executor);
-			ft_free_all(data);
-			exit(0);
-			write(1, "comes", 5);
-			exit(0);
-		}
-		// else
-		wait(NULL);
-		// exit(0);
-		// write(2, "comes here?", 11);
-		// prompt_loop(str, data);
-		// check_n_execute(str, data);
-		// wait(NULL);
-		// exit(0);
-	// }
+	if (signum == SIGINT)
+	{
+		ft_putchar_fd('\n', STDOUT_FILENO);
+		// g_exit_status = 130;
+		exit(130);
+	}
+}
+
+int	execution(t_data *data, int *pid)
+{
+	write(1, "comes here", 10);
+	signal(SIGINT, child_signals);
+	if (data->lexer_list->token == PIPE)
+		execute_pipe(data, pid);
+	else if (data->lexer_list->token == 0)
+		simple_cmd(data->cmd, data);
+	exit(0);
 	return (0);
 }
+
 
 int	builtin_command(char *str, t_data *data)
 {
@@ -93,7 +52,7 @@ int	builtin_command(char *str, t_data *data)
 			|| (!ft_strncmp(str, "ECHO", 4))
 			|| !ft_strncmp(str, "echo -n", 7)))
 		return (ft_echo(str));
-	else if (str && ((!ft_strncmp(str, "cd", 2))))
+	else if (str && (!(ft_strncmp(str, "cd", 2))))
 		return (ft_cd(str, data));
 	else if (str && (!ft_strncmp(str, "unset", 5)))
 		return (ft_unset(str, data));

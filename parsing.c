@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/09 20:38:50 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/10 15:12:41 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char	*cmd_file(t_data *data, char **paths)
 		execve(data->cmd, str, paths);
 	while (paths[i])
 	{
-		cmd_file = ft_strjoin(paths[i], data->cmd);
+		cmd_file = ft_strjoin(paths[i], *str);
 		if (!(access(cmd_file, F_OK | X_OK)))
 		{
 			free(data->executor);

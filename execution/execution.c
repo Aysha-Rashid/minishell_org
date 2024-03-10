@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:27:11 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/09 20:39:51 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/10 19:41:05 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,14 @@ void	init_executor(t_data *data)
 
 int	simple_cmd(char *cmd, t_data *data)
 {
-	int	builtin_index;
-	int	pid;
+	char	**str;
+	int		builtin_index;
+	int		pid;
 
 	pid = 0;
-	builtin_index = check_builtin(cmd);
+	str = ft_split(data->cmd, ' ');
+	builtin_index = check_builtin(str);
+	free_array(str);
 	if (builtin_index)
 		return (builtin_command(cmd, data));
 	else if (cmd)
@@ -50,7 +53,7 @@ int	simple_cmd(char *cmd, t_data *data)
 	return (1);
 }
 
-int	check_builtin(char *str)
+int	check_builtin(char **str)
 {
 	int			i;
 	static char	*builtins[] = {
@@ -66,7 +69,7 @@ int	check_builtin(char *str)
 	i = 0;
 	while (i < 7)
 	{
-		if (ft_strcmp(builtins[i++], str) == 0)
+		if (ft_strcmp(builtins[i++], str[0]) == 0)
 			return (i);
 	}
 	return (0);

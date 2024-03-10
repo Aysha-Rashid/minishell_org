@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:17:00 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/09 20:47:52 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/10 16:12:05 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,7 @@ int	ft_error(int i, char *str, int no_path)
 		ft_putstr_fd("unable to assign memory\n", 2);
 	else if (i == 4)
 		name_error(str, NULL, "Permission denied");
+	else if (i == 5)
+		name_error(str, NULL, "No options allowed");
 	return (1);
 }
