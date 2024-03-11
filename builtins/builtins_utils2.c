@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 21:11:04 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/09 19:43:31 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/11 12:15:20 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_env	*duplicate_env(t_env *env)
 	return (head);
 }
 
-void	print_after_equal(char *temp)//aysha
+void	print_after_equal(char *temp)
 {
 	char	*equal_pos;
 
@@ -68,7 +68,6 @@ char	*ft_strcpy(char	*dest, char *src)
 	int	i;
 
 	i = 0;
-
 	while (src[i])
 	{
 		dest[i] = src[i];

@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:27:11 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/10 19:41:05 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/11 13:15:24 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	init_executor(t_data *data)
 	data->executor->heredoc = 0;
 	data->executor->in = 0;
 	data->executor->out = 0;
+	data->executor->next = NULL;
 }
 
 int	simple_cmd(char *cmd, t_data *data)

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 12:16:37 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/10 21:31:39 by ayal-ras         ###   ########.fr       */
+/*   Created: 2024/03/11 08:32:56 by ayal-ras          #+#    #+#             */
+/*   Updated: 2024/03/11 13:19:50 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,24 @@ void	child_signals(int signum)
 	}
 }
 
-int	execution(t_data *data, int *pid)
+int	execution(t_executor *pid, t_data *data)
 {
-	write(1, "comes here", 10);
-	signal(SIGINT, child_signals);
-	if (data->lexer_list->token == PIPE)
-		execute_pipe(data, pid);
-	else if (data->lexer_list->token == 0)
+	// signal(SIGINT, child_signals);
+	
+	if (data->lexer_list->token == 0)
+	{
+		write(1, "here", 4);
+		// data->lexer_list->token 
 		simple_cmd(data->cmd, data);
+	}
+	if (data->executor->pipes)
+	{
+		data->executor->pipes--;
+		execute_pipe(data, pid);
+	}
 	exit(0);
 	return (0);
 }
-
 
 int	builtin_command(char *str, t_data *data)
 {
@@ -75,7 +81,6 @@ void	prompt_loop(char *str, t_data *data)
 		data->cmd = ft_strdup(trimmed_cmd);
 		free(trimmed_cmd);
 		free(str);
-		// ft_expansion(data);
 		check_n_execute(data->cmd, data);
 		add_history(data->cmd);
 		free(data->cmd);

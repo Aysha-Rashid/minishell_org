@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 18:01:34 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/09 17:39:02 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:05:28 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,12 +136,11 @@ int	ft_export(char *str, t_data *data)
 	i = 1;
 	if (token[1] == NULL)
 		return (declare_sorted(data->envp), free_array(token));
-	if (!validate_input(token, data->envp, "export"))
-		return (0);
 	while (token[i])
 	{
 		token[i] = remove_all_qoutes(token[i]);
-		if (!already_there(token[i], data))
+		if (!already_there(token[i], data)
+			|| !validate_input(token[i], data->envp, "export"))
 			env_add(token[i], data);
 		i++;
 	}

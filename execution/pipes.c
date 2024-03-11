@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:03:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/10 21:22:10 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/11 13:23:03 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,8 @@ int	check_pipes_n_execute(t_data *data)
 	t_lexer		*temp;
 
 	temp = data->lexer_list;
-	// init_executor(data);
-	data->executor = (t_executor *)malloc(sizeof(t_executor));
-	// if (!data->executor)
-	// 	return ;
-	data->executor->pipes = 0;
-	data->executor->heredoc = 0;
-	data->executor->in = 0;
-	data->executor->out = 0;
+	init_executor(data);
 	count_pipes(temp, data);
-	ft_putnbr_fd(data->executor->pipes, 1);
 	if (parsing_lexar(data, temp))
 		return (1);
 	if (data->lexer_list->token == 0 && data->executor->pipes == 0)
@@ -67,16 +59,18 @@ int	check_pipes_n_execute(t_data *data)
 	data->executor->pid = ft_calloc(sizeof(int), data->executor->pipes + 2);
 	if (!data->executor->pid)
 		return (ft_error(3, NULL, data->no_path), free(data->executor), 1);
-	else if (fork() == 0)
-		execution(data, data->executor->pid);
+	if (fork() == 0)
+		execution(data->executor, data);
 	waitpid(-1, &data->status_code, 0);
-	// free(data->executor->pid);
+	free(data->executor->pid);
 	return (free(data->executor), 0);
 }
 
 void	count_pipes(t_lexer *lexer, t_data *data)
 {
-	int num_pipe = 0;
+	int	num_pipe;
+
+	num_pipe = 0;
 	while (lexer)
 	{
 		if (lexer->token == PIPE)
@@ -86,46 +80,75 @@ void	count_pipes(t_lexer *lexer, t_data *data)
 	data->executor->pipes = num_pipe;
 }
 
-void execute_pipe(t_data *data, int *pid)
+static void	left_side(t_executor *nd, t_data *data, int pdes[2])
 {
-    int pipe_fd[2];
-    // int i = 0;
-
-    if (pipe(pipe_fd) == -1)
-    {
-        perror("pipe");
-        exit(1); // Exit on pipe creation failure
-    }
-
-    pid_t child_pid = fork();
-    if (child_pid < 0)
-    {
-        perror("fork");
-        exit(1); // Exit on fork failure
-    }
-    else if (child_pid == 0)
-    {
-        close(pipe_fd[0]); // Close read end of pipe in child
-        dup2(pipe_fd[1], STDOUT_FILENO); // Redirect stdout to pipe
-        close(pipe_fd[1]); // Close write end of pipe
-        execution(data, pid);
-        exit(0); // Exit child process after execution
-    }
-    else
-    {
-        close(pipe_fd[1]); // Close write end of pipe in parent
-        dup2(pipe_fd[0], STDIN_FILENO); // Redirect stdin to pipe
-        close(pipe_fd[0]); // Close read end of pipe
-        execution(data, pid);
-        close(pipe_fd[0]); // Close remaining file descriptor
-        waitpid(child_pid, &data->status_code, 0);
-    }
+	close(STDOUT_FILENO);
+	dup(pdes[1]);
+	close(pdes[0]);
+	close(pdes[1]);
+	execution(nd, data);
 }
 
+static void	right_side(t_executor *nd, t_data *data, int pdes[2])
+{
+	close(STDIN_FILENO);
+	dup(pdes[0]);
+	close(pdes[0]);
+	close(pdes[1]);
+	execution(nd, data);
+}
 
-// void	expansion(t_data *data, char *cmd)
-// {
-	
+void execute_pipe(t_data *data, t_executor *pid)
+{
+// 	int pipe_fd[2];
+// 	// int i = 0;
+
+// 	write(1, "comes here", 10);
+// 	if (pipe(pipe_fd) == -1)
+// 	{
+// 		perror("pipe");
+// 		exit(1);
+// 	}
+
+// 	pid_t child_pid = fork();
+// 	if (child_pid < 0)
+// 	{
+// 		perror("fork");
+// 		exit(1);
+// 	}
+// 	else if (child_pid == 0)
+// 	{
+// 		close(pipe_fd[0]);
+// 		dup2(pipe_fd[1], STDOUT_FILENO);
+// 		close(pipe_fd[1]);
+// 		execution(data, pid);
+// 		exit(0);
+// 	}
+// 	else
+// 	{
+// 		close(pipe_fd[1]);
+// 		dup2(pipe_fd[0], STDIN_FILENO);
+// 		close(pipe_fd[0]);
+// 		execution(data, pid);
+// 		close(pipe_fd[0]);
+// 		waitpid(child_pid, &data->status_code, 0);
+// 	}
 // }
-// found a $ sign then print the environment variable of it
-// found a ? sign then print the exit status of the previous command
+	(void) pid;
+	pid_t	child_pid;
+	int		pipedes[2];
+	int		temp_status;
+
+	// node->operator = NONE;
+	if (pipe(pipedes) == -1)
+		return ;
+	child_pid = fork();
+	if (child_pid == -1)
+		return ;
+	if (child_pid == 0)
+		left_side(data->executor, data, pipedes);
+	right_side(data->executor->next, data, pipedes);
+	close(pipedes[0]);
+	close(pipedes[1]);
+	waitpid(child_pid, &temp_status, 0);
+}
