@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 int 	g_sig_interrupt = 0;
 
 void	init_executor(t_data *data)
@@ -22,7 +23,7 @@ void	init_executor(t_data *data)
 	data->executor->heredoc = 0;
 	data->executor->in = 0;
 	data->executor->out = 0;
-	data->executor->next = NULL;
+	// data->executor->next = NULL;
 }
 
 void	child_signals(int signum)
@@ -35,61 +36,53 @@ void	child_signals(int signum)
 	}
 }
 
-void	execution(t_data *data)
+void execution(t_data *data)
 {
-	static int	i;
+    static int i;
 
-	i = 0;
-	data->executor->pid = malloc((sizeof(int) * data->executor->pipes) + 2);
-	data->executor->pid[i] = 0;
-	data->executor->pid[i] = fork();
-	if (data->executor->pid[i] == -1)
-		ft_error(3, NULL, 0);
-	if (data->executor->pid[i] == 0)
-	{
-		cmd_file(data, data->envp->path);
-		free(data->lexer_list);
-		ft_free_all(data);
-		free(data->executor);
-		i++;
-		exit(data->status_code);
-	}
-	waitpid(-1, &data->status_code, 0);
+    i = 0;
+    ft_putnbr_fd(data->executor->pipes, 1);
+    if (data->executor->pipes > 0)
+    {
+        data->executor->pid = malloc(sizeof(int) * data->executor->pipes);
+        if (!data->executor->pid) {
+            // Handle allocation failure here
+            return;
+        }
+        while (i < data->executor->pipes)
+        {
+            data->executor->pid[i] = fork();
+            if (data->executor->pid[i] == -1) {
+                ft_error(3, NULL, 0);
+                // Handle fork failure here
+            }
+
+            if (data->executor->pid[i] == 0) {
+                // Child process
+                free(data->executor);
+                cmd_file(data, data->envp->path);
+                ft_free_all(data);
+                exit(data->status_code);
+            }
+            i++;
+        }
+    }
+    else 
+    {
+        int pid;
+        pid = fork();
+        if (pid == 0) {
+            // Child process
+            free(data->executor);
+            cmd_file(data, data->envp->path);
+            ft_free_all(data);
+            exit(data->status_code);
+        }
+
+        // Parent process
+    }
+    waitpid(-1, &data->status_code, 0);
 }
-
-// void execution(t_data *data) {
-//     int pid;
-//     static int i = 0;
-
-//     pid = fork();
-//     if (pid == -1) {
-//         ft_error(3, NULL, 0);
-//         return; // Exit function on fork failure
-//     }
-
-//     if (pid == 0) {
-//         // Child process
-//         cmd_file(data, data->envp->path);
-//         free(data->lexer_list);
-//         ft_free_all(data);
-//         free(data->executor->pid); // Free memory allocated for pid array
-//         exit(data->status_code);
-//     } else {
-//         // Parent process
-//         // Allocate memory for pid array if not already allocated
-//         if (data->executor->pid == NULL) {
-//             data->executor->pid = malloc(sizeof(int) * (i + 2));
-//             if (data->executor->pid == NULL) {
-//                 // Memory allocation failed, handle error
-//                 ft_error(3, NULL, 0);
-//                 return;
-//             }
-//         }
-//         data->executor->pid[i] = pid; // Store process ID
-//         i++;
-//         waitpid(pid, &data->status_code, 0);
-//     }
-// }
 
 
 // int	simple_cmd(char *cmd, t_data *data)
@@ -136,14 +129,17 @@ int	check_builtin(char **str)
 		"export",
 		"unset",
 		"env",
-		"exit"
+		"exit",
+		"ENV",
+		"PWD",
+		"ECHO",
 	};
-
 	i = 0;
-	while (i < 7)
+	while (i < 10)
 	{
-		if (ft_strcmp(builtins[i++], str[0]) == 0)
+		if (ft_strcmp(builtins[i], str[0]) == 0)
 			return (i);
+		i++;
 	}
 	return (0);
 }

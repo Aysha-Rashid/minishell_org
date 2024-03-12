@@ -14,27 +14,27 @@
 
 int	builtin_command(char *str, t_data *data)
 {
+	free(data->executor);
 	if (!quote(str))
 		return (ft_error(1, NULL, data->no_path));
 	if (str && (!ft_strncmp(str, "env", 3)
 			|| !ft_strncmp(str, "ENV", 3)))
-		return (ft_env(data, str),free(data->executor), 0);
+		return (ft_env(data, str), 0);
 	else if (!ft_strncmp(str, "export", 6))
-		return (ft_export(str, data),free(data->executor), 0);
+		return (ft_export(str, data), 0);
 	else if (str && (!ft_strncmp(str, "pwd", 4)
 			|| !ft_strncmp(str, "PWD", 4)))
-		return (ft_pwd(data),free(data->executor), 0);
+		return (ft_pwd(data), 0);
 	else if (str && (!ft_strncmp(str, "echo", 4)
 			|| (!ft_strncmp(str, "ECHO", 4))
 			|| !ft_strncmp(str, "echo -n", 7)))
-		return (ft_echo(str),free(data->executor), 0);
+		return (ft_echo(str), 0);
 	else if (str && (!(ft_strncmp(str, "cd", 2))))
-		return (ft_cd(str, data),free(data->executor), 0);
+		return (ft_cd(str, data), 0);
 	else if (str && (!ft_strncmp(str, "unset", 5)))
-		return (ft_unset(str, data),free(data->executor), 0);
+		return (ft_unset(str, data), 0);
 	else if (!*str)
-		return (free(data->executor), 0);
-	// execution(str, data, data->executor);
+		return (0);
 	return (0);
 }
 

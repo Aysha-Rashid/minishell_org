@@ -17,6 +17,7 @@ int	invalid_identifier(char *str, char *name)
 	int	error;
 
 	error = 0;
+		// write(1, "hello", 5);
 	if (!(ft_isalpha(str[0])) && str[0] != '_'
 		&& str[0] != '\"' && str[0] != '\'')
 	{
@@ -32,16 +33,16 @@ int	invalid_identifier(char *str, char *name)
 
 int	validate_input(char *token, t_env *current, char *name)
 {
-	if (ft_strcmp(name, "unset"))
-	{
+	// if (ft_strcmp(name, "unset"))
+	// {
 		if (invalid_identifier(token, name) || !current)
 			return (0);
-	}
-	else
-	{
-		if (invalid_identifier(token, name) || !current)
-			return (0);
-	}
+	// }
+	// else
+	// {
+	// 	if (invalid_identifier(token, name) || !current)
+	// 		return (0);
+	// }
 	return (1);
 }
 

@@ -106,12 +106,11 @@ char	*cmd_file(t_data *data, char **paths)
 		execve(data->cmd, str, paths);
 	while (paths[i])
 	{
-		cmd_file = ft_strjoin(paths[i], *str);
+		cmd_file = ft_strjoin(paths[i], data->cmd);
 		if (!(access(cmd_file, F_OK | X_OK)))
 		{
-			free(data->executor);
-			free(data->lexer_list);
 			execve(cmd_file, str, paths);
+			free_array(str);
 		}
 		free(cmd_file);
 		i++;

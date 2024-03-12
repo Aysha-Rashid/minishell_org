@@ -140,7 +140,7 @@ int	ft_export(char *str, t_data *data)
 	{
 		token[i] = remove_all_qoutes(token[i]);
 		if (!already_there(token[i], data)
-			|| !validate_input(token[i], data->envp, "export"))
+			&& validate_input(token[i], data->envp, "export"))
 			env_add(token[i], data);
 		i++;
 	}
