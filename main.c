@@ -6,41 +6,11 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 08:32:56 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/12 13:26:13 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/12 14:18:50 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int 	g_sig_interrupt = 0;
-void	child_signals(int signum)
-{
-	if (signum == SIGINT)
-	{
-		ft_putchar_fd('\n', STDOUT_FILENO);
-		// g_exit_status = 130;
-		exit(130);
-	}
-}
-
-void	execution(t_data *data)
-{
-	int		pid;
-
-	pid = 0;
-	pid = fork();
-	if (pid == -1)
-		ft_error(3, NULL, 0);
-	if (pid == 0)
-	{
-		cmd_file(data, data->envp->path);
-		free(data->lexer_list);
-		ft_free_all(data);
-		free(data->executor);
-		exit(data->status_code);
-	}
-	waitpid(-1, &data->status_code, 0);
-}
 
 int	builtin_command(char *str, t_data *data)
 {

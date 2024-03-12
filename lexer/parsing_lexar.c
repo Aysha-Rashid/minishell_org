@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 21:00:41 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/12 13:15:55 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/12 14:18:00 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	double_token_error(char *str)
 {
 	char	*error;
 
-	// error = "";
+	error = "";
 	if (ft_strcmp(str, "<") == 0 || ft_strcmp(str, ">") == 0
 		|| ft_strcmp(str, "<<") == 0 || ft_strcmp(str, "|") == 0
 		|| ft_strcmp(str, "||") == 0 || ft_strcmp(str, ">>") == 0
