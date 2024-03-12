@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:41:59 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/02 15:06:07 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/12 11:42:41 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	handle_token(char *str, int i, t_lexer **lexer_list)
 	t_tokens	token;
 
 	token = check_token(str[i]);
+	// ft_putnbr_fd(token, 1);
 	if (token == OUTFILE && check_token(str[i + 1] == OUTFILE))
 	{
 		if (!add_node(NULL, OUTEOF, lexer_list))

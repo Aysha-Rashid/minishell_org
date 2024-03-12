@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 08:32:56 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/11 13:19:50 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/12 13:26:13 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,23 @@ void	child_signals(int signum)
 	}
 }
 
-int	execution(t_executor *pid, t_data *data)
+void	execution(t_data *data)
 {
-	// signal(SIGINT, child_signals);
-	
-	if (data->lexer_list->token == 0)
+	int		pid;
+
+	pid = 0;
+	pid = fork();
+	if (pid == -1)
+		ft_error(3, NULL, 0);
+	if (pid == 0)
 	{
-		write(1, "here", 4);
-		// data->lexer_list->token 
-		simple_cmd(data->cmd, data);
+		cmd_file(data, data->envp->path);
+		free(data->lexer_list);
+		ft_free_all(data);
+		free(data->executor);
+		exit(data->status_code);
 	}
-	if (data->executor->pipes)
-	{
-		data->executor->pipes--;
-		execute_pipe(data, pid);
-	}
-	exit(0);
-	return (0);
+	waitpid(-1, &data->status_code, 0);
 }
 
 int	builtin_command(char *str, t_data *data)
@@ -48,22 +48,22 @@ int	builtin_command(char *str, t_data *data)
 		return (ft_error(1, NULL, data->no_path));
 	if (str && (!ft_strncmp(str, "env", 3)
 			|| !ft_strncmp(str, "ENV", 3)))
-		return (ft_env(data, str));
+		return (ft_env(data, str),free(data->executor), 0);
 	else if (!ft_strncmp(str, "export", 6))
-		return (ft_export(str, data));
+		return (ft_export(str, data),free(data->executor), 0);
 	else if (str && (!ft_strncmp(str, "pwd", 4)
 			|| !ft_strncmp(str, "PWD", 4)))
-		return (ft_pwd(data));
+		return (ft_pwd(data),free(data->executor), 0);
 	else if (str && (!ft_strncmp(str, "echo", 4)
 			|| (!ft_strncmp(str, "ECHO", 4))
 			|| !ft_strncmp(str, "echo -n", 7)))
-		return (ft_echo(str));
+		return (ft_echo(str),free(data->executor), 0);
 	else if (str && (!(ft_strncmp(str, "cd", 2))))
-		return (ft_cd(str, data));
+		return (ft_cd(str, data),free(data->executor), 0);
 	else if (str && (!ft_strncmp(str, "unset", 5)))
-		return (ft_unset(str, data));
+		return (ft_unset(str, data),free(data->executor), 0);
 	else if (!*str)
-		return (0);
+		return (free(data->executor), 0);
 	// execution(str, data, data->executor);
 	return (0);
 }

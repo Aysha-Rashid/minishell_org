@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/11 13:21:47 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/12 11:20:32 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ char		*remove_all_qoutes(char *str);
 //execution
 void		check_n_execute(char *str, t_data *data);
 int			check_pipes_n_execute(t_data *data);
-int			execution(t_executor *pid, t_data *data);
+void		execution(t_data *data);
 int			builtin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
 int			simple_cmd(char *cmd, t_data *data);
@@ -151,6 +151,6 @@ int			parsing_lexar(t_data *data, t_lexer *lexar);
 int			double_token_error(char *str);
 void		ft_lexerclear(t_lexer **lst);
 void		init_executor(t_data *data);
-void		execute_pipe(t_data *data, t_executor *pid);
+void		execute_pipe(t_data *data);
 
 extern		int g_sig_interrupt;

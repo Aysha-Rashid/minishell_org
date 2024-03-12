@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:27:11 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/11 13:15:24 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/12 12:32:26 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int	simple_cmd(char *cmd, t_data *data)
 	builtin_index = check_builtin(str);
 	free_array(str);
 	if (builtin_index)
-		return (builtin_command(cmd, data));
-	else if (cmd)
+		return (builtin_command(cmd, data), 1);
+	else
 	{
 		pid = fork();
 		if (pid == -1)
@@ -47,10 +47,12 @@ int	simple_cmd(char *cmd, t_data *data)
 			free(data->lexer_list);
 			free(data->executor);
 			ft_free_all(data);
-			exit(data->status_code);
+			// exit(data->status_code);
 		}
-		waitpid(pid, &data->status_code, 0);
+		waitpid(-1, &data->status_code, 0);
+		return (0);
 	}
+	ft_error(2, data->cmd, 0);
 	return (1);
 }
 
