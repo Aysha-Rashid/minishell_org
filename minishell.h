@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/12 11:20:32 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/13 14:32:34 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,19 @@ typedef struct s_lexer
 
 typedef struct s_executor
 {
-	int					*pid;
+	// int					*pid;
 	int					pipes;
 	int					heredoc;
 	int					in;
 	int					out;
+	char				*cmd;
 	struct s_executor	*next;
+	struct s_executor	*prev;
 }				t_executor;
 
 typedef struct s_data
 {
+	int				*pid;
 	int				no_path;
 	int				status_code;
 	char			*cmd;
@@ -137,7 +140,6 @@ t_tokens	check_token(int n);
 int			handle_token(char *str, int i, t_lexer **lexer_list);
 char		*return_woqoutes(char *str, char del);
 char		*remove_all_qoutes(char *str);
-
 //execution
 void		check_n_execute(char *str, t_data *data);
 int			check_pipes_n_execute(t_data *data);
@@ -150,7 +152,17 @@ int			check_builtin(char **str);
 int			parsing_lexar(t_data *data, t_lexer *lexar);
 int			double_token_error(char *str);
 void		ft_lexerclear(t_lexer **lst);
-void		init_executor(t_data *data);
-void		execute_pipe(t_data *data);
+t_executor 	*init_executor(t_data *data, char *cmd);
+// void		execute_pipe(t_data *data);
+// void		wait_pid(int *pid, int amount, t_data *data);
+t_lexer		*ft_lexerclear_one(t_lexer **lst);
+int			ft_fork(t_data *data, int end[2], int fd_in, char *cmd);
+int			dup_cmd(t_executor *executor, t_data *data, int *end, int fd_in);
+int			in_or_heredoc(t_data *data, int *end, t_executor *executor);
+void		ft_simple_cmdsadd_back(t_executor **lst, t_executor *new);
+t_executor	*initialize_cmd(t_data *parser_tools);
+int	count_args(t_lexer *lexer_list);
+
+
 
 extern		int g_sig_interrupt;

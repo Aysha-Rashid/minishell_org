@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:57:05 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/11 12:11:06 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/13 10:15:49 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,23 @@ int	handle_quotes(int i, char *str, char del)
 
 char	*remove_all_qoutes(char *str)
 {
-	char	*temp1;
-	char	*temp2;
+	char	*ptr;
+	int		i;
+	int		j;
 
-	temp1 = return_woqoutes(str, 34);
-	temp2 = return_woqoutes(temp1, 39);
-	free(temp1);
-	if (temp2 == NULL)
-		return (NULL); 
-	str = temp2;
-	return (str);
+	ptr = malloc(ft_strlen(str) + 1);
+	if (ptr == NULL)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[j] != ' ' && str[j])
+	{
+		if (str[j] != '\'' && str[j] != '"')
+			ptr[i++] = str[j];
+		j++;
+	}
+	while (str[j])
+		ptr[i++] = str[j++];
+	ptr[i] = '\0';
+	return (ptr);
 }

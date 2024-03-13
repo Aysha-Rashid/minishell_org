@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 08:32:56 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/12 14:18:50 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/13 13:22:10 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 int	builtin_command(char *str, t_data *data)
 {
 	free(data->executor);
-	if (!quote(str))
-		return (ft_error(1, NULL, data->no_path));
 	if (str && (!ft_strncmp(str, "env", 3)
 			|| !ft_strncmp(str, "ENV", 3)))
 		return (ft_env(data, str), 0);
@@ -27,8 +25,8 @@ int	builtin_command(char *str, t_data *data)
 		return (ft_pwd(data), 0);
 	else if (str && (!ft_strncmp(str, "echo", 4)
 			|| (!ft_strncmp(str, "ECHO", 4))
-			|| !ft_strncmp(str, "echo -n", 7)))
-		return (ft_echo(str), 0);
+			|| (!ft_strncmp(str, "echo -n", 7))))
+		return (ft_echo(str));
 	else if (str && (!(ft_strncmp(str, "cd", 2))))
 		return (ft_cd(str, data), 0);
 	else if (str && (!ft_strncmp(str, "unset", 5)))

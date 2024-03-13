@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/10 15:12:41 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/13 12:15:39 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,11 @@ char	*cmd_file(t_data *data, char **paths)
 	if (!data->cmd)
 		return (NULL);
 	i = 0;
-	str = ft_split(data->cmd, ' ');
+	// ft_putnbr_fd(data->executor->pipes, 1);
+	if (data->executor->pipes == 0)
+		str = ft_split(data->cmd, ' ');
+	else
+		str = ft_split(data->cmd, '|');
 	cmd_file = NULL;
 	if (!access(data->cmd, F_OK))
 		execve(data->cmd, str, paths);

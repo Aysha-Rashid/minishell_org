@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:03:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/12 14:18:39 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/13 14:24:08 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,16 @@ int	check_pipes_n_execute(t_data *data)
 	char		builtin_index;
 	char		**str;
 
+	if (!quote(data->cmd))
+		return (ft_error(1, NULL, data->no_path));
 	temp = data->lexer_list;
 	if (parsing_lexar(data, temp))
 		return (1);
-	init_executor(data);
-	count_pipes(temp, data);
+	data->cmd = remove_all_qoutes(data->cmd);
 	str = ft_split(data->cmd, ' ');
 	builtin_index = check_builtin(str);
 	free_array(str);
-	if (builtin_index)
+	if (builtin_index >= 0)
 		builtin_command(data->cmd, data);
 	else
 		execution(data);
@@ -73,14 +74,13 @@ int	check_pipes_n_execute(t_data *data)
 
 void	count_pipes(t_lexer *lexer, t_data *data)
 {
-	int	num_pipe;
+	t_lexer	*tmp;
 
-	num_pipe = 0;
-	while (lexer)
+	tmp = lexer;
+	while (tmp)
 	{
-		if (lexer->token == PIPE)
-			num_pipe++;
-		lexer = lexer->next;
+		if (tmp->token == PIPE)
+			data->executor->pipes++;
+		tmp = tmp->next;
 	}
-	data->executor->pipes = num_pipe;
 }
