@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/13 14:32:34 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/14 12:24:18 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_executor
 	// int					*pid;
 	int					pipes;
 	int					heredoc;
+	char				*here_name;
 	int					in;
 	int					out;
 	char				*cmd;
@@ -79,7 +80,7 @@ int			ft_env(t_data *data, char *str);
 int			parse_env(t_data *data, char **env);
 t_env		*allocate_env(char **env);
 char		*find_paths_and_split(char **env);
-char		*cmd_file(t_data *data, char **paths);
+char		*cmd_file(char *cmd, char **paths);
 char		*given_path(char *cmd);
 
 int			find_pwd(t_data *data);
@@ -152,7 +153,7 @@ int			check_builtin(char **str);
 int			parsing_lexar(t_data *data, t_lexer *lexar);
 int			double_token_error(char *str);
 void		ft_lexerclear(t_lexer **lst);
-t_executor 	*init_executor(t_data *data, char *cmd);
+t_executor	*init_executor(t_data *data, char *cmd);
 // void		execute_pipe(t_data *data);
 // void		wait_pid(int *pid, int amount, t_data *data);
 t_lexer		*ft_lexerclear_one(t_lexer **lst);
@@ -161,8 +162,8 @@ int			dup_cmd(t_executor *executor, t_data *data, int *end, int fd_in);
 int			in_or_heredoc(t_data *data, int *end, t_executor *executor);
 void		ft_simple_cmdsadd_back(t_executor **lst, t_executor *new);
 t_executor	*initialize_cmd(t_data *parser_tools);
-int	count_args(t_lexer *lexer_list);
-
-
+int			count_args(t_lexer *lexer_list);
+t_executor *parse_pipeline(char *cmd, t_data *data);
+char 		*ft_strjoin_free_first(char *str1, char *str2);
 
 extern		int g_sig_interrupt;

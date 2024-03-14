@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:03:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/13 14:24:08 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/14 12:44:28 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,14 @@ int	check_pipes_n_execute(t_data *data)
 	data->cmd = remove_all_qoutes(data->cmd);
 	str = ft_split(data->cmd, ' ');
 	builtin_index = check_builtin(str);
+	data->executor = parse_pipeline(data->cmd, data);
 	free_array(str);
-	if (builtin_index >= 0)
+	if (builtin_index >= 0 && data->executor->pipes == 0)
 		builtin_command(data->cmd, data);
 	else
+	{
 		execution(data);
+	}
 	// data->executor->pid = ft_calloc(sizeof(int), data->executor->pipes + 2);
 	// if (!data->executor->pid)
 		// return (ft_error(3, NULL, data->no_path), free(data->executor), 1);

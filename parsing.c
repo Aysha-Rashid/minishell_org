@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:53:44 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/13 12:15:39 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/14 13:41:18 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,35 +91,31 @@ char	*env_str(t_env *env)
 	return (str);
 }
 
-char	*cmd_file(t_data *data, char **paths)
+char	*cmd_file(char *cmd, char **paths)
 {
 	char	*cmd_file;
 	char	**str;
 	int		i;
 
-	if (!data->cmd)
+	if (!cmd)
 		return (NULL);
-	i = 0;
-	// ft_putnbr_fd(data->executor->pipes, 1);
-	if (data->executor->pipes == 0)
-		str = ft_split(data->cmd, ' ');
-	else
-		str = ft_split(data->cmd, '|');
+	str = ft_split(cmd, ' ');
 	cmd_file = NULL;
-	if (!access(data->cmd, F_OK))
-		execve(data->cmd, str, paths);
+	if (!(access(str[0], F_OK | X_OK)))
+		execve(str[0], str, paths);
+	i = 0;
 	while (paths[i])
 	{
-		cmd_file = ft_strjoin(paths[i], data->cmd);
-		if (!(access(cmd_file, F_OK | X_OK)))
+		cmd_file = ft_strjoin(paths[i], str[0]);
+		if ((access(cmd_file, F_OK | X_OK)) == 0)
 		{
 			execve(cmd_file, str, paths);
-			free_array(str);
+			free(cmd_file);
 		}
 		free(cmd_file);
 		i++;
 	}
-	return (ft_error(2, data->cmd, 0), free_array(str), NULL);
+	return (ft_error(2, cmd, 0), free_array(str), NULL);
 }
 
 char	*given_path(char *cmd)
