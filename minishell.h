@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/14 12:24:18 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/14 13:59:41 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_executor
 	int					in;
 	int					out;
 	char				*cmd;
+	char				*hd_file_name;
 	struct s_executor	*next;
 	struct s_executor	*prev;
 }				t_executor;

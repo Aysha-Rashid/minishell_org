@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:27:11 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/14 13:44:02 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/14 14:07:49 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,23 +31,21 @@ t_executor	*init_executor(t_data *data, char *cmd)
 	return (data->executor);
 }
 
-t_executor *parse_pipeline(char *cmd, t_data *data)
+t_executor	*parse_pipeline(char *cmd, t_data *data)
 {
 	t_executor	*head;
 	t_executor	*tail;
+	t_executor	*executor;
 	char		**token;
-	char		*pipeline_copy;
 	int			i;
 
 	i = 0;
-	pipeline_copy = ft_strdup(cmd);
 	head = NULL;
 	tail = NULL;
-	token = ft_split(pipeline_copy, '|');
+	token = ft_split(cmd, '|');
 	while (token[i])
 	{
-		t_executor *executor = init_executor(data, token[i]);
-		count_pipes(data->lexer_list, data);
+		executor = init_executor(data, token[i++]);
 		if (head == NULL)
 			head = executor;
 		else
@@ -56,9 +54,8 @@ t_executor *parse_pipeline(char *cmd, t_data *data)
 			executor->prev = tail;
 		}
 		tail = executor;
-		i++;
 	}
-	return (free(pipeline_copy), head);
+	return (head);
 }
 
 void	execute_command(char *cmd, t_data *data)
@@ -78,8 +75,8 @@ void	execute_command(char *cmd, t_data *data)
 
 void	execution(t_data *data)
 {
-	int	fd_in;
-	int	end[2];
+	int		fd_in;
+	int		end[2];
 	pid_t	pid;
 
 	fd_in = STDIN_FILENO;
@@ -128,69 +125,6 @@ void	execution(t_data *data)
 	// exit(0);
 	return ;
 }
-// void execution(t_data *data)
-// {
-//     static int i;
-
-//     i = 0;
-//     // ft_putnbr_fd(data->executor->pipes, 1);
-//     if (data->executor->pipes > 0)
-//     {
-//         data->executor->pid = malloc(sizeof(int) * data->executor->pipes);
-//         if (!data->executor->pid) {
-//             // Handle allocation failure here
-//             return;
-//         }
-//         while (i < data->executor->pipes)
-//         {
-//             data->executor->pid[i] = fork();
-//             if (data->executor->pid[i] == -1) {
-//                 ft_error(3, NULL, 0);
-//                 // Handle fork failure here
-//             }
-
-//             if (data->executor->pid[i] == 0) {
-//                 // Child process
-//                 free(data->executor);
-//                 cmd_file(data, data->envp->path);
-//                 ft_free_all(data);
-//                 exit(data->status_code);
-//             }
-//             i++;
-//         }
-//     }
-//     else 
-//     {
-//         int pid;
-//         pid = fork();
-//         if (pid == 0) {
-//             // Child process
-//             free(data->executor);
-//             cmd_file(data, data->envp->path);
-//             ft_free_all(data);
-//             exit(data->status_code);
-//         }
-
-//         // Parent process
-//     }
-//     waitpid(-1, &data->status_code, 0);
-//     // exit(0);
-// }
-
-// void wait_pid(int *pid, int amount, t_data *data)
-// {
-//     int i;
-
-//     i = 0;
-
-//     while (i < amount)
-//     {
-//         waitpid(pid[i], &data->status_code, 0);
-//         i++;
-//     }
-//     waitpid(pid[i], &data->status_code, 0);
-//     exit(0);
-// }
 
 int	check_builtin(char **str)
 {
