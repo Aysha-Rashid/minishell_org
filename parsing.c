@@ -91,35 +91,35 @@ char	*env_str(t_env *env)
 	return (str);
 }
 
-char	*cmd_file(t_data *data, char **paths)
+char	*cmd_file(char *cmd, char **paths)
 {
 	char	*cmd_file;
 	char	**str;
 	int		i;
 
-	if (!data->cmd)
+	if (!cmd)
 		return (NULL);
 	i = 0;
-	// ft_putnbr_fd(data->executor->pipes, 1);
-	if (data->executor->pipes == 0)
-		str = ft_split(data->cmd, ' ');
-	else
-		str = ft_split(data->cmd, '|');
+	str = ft_split(cmd, ' ');
+	// ft_putstr_fd(str[0], 2);
+	// ft_putstr_fd(cmd, 2);
+	// write(1, "\n", 1);
 	cmd_file = NULL;
-	if (!access(data->cmd, F_OK))
-		execve(data->cmd, str, paths);
+	if (!access(cmd, F_OK))
+		execve(cmd, str, paths);
 	while (paths[i])
 	{
-		cmd_file = ft_strjoin(paths[i], data->cmd);
+		cmd_file = ft_strjoin(paths[i], cmd);
 		if (!(access(cmd_file, F_OK | X_OK)))
 		{
 			execve(cmd_file, str, paths);
+			// write(2, "hi", 2);
 			free_array(str);
 		}
 		free(cmd_file);
 		i++;
 	}
-	return (ft_error(2, data->cmd, 0), free_array(str), NULL);
+	return (ft_error(2, cmd, 0), free_array(str), NULL);
 }
 
 char	*given_path(char *cmd)

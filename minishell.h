@@ -56,6 +56,7 @@ typedef struct s_executor
 	int					in;
 	int					out;
 	char				*cmd;
+	char				*hd_file_name;
 	struct s_executor	*next;
 	struct s_executor	*prev;
 }				t_executor;
@@ -79,7 +80,8 @@ int			ft_env(t_data *data, char *str);
 int			parse_env(t_data *data, char **env);
 t_env		*allocate_env(char **env);
 char		*find_paths_and_split(char **env);
-char		*cmd_file(t_data *data, char **paths);
+char	*cmd_file(char *cmd, char **paths);
+// char		*cmd_file(t_data *data, char **paths);
 char		*given_path(char *cmd);
 
 int			find_pwd(t_data *data);
@@ -143,7 +145,7 @@ char		*remove_all_qoutes(char *str);
 //execution
 void		check_n_execute(char *str, t_data *data);
 int			check_pipes_n_execute(t_data *data);
-void		execution(t_data *data);
+void execution(t_executor *executor, t_data *data);
 int			builtin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
 int			simple_cmd(char *cmd, t_data *data);
@@ -162,7 +164,9 @@ int			in_or_heredoc(t_data *data, int *end, t_executor *executor);
 void		ft_simple_cmdsadd_back(t_executor **lst, t_executor *new);
 t_executor	*initialize_cmd(t_data *parser_tools);
 int	count_args(t_lexer *lexer_list);
-
-
+void execute_command(char *command, int in_fd, int out_fd, t_data *data);
+// void execute_command(t_data *data, t_executor *executor);
+// void execute_command(char *cmd, t_data *data);
+t_executor *parse_pipeline(char *cmd, t_data *data);
 
 extern		int g_sig_interrupt;

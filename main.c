@@ -14,7 +14,7 @@
 
 int	builtin_command(char *str, t_data *data)
 {
-	free(data->executor);
+	// free(data->executor);
 	if (str && (!ft_strncmp(str, "env", 3)
 			|| !ft_strncmp(str, "ENV", 3)))
 		return (ft_env(data, str), 0);

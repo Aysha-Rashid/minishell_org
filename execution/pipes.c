@@ -60,10 +60,16 @@ int	check_pipes_n_execute(t_data *data)
 	str = ft_split(data->cmd, ' ');
 	builtin_index = check_builtin(str);
 	free_array(str);
-	if (builtin_index >= 0)
+	// write(1, "here", 4);
+	if (builtin_index >= 0 && data->lexer_list->token != 1)
 		builtin_command(data->cmd, data);
 	else
-		execution(data);
+	{
+		// init_executor(data, data->cmd);
+		// count_pipes(data->lexer_list, data);
+		data->executor = parse_pipeline(data->cmd, data);
+		execution(data->executor, data);
+	}
 	// data->executor->pid = ft_calloc(sizeof(int), data->executor->pipes + 2);
 	// if (!data->executor->pid)
 		// return (ft_error(3, NULL, data->no_path), free(data->executor), 1);
