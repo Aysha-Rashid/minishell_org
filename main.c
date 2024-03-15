@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 08:32:56 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/13 13:22:10 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 14:50:59 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	builtin_command(char *str, t_data *data)
 {
-	// free(data->executor);
 	if (str && (!ft_strncmp(str, "env", 3)
 			|| !ft_strncmp(str, "ENV", 3)))
 		return (ft_env(data, str), 0);
@@ -76,7 +75,6 @@ int	main(int argc, char **argv, char **env)
 	parse_env(&data, env);
 	find_pwd(&data);
 	prompt_loop(*argv, &data);
-	// free_data(&data);
 	free(data.cmd);
 	return (0);
 }

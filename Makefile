@@ -45,7 +45,7 @@ all: $(NAME)
 
 clean:
 	@ rm -rf $(OBJ)
-	@make fclean -C $(LIBFTPATH)
+	@ make fclean -C $(LIBFTPATH)
 	@ echo "$(COLOUR_GREEN)Cleaned all 'o' files successfully$(COLOUR_END)"
 
 fclean: clean

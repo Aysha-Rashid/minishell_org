@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 21:00:41 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/12 14:18:00 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/14 14:56:18 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int parsing_lexar(t_data *data, t_lexer *lexar)
 			}
 		}
 	}
-	else if ((ft_strcmp(str[0], ">") == 0 && len >= 1) || (ft_strcmp(str[0], ">>") == 0 && len >= 2))
+	else if ((ft_strcmp(str[len - 2], ">") == 0 && len >= 1) || (ft_strcmp(str[len - 2], ">>") == 0 && len >= 2))
 	{
 		if (str[len - 1] != NULL)
 		{
@@ -54,10 +54,15 @@ int parsing_lexar(t_data *data, t_lexer *lexar)
 				return (free_array(str), 1);
 			else
 			{
-				int flags = O_CREAT | O_RDWR | (lexar->token == OUTEOF ? O_APPEND : O_TRUNC);
-				data->executor->out = open(str[len - 1], flags, 0644);
-				if (data->executor->out == -1)
-					return (ft_error(4, str[len - 1], 0), free_array(str), 1);
+				if (double_token_error(str[1]))
+					return (free_array(str),1);
+				else
+				{
+					int flags = O_CREAT | O_RDWR | (lexar->token == OUTEOF ? O_APPEND : O_TRUNC);
+					data->executor->out = open(str[len - 1], flags, 0644);
+					if (data->executor->out == -1)
+						return (ft_error(4, str[len - 1], 0), free_array(str), 1);
+				}
 			}
 		}
 	}

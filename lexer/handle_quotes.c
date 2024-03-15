@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 08:57:05 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/13 10:15:49 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 10:20:15 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ char	*remove_all_qoutes(char *str)
 	int		i;
 	int		j;
 
+	if (!str || str[0] == '\0')
+		return (NULL);
 	ptr = malloc(ft_strlen(str) + 1);
 	if (ptr == NULL)
 		return (NULL);

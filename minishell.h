@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/14 13:59:41 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 13:30:00 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ typedef struct s_executor
 	char				*here_name;
 	int					in;
 	int					out;
+	char				*in_file;
+	char				*out_file;
 	char				*cmd;
 	char				*hd_file_name;
 	struct s_executor	*next;
@@ -145,26 +147,21 @@ char		*remove_all_qoutes(char *str);
 //execution
 void		check_n_execute(char *str, t_data *data);
 int			check_pipes_n_execute(t_data *data);
-void		execution(t_data *data);
+int			execution(t_executor *executor, t_data *data);
 int			builtin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
-int			simple_cmd(char *cmd, t_data *data);
 int			check_builtin(char **str);
 
 int			parsing_lexar(t_data *data, t_lexer *lexar);
 int			double_token_error(char *str);
 void		ft_lexerclear(t_lexer **lst);
 t_executor	*init_executor(t_data *data, char *cmd);
+t_executor	*parse_pipeline(char *cmd, t_data *data);
+void		assign_fd(t_executor *executor, int fd_in, int *end);
+void		handle_heredoc(int fd_in, t_executor *executor, int end[]);
+void		ft_close_fd(t_executor *executor, int fd, int end);
+void		free_executor(t_executor *executor);
 // void		execute_pipe(t_data *data);
 // void		wait_pid(int *pid, int amount, t_data *data);
-t_lexer		*ft_lexerclear_one(t_lexer **lst);
-int			ft_fork(t_data *data, int end[2], int fd_in, char *cmd);
-int			dup_cmd(t_executor *executor, t_data *data, int *end, int fd_in);
-int			in_or_heredoc(t_data *data, int *end, t_executor *executor);
-void		ft_simple_cmdsadd_back(t_executor **lst, t_executor *new);
-t_executor	*initialize_cmd(t_data *parser_tools);
-int			count_args(t_lexer *lexer_list);
-t_executor *parse_pipeline(char *cmd, t_data *data);
-char 		*ft_strjoin_free_first(char *str1, char *str2);
 
 extern		int g_sig_interrupt;

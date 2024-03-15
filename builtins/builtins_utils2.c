@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 21:11:04 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/11 12:15:20 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 14:12:17 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ char	*ft_strcpy(char	*dest, char *src)
 
 void	ft_free_all(t_data *data)
 {
-	free(data->old_pwd);
 	free(data->pwd);
+	free(data->old_pwd);
 	free_env_list(data->envp);
 	free(data->cmd);
 }

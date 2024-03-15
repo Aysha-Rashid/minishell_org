@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:27:11 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/14 14:07:49 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 14:50:38 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ t_executor	*init_executor(t_data *data, char *cmd)
 	data->executor->here_name = "home";
 	data->executor->pipes = 0;
 	data->executor->heredoc = 0;
-	data->executor->in = 0;
-	data->executor->out = 0;
+	data->executor->in = STDIN_FILENO;
+	data->executor->out = STDOUT_FILENO;
 	data->executor->next = NULL;
 	data->executor->prev = NULL;
 	return (data->executor);
@@ -55,75 +55,82 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 		}
 		tail = executor;
 	}
+	free_array(token);
 	return (head);
 }
 
-void	execute_command(char *cmd, t_data *data)
+void	execute_command(char *cmd, t_data *data, int *end)
 {
-	if (data->executor->in != STDIN_FILENO)
+	// (void)end;
+	if (check_builtin(&cmd) >= 0)
 	{
-		dup2(data->executor->in, STDIN_FILENO);
-		close(data->executor->in);
+		builtin_command(cmd, data);
+		exit(0);
 	}
-	if (data->executor->out != STDOUT_FILENO)
+	if (data->no_path)
 	{
-		dup2(data->executor->out, STDOUT_FILENO);
-		close(data->executor->out);
-	}
-	cmd_file(cmd, data->envp->path);
-}
-
-void	execution(t_data *data)
-{
-	int		fd_in;
-	int		end[2];
-	pid_t	pid;
-
-	fd_in = STDIN_FILENO;
-	if (data->executor->pipes)
-	{
-		while (data->executor)
-		{
-			if (data->executor->next)
-				pipe(end);
-			pid = fork();
-			if (pid < 0)
-			{
-				perror("fork");
-				return ;
-			}
-			else if (pid == 0)
-			{
-				data->executor->out = (data->executor->next) ? end[1] : STDOUT_FILENO;
-				fd_in = (data->executor->heredoc) ? open(data->executor->here_name, O_RDONLY) : STDIN_FILENO;
-				execute_command(data->executor->cmd, data);
-				write(2, "out", 3);
-				exit(1);
-			}
-			else
-			{
-				if (data->executor->next)
-					close(end[1]);
-				if (data->executor->prev)
-					close(fd_in);
-				fd_in = (data->executor->heredoc) ? fd_in : end[0];
-			}
-			data->executor = data->executor->next;
-		}
+		ft_error(2, cmd, data->no_path);
+		exit(0);
 	}
 	else
+		cmd_file(cmd, data->envp->path);
+	close(end[0]);
+	close(end[1]);
+	close(data->executor->in);
+	close(data->executor->out);
+	free_executor(data->executor);
+	ft_free_all(data);
+	exit(1);
+}
+
+void	ft_dup_fd(t_executor *executor, int *end)
+{
+	// int fd;
+	(void)executor;
+	// if (executor->in != STDIN_FILENO)
+	// {
+	// 	dup2(executor->in, STDIN_FILENO);
+	// 	close(executor->in);
+	// }
+	// if (executor->out != STDOUT_FILENO)
+	// {
+	// 	dup2(executor->out, STDOUT_FILENO);
+	// 	close(executor->out);
+	// }
+	dup2(end[1], STDOUT_FILENO);
+	close(end[0]);
+	close(end[1]);
+}
+
+int	execution(t_executor *executor, t_data *data)
+{
+	int		end[2];
+	int		pid;
+
+	while (executor)
 	{
+		// if (executor->next)
+			pipe(end);
 		pid = fork();
-		if (pid == 0)
+		if (pid < 0)
+			return (perror("fork"), 1);
+		else if (pid == 0)
 		{
-			cmd_file(data->cmd, data->envp->path);
-			ft_free_all(data);
-			exit(data->status_code);
+			if (executor->next)
+				ft_dup_fd(executor, end);
+			execute_command(executor->cmd, data, end);
 		}
+		else
+		{
+			if (executor->next)
+				close(end[1]);
+		}
+		executor = executor->next;
+		close(end[0]);
+		close(end[1]);
+		while (wait(&data->status_code) > 0);
 	}
-	waitpid(pid, &data->status_code, 0);
-	// exit(0);
-	return ;
+	return (0);
 }
 
 int	check_builtin(char **str)
@@ -151,3 +158,22 @@ int	check_builtin(char **str)
 	}
 	return (-1);
 }
+
+// void	assign_fd(t_executor *executor, int fd_in, int *end)
+// {
+// 	executor->out = (executor->next) ? end[1] : STDOUT_FILENO;
+// 	fd_in = (executor->heredoc) ? open(executor->here_name, O_RDONLY) : STDIN_FILENO;
+// }
+
+// void	handle_heredoc(int fd_in, t_executor *executor, int end[])
+// {
+// 	fd_in = (executor->heredoc) ? fd_in : end[0];
+// }
+
+// void	ft_close_fd(t_executor *executor, int fd, int end)
+// {
+// 	if (executor->next)
+// 		close(end);
+// 	if (executor->prev)
+// 		close(fd);
+// }
