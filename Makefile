@@ -19,6 +19,8 @@ SRC = main.c\
 		lexer/parsing_lexar.c\
 		execution/pipes.c\
 		execution/execution.c\
+		expansion/expansion1.c\
+		expansion/expansion_utils.c\
 
 OBJ = $(SRC:.c=.o)
 

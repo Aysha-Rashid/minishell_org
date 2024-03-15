@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 12:45:58 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/15 13:30:00 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 14:55:07 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,4 +164,12 @@ void		free_executor(t_executor *executor);
 // void		execute_pipe(t_data *data);
 // void		wait_pid(int *pid, int amount, t_data *data);
 
+
+//expansion
+int			ft_expansion(t_data *data);
+int			ft_expansion3(t_data *data, char *str);
+size_t		dollar_sign(char *str);
+char		*search_env_variable2(t_env *envp, char *key);
+void		print_after_equal2(char *temp);
+int			name_error2(char *name, char *str, char *message);
 extern		int g_sig_interrupt;

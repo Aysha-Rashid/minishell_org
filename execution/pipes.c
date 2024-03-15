@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 17:03:36 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/15 14:13:34 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 15:31:04 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	check_n_execute(char *str, t_data *data)
 	(void)str;
 	if (!token_reader(data))
 		ft_error(3, NULL, data->no_path);
+	// ft_expansion(data);
 	if (check_pipes_n_execute(data))
 		return ;
 }
@@ -65,6 +66,7 @@ int	check_pipes_n_execute(t_data *data)
 	// if (parsing_lexar(data, temp))
 	// 	return (1);
 	// data->cmd = remove_all_qoutes(data->cmd);
+	// ft_expansion(data);
 	str = ft_split(data->cmd, ' ');
 	builtin_index = check_builtin(str);
 	free_array(str);
@@ -72,8 +74,11 @@ int	check_pipes_n_execute(t_data *data)
 	count_pipes(data->lexer_list, data);
 	if (builtin_index >= 0 && data->executor->pipes == 0)
 		builtin_command(data->cmd, data);
-	else
+	else if (data->executor->pipes)
 		execution(data->executor, data);
+	// else
+	// 	ft_expansion(data);
+		// ÷return (0);
 	free_executor(data->executor);
 	// free(data->executor->cmd);
 	return (0);

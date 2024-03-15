@@ -3,62 +3,79 @@
 /*                                                        :::      ::::::::   */
 /*   expansion1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:08:51 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/09 09:40:28 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 15:27:37 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*expander2(t_data *data, char *str)
+size_t	dollar_sign(char *str)
 {
-	int		i;
-	char	*tmp;
+	size_t	i;
 
 	i = 0;
-	tmp = NULL;
 	while (str[i])
 	{
-		if (str[dollar_sign(str[i]) - 2] != '\'' && dollar_sign(str[i]) != 0
-			&& str[dollar_sign(str[i])] != '\0')
-		{
-			tmp = detect_dollar_sign(data, str);
-			free(str);
-			str = tmp;
-		}
-		if (ft_strncmp(str, "export", ft_strlen(str - 1)) != 0)
-		{
-			str = delet_quotes(str, "\"");
-			str = delete_quotes(str, "\'");
-		}
+		if (str[i] == '$')
+			return (i + 1);
 		i++;
 	}
-	return (str);
-}
-
-char	*expander(t_data *data, char *str)
-{
-	t_lexer	*start;
-
-	data->cmd = expander2(data, data->cmd);
-	start = data->lexer_list;
-	while (data->lexer_list)
-	{
-		if (data->lexer_list->token != HEREDOC)
-			data->lexer_list
-	}
-}
-
-void	single_cmd(char *cmd, t_data *data)
-{
-	data->cmd = expander(data, data->cmd);
+	return (0);
 }
 
 int	ft_expansion(t_data *data)
 {
-	signal(SIGQUIT, sigint_handler);
-	if (data->executor->pipes == 0)
-		single_cmd(data->cmd, data);
+	int		i;
+	char	**splitted;
+
+	i = 0;
+	splitted = ft_split(data->cmd, ' ');
+	while (splitted[i])
+	{
+		ft_expansion3(data, splitted[i]);
+		i++;
+	}
+	return (0);
+}
+
+int	ft_specified_error(char *str)
+{
+	if (!ft_strncmp(str, "PATH", 4))
+		name_error2(str, NULL, "No such file or directory");
+	else if (!ft_strncmp(str, "PWD", 3)
+		|| !ft_strncmp(str, "OLDPWD", 6) || !ft_strncmp(str, "HOME", 4))
+		name_error2(str, NULL, "is a directory");
+	else
+		name_error2(str, NULL, "command not found");
+
+	return (0);
+}
+
+int	ft_expansion3(t_data *data, char *str)
+{
+	char	*exp;
+	char	*exit_status;
+	int		j;
+
+	exit_status = ft_itoa(data->status_code);
+	j = dollar_sign(str);
+	while (str)
+	{
+		if (j != 0 && str[j] != '\0')
+		{
+			if (str[j] == '?')
+				return (name_error(exit_status, NULL, "command not found"), 1);
+			else
+			{
+				exp = search_env_variable2(data->envp, &str[j++]);
+				if (!exp)
+					return (0);
+				return (ft_specified_error(exp), 1);
+			}
+		}
+	}
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
+/*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 21:11:04 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/15 14:12:17 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/15 15:11:37 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ void	print_after_equal(char *temp)
 	char	*equal_pos;
 
 	equal_pos = ft_strchr(temp, '=');
-	ft_putstrn_fd(temp, equal_pos - temp + 1, 1);
-	ft_putchar_fd('"', 1);
+	// ft_putstrn_fd(temp, equal_pos - temp + 1, 1);
+	// ft_putchar_fd('"', 1);
 	ft_putstr_fd(equal_pos + 1, 1);
-	ft_putendl_fd("\"", 1);
+	// ft_putendl_fd("\"", 1);
 }
 
 char	*ft_strcpy(char	*dest, char *src)

@@ -6,69 +6,38 @@
 /*   By: zfiros-a <zfiros-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 18:24:41 by zfiros-a          #+#    #+#             */
-/*   Updated: 2024/03/08 14:43:55 by zfiros-a         ###   ########.fr       */
+/*   Updated: 2024/03/15 15:12:03 by zfiros-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*delete_quotes(char *str, char c)
+char	*search_env_variable2(t_env *envp, char *key)
 {
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (str[i])
+	while (envp)
 	{
-		if (str[i] == c)
-		{
-			j = 0;
-			while (str[i + j] == c)
-				j++;
-			ft_strlcpy(&str[i], &str[i + j], strlen(str) - i);
-		}
-		i++;
+		if (ft_strcmp(envp->key, key) == 0)
+			return (envp->value);
+		envp = envp->next;
 	}
-	return (str);
+	return (NULL);
 }
 
-int	error_code(t_data *data, char *str)
+void	print_after_equal2(char *temp)
 {
-	str = ft_itoa(data->status_code);
-	return (ft_strlen(str) + 1);
+	char	*equal_pos;
+
+	equal_pos = ft_strchr(temp, '=');
+	ft_putstrn_fd(temp, equal_pos - temp + 1, 1);
+	ft_putstr_fd(equal_pos + 1, 1);
 }
 
-char	*detect_dollar_sign(t_data *data, char *str)
+int	name_error2(char *name, char *str, char *message)
 {
-	int		j;
-	char	*tmp;
-	char	*tmp2;
-	char	*tmp3;
-
-	j = 0;
-	tmp = ft_strdup("\0");
-	while (str[j])
-	{
-		if (str[j] == '$' && str[j + 1] == '?')
-			j = error_code(data, &tmp);
-		else if (str[j] == '$' && (str[j + 1] != ' ' && (str[j + 1] != '\"'
-					|| str[j + 2] != '\0')) && str[j + 1] != '\0')
-			j = j + loop_if_dollar(data, str, tmp, j);
-		else
-	}
-}
-
-size_t	dollar_sign(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$')
-			return (i + 1);
-		i++;
-	}
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	print_after_equal(name);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putendl_fd(message, STDERR_FILENO);
 	return (0);
 }
