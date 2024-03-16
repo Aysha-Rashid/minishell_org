@@ -12,24 +12,6 @@
 
 #include "../minishell.h"
 
-void	free_executor(t_executor *executor)
-{
-	if (!executor)
-		return ;
-	free(executor->cmd);
-	free_executor(executor->next);
-	free(executor);
-}
-
-void	free_lexer_list(t_lexer *list)
-{
-	if (!list)
-		return ;
-	// free(list->str);
-    free_lexer_list(list->next);
-    free(list);
-}
-
 void	check_n_execute(char *str, t_data *data)
 {
 	if (!data->cmd || data->cmd[0] == '\0')
@@ -38,7 +20,7 @@ void	check_n_execute(char *str, t_data *data)
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 		ft_putendl_fd("exit", 1);
-		// free_lexer_list(data->lexer_list);
+		free_array(data->envp->path);
 		ft_free_all(data);
 		exit(0);
 	}
@@ -71,17 +53,54 @@ int	check_pipes_n_execute(t_data *data)
 	// if (parsing_lexar(data, temp))
 	// 	return (1);
 	// data->cmd = remove_all_qoutes(data->cmd);
-	ft_expansion(data);
+	// ft_expansion(data);
 	str = ft_split(data->cmd, ' ');
 	builtin_index = check_builtin(str);
 	free_array(str);
 	data->executor = parse_pipeline(data->cmd, data);
 	count_pipes(data->lexer_list, data);
-	free_lexer_list(data->lexer_list);
 	if (builtin_index >= 0 && data->executor->pipes == 0)
 		builtin_command(data->cmd, data);
 	else
-		execution(data->executor, data);;
+		execution(data->executor, data);
+	free_lexer_list(data->lexer_list);
 	free_executor(data->executor);
+	return (0);
+}
+
+int	check_line(t_executor *executor, t_data *data)
+{
+	(void)executor;
+	while (data->lexer_list)
+	{
+		if (is_type(data->lexer_list, "IOH") && (!data->lexer_list->next
+				|| is_type(data->lexer_list, "IOHAP")))
+		{
+			ft_putstr_fd("error", 1);
+			return (0);
+		}
+		if (is_type(data->lexer_list, "PA") && (!data->lexer_list->prev
+				|| is_type(data->lexer_list, "IOHAP")))
+		{
+			ft_putstr_fd("error", 1);
+			return (0);
+		}
+		data->lexer_list = data->lexer_list->next;
+	}
+	return (1);
+}
+
+int	is_type(t_lexer *lexer, char *str)
+{
+	if (ft_strchr(str, 'P') && lexer->token == PIPE)
+		return (1);
+	if (ft_strchr(str, 'I') && lexer->token == INFILE)
+		return (1);
+	if (ft_strchr(str, 'O') && lexer->token == OUTFILE)
+		return (1);
+	if (ft_strchr(str, 'H') && lexer->token == HEREDOC)
+		return (1);
+	if (ft_strchr(str, 'A') && lexer->token == OUTEOF)
+		return (1);
 	return (0);
 }

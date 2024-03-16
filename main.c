@@ -58,6 +58,11 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
 
+	if (!env || env[0] == NULL)
+	{
+		ft_error(2, "env", 1);
+		exit(0);
+	}
 	if (argv[1] || argc != 1)
 	{
 		ft_putendl_fd("invalid arguments", 2);
@@ -71,6 +76,6 @@ int	main(int argc, char **argv, char **env)
 	find_pwd(&data);
 	prompt_loop(*argv, &data);
 	ft_free_all(&data);
-	rl_clear_history();
+	// rl_clear_history();
 	return (0);
 }

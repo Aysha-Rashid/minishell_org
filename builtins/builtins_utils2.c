@@ -12,9 +12,9 @@
 
 #include "../minishell.h"
 
-int	check_unset_arg(char *str, char *token, t_data *data, int size_of_env)
+int	check_unset_arg(char *token, t_data *data)
 {
-	if (ft_strncmp(str, token, size_of_env) == 0)
+	if (ft_strcmp("PATH", token) == 0 || ft_strcmp("PATH=", token) == 0)
 	{
 		if (!data->envp)
 			return (0);
@@ -81,8 +81,6 @@ void	ft_free_all(t_data *data)
 {
 	free(data->pwd);
 	free(data->old_pwd);
-	free_array(data->envp->path);
-	// free_lexer_list(data->lexer_list);
 	free_env_list(data->envp);
 	free(data->cmd);
 }

@@ -14,19 +14,19 @@
 
 #include <stdlib.h>
 
-char *ft_strdup(const char *s1)
+char	*ft_strdup(const char *s1)
 {
-    size_t len = ft_strlen(s1);
-    char *ptr = (char *)malloc(sizeof(*ptr) * (len + 1));
-    if (!ptr)
-        return NULL;
+	size_t	len;
+	size_t	i;
+	char*	ptr;
 
-    // Copy the string
-    size_t i = 0;
-    while (*s1)
-        ptr[i++] = *s1++;
-    ptr[i] = '\0';
-
-    return ptr;
+	i = 0;
+	len = ft_strlen(s1);
+	ptr = (char *)malloc(sizeof(*ptr) * (len + 1));
+	if (!ptr)
+		return (NULL);
+	while (*s1)
+		ptr[i++] = *s1++;
+	ptr[i] = '\0';
+	return (ptr);
 }
-

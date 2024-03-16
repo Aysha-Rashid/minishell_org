@@ -16,18 +16,20 @@ int 	g_sig_interrupt = 0;
 
 t_executor	*init_executor(t_data *data, char *cmd)
 {
-	data->executor = (t_executor *) malloc(sizeof(t_executor));
-	// data = (t_executor *)malloc(sizeof(t_executor));
+	data->executor = (t_executor *)malloc(sizeof(t_executor));
 	if (!data->executor)
+	{
+		ft_putstr_fd("execution memory", 1);
 		return (0);
+	}
 	data->executor->cmd = ft_strdup(cmd);
-	data->executor->here_name = "home";
+	// data->executor->here_name = "home";
 	data->executor->pipes = 0;
 	data->executor->heredoc = 0;
-	data->executor->in = STDIN_FILENO;
-	data->executor->out = STDOUT_FILENO;
+	data->executor->in = 0;
+	data->executor->out = 0;
 	data->executor->next = NULL;
-	data->executor->prev = NULL;
+	// data->executor->prev = NULL;
 	return (data->executor);
 }
 
@@ -61,7 +63,6 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 
 void	execute_command(char *cmd, t_data *data, int *end)
 {
-	// (void)end;
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
 		exit (0);
 	if (check_builtin(&cmd) >= 0)
@@ -71,49 +72,14 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	}
 	if (data->no_path)
 	{
-		close(end[0]);
-		close(end[1]);
-		close(data->executor->in);
-		close(data->executor->out);
 		ft_error(2, cmd, data->no_path);
-		free(data->pwd);
-		free(data->old_pwd);
-		free_array(data->envp->path);
-		free_executor(data->executor);
-		free_env_list(data->envp);
-		free(data->cmd);
+		close_and_free_all(data, end);
 		exit(0);
 	}
 	else
 		cmd_file(cmd, data->envp->path);
-	close(end[0]);
-	close(end[1]);
-	close(data->executor->in);
-	close(data->executor->out);
-	// free(data->lexer_list->str);
-	// free_executor(data->executor);
-	free_array(data->envp->path);
-	ft_free_all(data);
+	close_and_free_all(data, end);
 	exit(1);
-}
-
-void	ft_dup_fd(t_executor *executor, int *end)
-{
-	// int fd;
-	(void)executor;
-	// if (executor->in != STDIN_FILENO)
-	// {
-	// 	dup2(executor->in, STDIN_FILENO);
-	// 	close(executor->in);
-	// }
-	// if (executor->out != STDOUT_FILENO)
-	// {
-	// 	dup2(executor->out, STDOUT_FILENO);
-	// 	close(executor->out);
-	// }
-	dup2(end[1], STDOUT_FILENO);
-	close(end[0]);
-	close(end[1]);
 }
 
 int	execution(t_executor *executor, t_data *data)
@@ -123,15 +89,14 @@ int	execution(t_executor *executor, t_data *data)
 
 	while (executor)
 	{
-		// if (executor->next)
-			pipe(end);
+		pipe(end);
 		pid = fork();
 		if (pid < 0)
-			return (perror("fork"), 1);
+			return (ft_putstr_fd("fork error", 1), 1);
 		else if (pid == 0)
 		{
 			if (executor->next)
-				ft_dup_fd(executor, end);
+				ft_dup_fd(end);
 			execute_command(executor->cmd, data, end);
 		}
 		else
@@ -172,22 +137,3 @@ int	check_builtin(char **str)
 	}
 	return (-1);
 }
-
-// void	assign_fd(t_executor *executor, int fd_in, int *end)
-// {
-// 	executor->out = (executor->next) ? end[1] : STDOUT_FILENO;
-// 	fd_in = (executor->heredoc) ? open(executor->here_name, O_RDONLY) : STDIN_FILENO;
-// }
-
-// void	handle_heredoc(int fd_in, t_executor *executor, int end[])
-// {
-// 	fd_in = (executor->heredoc) ? fd_in : end[0];
-// }
-
-// void	ft_close_fd(t_executor *executor, int fd, int end)
-// {
-// 	if (executor->next)
-// 		close(end);
-// 	if (executor->prev)
-// 		close(fd);
-// }

@@ -19,6 +19,7 @@ SRC = main.c\
 		lexer/parsing_lexar.c\
 		execution/pipes.c\
 		execution/execution.c\
+		execution/free_and_close.c\
 		expansion/expansion1.c\
 		expansion/expansion_utils.c\
 

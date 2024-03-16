@@ -101,8 +101,7 @@ int			ft_unset(char *str, t_data *data);
 int			unset_loop(t_data *data, t_env *current, char **token);
 t_env		*search_env_variable(t_env *envp, char *key);
 
-int			check_unset_arg(char *str, char *token, t_data *data,
-				int size_of_env);
+int			check_unset_arg(char *token, t_data *data);
 
 int			free_array(char **str);
 int			free_env_list(t_env *head);
@@ -161,6 +160,8 @@ t_executor	*parse_pipeline(char *cmd, t_data *data);
 // void		handle_heredoc(int fd_in, t_executor *executor, int end[]);
 // void		ft_close_fd(t_executor *executor, int fd, int end);
 void		free_executor(t_executor *executor);
+void		close_and_free_all(t_data *data, int *end);
+void		ft_dup_fd(int *end);
 // void		execute_pipe(t_data *data);
 // void		wait_pid(int *pid, int amount, t_data *data);
 
@@ -172,4 +173,8 @@ size_t		dollar_sign(char *str);
 char		*search_env_variable2(t_env *envp, char *key);
 void		print_after_equal2(char *temp);
 int			name_error2(char *name, char *str, char *message);
+
+//redirection
+int			is_type(t_lexer *lexer, char *str);
+int			check_line(t_executor *executor, t_data *data);
 extern		int g_sig_interrupt;

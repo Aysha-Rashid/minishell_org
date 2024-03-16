@@ -67,12 +67,13 @@ int	ft_expansion3(t_data *data, char *str)
 		if (j != 0 && str[j] != '\0')
 		{
 			if (str[j] == '?')
-				return (name_error(exit_status, NULL, "command not found"), free(exit_status), 1);
+				return (name_error(exit_status, NULL,
+						"command not found"), free(exit_status), 1);
 			else
 			{
 				exp = search_env_variable2(data->envp, &str[j]);
 				if (!exp)
-					return (free(exit_status),0);
+					return (free(exit_status), 0);
 				return (ft_specified_error(exp), free(exit_status), 1);
 			}
 		}

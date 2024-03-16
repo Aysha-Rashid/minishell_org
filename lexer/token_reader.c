@@ -35,8 +35,8 @@ int	add_node(char *str, t_tokens token, t_lexer **lexer_list)
 	if (!node)
 		return (0);
 	if ((ft_lexeradd_back(lexer_list, node)))
-        return (0);
-    return (1);
+		return (0);
+	return (1);
 }
 
 int	read_words(int i, char *str, t_lexer **lexer_list)
@@ -54,7 +54,6 @@ int	read_words(int i, char *str, t_lexer **lexer_list)
 		else
 			j++;
 	}
-	// ft_putnbr_fd(j, 1);
 	temp = ft_substr(str, i, j);
 	if (!temp)
 		return (0);

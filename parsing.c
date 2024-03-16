@@ -24,9 +24,9 @@ int	parse_env(t_data *data, char **env)
 	i = 0;
 	if (!data->envp || !data->envp->path)
 	{
-		// free_env_list(data->envp);
+		free_env_list(data->envp);
 		ft_error(2, "env", 1);
-		exit(1);
+		exit(0);
 	}
 	while (data->envp->path[i])
 	{
@@ -37,7 +37,7 @@ int	parse_env(t_data *data, char **env)
 			data->envp->path[i] = temp;
 		}
 		i++;
- 	}
+	}
 	return (0);
 }
 
@@ -101,6 +101,10 @@ char	*cmd_file(char *cmd, char **paths)
 		return (NULL);
 	i = 0;
 	str = ft_split(cmd, ' ');
+	if (!str)
+	{
+		ft_putstr_fd("cmd_file memory", 1);
+	}
 	cmd_file = NULL;
 	if (!access(str[0], F_OK))
 		execve(str[0], str, paths);

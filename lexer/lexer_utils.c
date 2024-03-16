@@ -35,15 +35,12 @@ int	ft_lexeradd_back(t_lexer **list, t_lexer *new)
 	if (temp == NULL)
 	{
 		*list = new;
-		return 1;
+		return (1);
 	}
 	while (temp != NULL && temp->next != NULL)
 		temp = temp->next;
-	// write(1, "here", 4);
 	temp->next = new;
 	new->prev = temp;
 	new->next = NULL;
-	// if (!new->prev)
-	// 	free(new);
 	return (0);
 }

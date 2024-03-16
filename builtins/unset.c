@@ -17,7 +17,6 @@ int	invalid_identifier(char *str, char *name)
 	int	error;
 
 	error = 0;
-		// write(1, "hello", 5);
 	if (!(ft_isalpha(str[0])) && str[0] != '_'
 		&& str[0] != '\"' && str[0] != '\'')
 	{
@@ -33,16 +32,8 @@ int	invalid_identifier(char *str, char *name)
 
 int	validate_input(char *token, t_env *current, char *name)
 {
-	// if (ft_strcmp(name, "unset"))
-	// {
-		if (invalid_identifier(token, name) || !current)
-			return (0);
-	// }
-	// else
-	// {
-	// 	if (invalid_identifier(token, name) || !current)
-	// 		return (0);
-	// }
+	if (invalid_identifier(token, name) || !current)
+		return (0);
 	return (1);
 }
 
@@ -66,11 +57,10 @@ int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 
 int	ft_unset(char *str, t_data *data)
 {
-	// write(1, "here", 4);
 	char	**token;
 	t_env	*current;
-	token = ft_split(str, ' ');
 
+	token = ft_split(str, ' ');
 	current = data->envp;
 	if (ft_strlen(token[0]) != 5)
 		return (free_array(token), ft_error(2, str, data->no_path), 1);
@@ -98,8 +88,7 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 		prev = NULL;
 		while (current && current != remove)
 		{
-			check_unset_arg("PATH", token[i], data, len_of_values(current));
-			check_unset_arg("PATH=", token[i], data, len_of_values(current));
+			check_unset_arg(token[i], data);
 			prev = current;
 			current = current->next;
 		}
