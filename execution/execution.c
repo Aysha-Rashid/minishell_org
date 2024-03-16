@@ -71,7 +71,17 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	}
 	if (data->no_path)
 	{
+		close(end[0]);
+		close(end[1]);
+		close(data->executor->in);
+		close(data->executor->out);
 		ft_error(2, cmd, data->no_path);
+		free(data->pwd);
+		free(data->old_pwd);
+		free_array(data->envp->path);
+		free_executor(data->executor);
+		free_env_list(data->envp);
+		free(data->cmd);
 		exit(0);
 	}
 	else

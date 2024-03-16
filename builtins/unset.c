@@ -75,8 +75,8 @@ int	ft_unset(char *str, t_data *data)
 	if (ft_strlen(token[0]) != 5)
 		return (free_array(token), ft_error(2, str, data->no_path), 1);
 	if (!unset_loop(data, current, token))
-		return (0);
-	return (1);
+		return (free_array(token));
+	return (free_array(token), 1);
 }
 
 int	unset_loop(t_data *data, t_env *current, char **token)
@@ -91,6 +91,8 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 		token[i] = remove_all_qoutes(token[i]);
 		if (!validate_input(token[i], current, "unset"))
 			i++;
+		if (!token[i])
+			return (1);
 		remove = search_env_variable(data->envp, token[i]);
 		current = data->envp;
 		prev = NULL;
@@ -104,5 +106,5 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 		remove_env_variable(data, remove, prev);
 		i++;
 	}
-	return (free_array(token), 1);
+	return (1);
 }
