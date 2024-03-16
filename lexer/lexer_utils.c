@@ -27,7 +27,7 @@ t_lexer	*ft_lexernew(char *str, int token)
 	return (new_element);
 }
 
-void	ft_lexeradd_back(t_lexer **list, t_lexer *new)
+int	ft_lexeradd_back(t_lexer **list, t_lexer *new)
 {
 	t_lexer	*temp;
 
@@ -35,7 +35,7 @@ void	ft_lexeradd_back(t_lexer **list, t_lexer *new)
 	if (*list == NULL)
 	{
 		*list = new;
-		return ;
+		return 1;
 	}
 	while (temp->next != NULL)
 		temp = temp->next;
@@ -43,4 +43,5 @@ void	ft_lexeradd_back(t_lexer **list, t_lexer *new)
 	new->prev = temp;
 	if (!new->prev)
 		free(new);
+	return (0);
 }

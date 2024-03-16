@@ -76,5 +76,6 @@ int	main(int argc, char **argv, char **env)
 	find_pwd(&data);
 	prompt_loop(*argv, &data);
 	free(data.cmd);
+	rl_clear_history();
 	return (0);
 }

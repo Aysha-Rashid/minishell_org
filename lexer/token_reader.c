@@ -34,13 +34,9 @@ int	add_node(char *str, t_tokens token, t_lexer **lexer_list)
 	node = ft_lexernew(str, token);
 	if (!node)
 		return (0);
-	ft_lexeradd_back(lexer_list, node);
-	if (!lexer_list)
-	{
-		free(node);
-		free_lexer_list(*lexer_list);
-	}
-	return (1);
+	if (!(ft_lexeradd_back(lexer_list, node)))
+        return (0);
+    return (1);
 }
 
 int	read_words(int i, char *str, t_lexer **lexer_list)
@@ -58,10 +54,11 @@ int	read_words(int i, char *str, t_lexer **lexer_list)
 		else
 			j++;
 	}
+	// ft_putnbr_fd(j, 1);
 	temp = ft_substr(str, i, j);
 	if (!temp)
 		return (0);
-	if (!(add_node(temp, 0, lexer_list)))
+	if ((add_node(temp, 0, lexer_list)))
 		return (free(temp), 0);
 	free(temp);
 	return (j);
@@ -83,10 +80,7 @@ int	token_reader(t_data *data)
 		else
 			j = read_words(i, data->cmd, &data->lexer_list);
 		if (j < 0)
-		{
-			free_lexer_list(data->lexer_list);
 			return (0);
-		}
 		i = i + j;
 	}
 	return (1);

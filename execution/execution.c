@@ -62,6 +62,8 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 void	execute_command(char *cmd, t_data *data, int *end)
 {
 	// (void)end;
+	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
+		exit (0);
 	if (check_builtin(&cmd) >= 0)
 	{
 		builtin_command(cmd, data);
@@ -78,6 +80,7 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	close(end[1]);
 	close(data->executor->in);
 	close(data->executor->out);
+	free_lexer_list(data->lexer_list);
 	free_executor(data->executor);
 	ft_free_all(data);
 	exit(1);

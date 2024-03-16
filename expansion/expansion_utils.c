@@ -28,14 +28,13 @@ void	print_after_equal2(char *temp)
 	char	*equal_pos;
 
 	equal_pos = ft_strchr(temp, '=');
-	ft_putstrn_fd(temp, equal_pos - temp + 1, 1);
 	ft_putstr_fd(equal_pos + 1, 1);
 }
 
 int	name_error2(char *name, char *str, char *message)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	print_after_equal(name);
+	print_after_equal2(name);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putendl_fd(message, STDERR_FILENO);

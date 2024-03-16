@@ -56,17 +56,17 @@ typedef struct s_executor
 	char				*here_name;
 	int					in;
 	int					out;
-	char				*in_file;
-	char				*out_file;
+	// char				*in_file;
+	// char				*out_file;
 	char				*cmd;
-	char				*hd_file_name;
+	// char				*hd_file_name;
 	struct s_executor	*next;
 	struct s_executor	*prev;
 }				t_executor;
 
 typedef struct s_data
 {
-	int				*pid;
+	// int				*pid;
 	int				no_path;
 	int				status_code;
 	char			*cmd;
@@ -138,7 +138,7 @@ int			add_node(char *str, t_tokens token, t_lexer **lexer_list);
 int			skip_spaces(char *str, int i);
 int			is_whitespace(char c);
 t_lexer		*ft_lexernew(char *str, int token);
-void		ft_lexeradd_back(t_lexer **list, t_lexer *new);
+int			ft_lexeradd_back(t_lexer **list, t_lexer *new);
 int			handle_quotes(int i, char *str, char del);
 t_tokens	check_token(int n);
 int			handle_token(char *str, int i, t_lexer **lexer_list);
@@ -157,9 +157,9 @@ int			double_token_error(char *str);
 void		ft_lexerclear(t_lexer **lst);
 t_executor	*init_executor(t_data *data, char *cmd);
 t_executor	*parse_pipeline(char *cmd, t_data *data);
-void		assign_fd(t_executor *executor, int fd_in, int *end);
-void		handle_heredoc(int fd_in, t_executor *executor, int end[]);
-void		ft_close_fd(t_executor *executor, int fd, int end);
+// void		assign_fd(t_executor *executor, int fd_in, int *end);
+// void		handle_heredoc(int fd_in, t_executor *executor, int end[]);
+// void		ft_close_fd(t_executor *executor, int fd, int end);
 void		free_executor(t_executor *executor);
 // void		execute_pipe(t_data *data);
 // void		wait_pid(int *pid, int amount, t_data *data);

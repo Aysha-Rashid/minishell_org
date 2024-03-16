@@ -38,6 +38,7 @@ int	ft_expansion(t_data *data)
 		ft_expansion3(data, splitted[i]);
 		i++;
 	}
+	free_array(splitted);
 	return (0);
 }
 
@@ -50,7 +51,6 @@ int	ft_specified_error(char *str)
 		name_error2(str, NULL, "is a directory");
 	else
 		name_error2(str, NULL, "command not found");
-
 	return (0);
 }
 
@@ -62,20 +62,21 @@ int	ft_expansion3(t_data *data, char *str)
 
 	exit_status = ft_itoa(data->status_code);
 	j = dollar_sign(str);
-	while (str)
+	while (str[j])
 	{
 		if (j != 0 && str[j] != '\0')
 		{
 			if (str[j] == '?')
-				return (name_error(exit_status, NULL, "command not found"), 1);
+				return (name_error(exit_status, NULL, "command not found"), free(exit_status), 1);
 			else
 			{
-				exp = search_env_variable2(data->envp, &str[j++]);
+				exp = search_env_variable2(data->envp, &str[j]);
 				if (!exp)
-					return (0);
-				return (ft_specified_error(exp), 1);
+					return (free(exit_status),0);
+				return (ft_specified_error(exp), free(exit_status), 1);
 			}
 		}
+		j++;
 	}
-	return (0);
+	return (free(exit_status), 0);
 }

@@ -21,6 +21,14 @@ void	free_executor(t_executor *executor)
 	free(executor);
 }
 
+void	free_lexer_list(t_lexer *list)
+{
+	if (!list)
+		return ;
+    free_lexer_list(list->next);
+    free(list);
+}
+
 void	check_n_execute(char *str, t_data *data)
 {
 	if (!data->cmd || data->cmd[0] == '\0')
@@ -29,59 +37,15 @@ void	check_n_execute(char *str, t_data *data)
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 		ft_putendl_fd("exit", 1);
+		free_lexer_list(data->lexer_list);
 		ft_free_all(data);
 		exit(0);
 	}
-	(void)str;
+
 	if (!token_reader(data))
 		ft_error(3, NULL, data->no_path);
-	// ft_expansion(data);
 	if (check_pipes_n_execute(data))
 		return ;
-}
-
-void	free_lexer_list(t_lexer *list)
-{
-	t_lexer	*current;
-	t_lexer	*next;
-
-	current = list;
-	while (current != NULL)
-	{
-		next = current->next;
-		free(current->str);
-		free(current);
-		current = next;
-	}
-	list = NULL;
-}
-
-int	check_pipes_n_execute(t_data *data)
-{
-	char		builtin_index;
-	char		**str;
-
-	if (!quote(data->cmd))
-		return (ft_error(1, NULL, data->no_path));
-	// if (parsing_lexar(data, temp))
-	// 	return (1);
-	// data->cmd = remove_all_qoutes(data->cmd);
-	// ft_expansion(data);
-	str = ft_split(data->cmd, ' ');
-	builtin_index = check_builtin(str);
-	free_array(str);
-	data->executor = parse_pipeline(data->cmd, data);
-	count_pipes(data->lexer_list, data);
-	if (builtin_index >= 0 && data->executor->pipes == 0)
-		builtin_command(data->cmd, data);
-	else if (data->executor->pipes)
-		execution(data->executor, data);
-	// else
-	// 	ft_expansion(data);
-		// ÷return (0);
-	free_executor(data->executor);
-	// free(data->executor->cmd);
-	return (0);
 }
 
 void	count_pipes(t_lexer *lexer, t_data *data)
@@ -95,4 +59,28 @@ void	count_pipes(t_lexer *lexer, t_data *data)
 			data->executor->pipes++;
 		tmp = tmp->next;
 	}
+}
+
+int	check_pipes_n_execute(t_data *data)
+{
+	char		builtin_index;
+	char		**str;
+
+	if (!quote(data->cmd))
+		return (ft_error(1, NULL, data->no_path));
+	// if (parsing_lexar(data, temp))
+	// 	return (1);
+	// data->cmd = remove_all_qoutes(data->cmd);
+	ft_expansion(data);
+	str = ft_split(data->cmd, ' ');
+	builtin_index = check_builtin(str);
+	free_array(str);
+	data->executor = parse_pipeline(data->cmd, data);
+	count_pipes(data->lexer_list, data);
+	if (builtin_index >= 0 && data->executor->pipes == 0)
+		builtin_command(data->cmd, data);
+	else
+		execution(data->executor, data);;
+	free_executor(data->executor);
+	return (0);
 }

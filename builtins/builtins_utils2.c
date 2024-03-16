@@ -57,10 +57,10 @@ void	print_after_equal(char *temp)
 	char	*equal_pos;
 
 	equal_pos = ft_strchr(temp, '=');
-	// ft_putstrn_fd(temp, equal_pos - temp + 1, 1);
-	// ft_putchar_fd('"', 1);
+	ft_putstrn_fd(temp, equal_pos - temp + 1, 1);
+	ft_putchar_fd('"', 1);
 	ft_putstr_fd(equal_pos + 1, 1);
-	// ft_putendl_fd("\"", 1);
+	ft_putendl_fd("\"", 1);
 }
 
 char	*ft_strcpy(char	*dest, char *src)

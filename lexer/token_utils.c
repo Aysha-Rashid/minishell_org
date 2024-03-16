@@ -36,7 +36,6 @@ int	handle_token(char *str, int i, t_lexer **lexer_list)
 	t_tokens	token;
 
 	token = check_token(str[i]);
-	// ft_putnbr_fd(token, 1);
 	if (token == OUTFILE && check_token(str[i + 1] == OUTFILE))
 	{
 		if (!add_node(NULL, OUTEOF, lexer_list))
