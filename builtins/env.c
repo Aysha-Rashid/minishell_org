@@ -92,7 +92,7 @@ int	free_env_list(t_env *head)
 	t_env	*temp;
 
 	temp = head;
-	free_array(temp->path);
+	// free_array(temp->path);
 	while (head)
 	{
 		temp = head;

@@ -66,11 +66,12 @@ int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 
 int	ft_unset(char *str, t_data *data)
 {
+	// write(1, "here", 4);
 	char	**token;
 	t_env	*current;
+	token = ft_split(str, ' ');
 
 	current = data->envp;
-	token = ft_split(str, ' ');
 	if (ft_strlen(token[0]) != 5)
 		return (free_array(token), ft_error(2, str, data->no_path), 1);
 	if (!unset_loop(data, current, token))

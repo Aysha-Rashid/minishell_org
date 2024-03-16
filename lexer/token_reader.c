@@ -34,7 +34,7 @@ int	add_node(char *str, t_tokens token, t_lexer **lexer_list)
 	node = ft_lexernew(str, token);
 	if (!node)
 		return (0);
-	if (!(ft_lexeradd_back(lexer_list, node)))
+	if ((ft_lexeradd_back(lexer_list, node)))
         return (0);
     return (1);
 }
@@ -58,7 +58,7 @@ int	read_words(int i, char *str, t_lexer **lexer_list)
 	temp = ft_substr(str, i, j);
 	if (!temp)
 		return (0);
-	if ((add_node(temp, 0, lexer_list)))
+	if ((add_node(temp, 0, lexer_list) == 0))
 		return (free(temp), 0);
 	free(temp);
 	return (j);

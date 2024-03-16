@@ -80,8 +80,9 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	close(end[1]);
 	close(data->executor->in);
 	close(data->executor->out);
-	free_lexer_list(data->lexer_list);
-	free_executor(data->executor);
+	// free(data->lexer_list->str);
+	// free_executor(data->executor);
+	free_array(data->envp->path);
 	ft_free_all(data);
 	exit(1);
 }

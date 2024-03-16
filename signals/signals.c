@@ -28,10 +28,11 @@ int	handle_eof(char *str, t_data *data)
 {
 	if (str == NULL)
 	{
-		free_env_list(data->envp);
 		free(data->pwd);
 		free(data->old_pwd);
+		free_array(data->envp->path);
 		// ft_free_all(data);
+		free_env_list(data->envp);
 		ft_putstr_fd("exit\n", 2);
 		return (1);
 	}

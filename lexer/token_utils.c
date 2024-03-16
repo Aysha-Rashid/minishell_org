@@ -38,19 +38,19 @@ int	handle_token(char *str, int i, t_lexer **lexer_list)
 	token = check_token(str[i]);
 	if (token == OUTFILE && check_token(str[i + 1] == OUTFILE))
 	{
-		if (!add_node(NULL, OUTEOF, lexer_list))
+		if (add_node(NULL, OUTEOF, lexer_list))
 			return (-1);
 		return (2);
 	}
 	else if (token == INFILE && str[i + 1] == INFILE)
 	{
-		if (!add_node(NULL, HEREDOC, lexer_list))
+		if (add_node(NULL, HEREDOC, lexer_list))
 			return (-1);
 		return (2);
 	}
 	else if (token)
 	{
-		if (!add_node(NULL, token, lexer_list))
+		if (add_node(NULL, token, lexer_list))
 			return (-1);
 		return (1);
 	}

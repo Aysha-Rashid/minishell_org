@@ -58,11 +58,6 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
 
-	if (env[0] == NULL || !env)
-	{
-		ft_putendl_fd("minishell: env: no such file or directory", 2);
-		exit(0);
-	}
 	if (argv[1] || argc != 1)
 	{
 		ft_putendl_fd("invalid arguments", 2);
@@ -75,7 +70,7 @@ int	main(int argc, char **argv, char **env)
 	parse_env(&data, env);
 	find_pwd(&data);
 	prompt_loop(*argv, &data);
-	free(data.cmd);
+	ft_free_all(&data);
 	rl_clear_history();
 	return (0);
 }

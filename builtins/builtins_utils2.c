@@ -81,6 +81,8 @@ void	ft_free_all(t_data *data)
 {
 	free(data->pwd);
 	free(data->old_pwd);
+	free_array(data->envp->path);
+	// free_lexer_list(data->lexer_list);
 	free_env_list(data->envp);
 	free(data->cmd);
 }

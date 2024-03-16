@@ -24,9 +24,9 @@ int	parse_env(t_data *data, char **env)
 	i = 0;
 	if (!data->envp || !data->envp->path)
 	{
-		data->no_path = 1;
-		ft_error(2, "env", data->no_path);
-		exit(0);
+		// free_env_list(data->envp);
+		ft_error(2, "env", 1);
+		exit(1);
 	}
 	while (data->envp->path[i])
 	{

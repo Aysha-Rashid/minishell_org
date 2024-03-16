@@ -25,6 +25,7 @@ void	free_lexer_list(t_lexer *list)
 {
 	if (!list)
 		return ;
+	// free(list->str);
     free_lexer_list(list->next);
     free(list);
 }
@@ -37,11 +38,10 @@ void	check_n_execute(char *str, t_data *data)
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 		ft_putendl_fd("exit", 1);
-		free_lexer_list(data->lexer_list);
+		// free_lexer_list(data->lexer_list);
 		ft_free_all(data);
 		exit(0);
 	}
-
 	if (!token_reader(data))
 		ft_error(3, NULL, data->no_path);
 	if (check_pipes_n_execute(data))
@@ -77,6 +77,7 @@ int	check_pipes_n_execute(t_data *data)
 	free_array(str);
 	data->executor = parse_pipeline(data->cmd, data);
 	count_pipes(data->lexer_list, data);
+	free_lexer_list(data->lexer_list);
 	if (builtin_index >= 0 && data->executor->pipes == 0)
 		builtin_command(data->cmd, data);
 	else
