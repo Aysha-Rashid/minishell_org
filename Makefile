@@ -41,7 +41,7 @@ LIBFTPATH = libft
 
 $(NAME): $(OBJ)
 	@ cd $(LIBFTPATH) && make all
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -I/usr/local/opt/readline/include -L/usr/local/opt/readline/lib -lreadline $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lreadline -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include $(LIBFT)
 	@ echo "$(COLOUR_GREEN)compiled $(words $(OBJ)) files $(COLOUR_END)"
 
 all: $(NAME)

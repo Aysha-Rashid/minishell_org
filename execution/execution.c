@@ -58,24 +58,28 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 
 void	execute_command(char *cmd, t_data *data, int *end)
 {
-	char **str;
+	char	*str;
 
-	str = ft_split(cmd, ' ');
+	str = ft_strtrim(cmd, " ");
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
 		exit (0);
 	if (check_builtin(str) >= 0)
 	{
-		builtin_command(cmd, data);
-		exit(0);
+		if (builtin_command(str, data))
+			exit_and_free(data, end, str, 0);
+		exit_and_free(data, end, str, 1);
+
 	}
-	if (data->no_path)
+	else if (data->no_path)
 	{
 		ft_error(2, cmd, data->no_path);
-		close_and_free_all(data, end);
-		exit(0);
+		exit_and_free(data, end, str, 0);
 	}
 	else
-		cmd_file(str, data->envp->path);
+	{
+		free(str);
+		cmd_file(cmd, data->envp->path);
+	}
 	close_and_free_all(data, end);
 	exit(1);
 }
@@ -110,9 +114,10 @@ int	execution(t_executor *executor, t_data *data)
 	return (0);
 }
 
-int	check_builtin(char **str)
+int	check_builtin(char *str)
 {
 	int			i;
+	char		**temp;
 	static char	*builtins[] = {
 		"echo",
 		"cd",
@@ -127,11 +132,12 @@ int	check_builtin(char **str)
 	};
 
 	i = 0;
+	temp = ft_split(str, ' ');
 	while (i < 10)
 	{
-		if (ft_strcmp(builtins[i], str[0]) == 0)
-			return (i);
+		if (ft_strcmp(builtins[i], temp[0]) == 0)
+			return (free_array(temp), i);
 		i++;
 	}
-	return (-1);
+	return (free_array(temp),-1);
 }

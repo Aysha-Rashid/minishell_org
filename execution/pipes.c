@@ -55,7 +55,7 @@ int	check_pipes_n_execute(t_data *data)
 	// data->cmd = remove_all_qoutes(data->cmd);
 	// ft_expansion(data);
 	str = ft_split(data->cmd, ' ');
-	builtin_index = check_builtin(str);
+	builtin_index = check_builtin(data->cmd);
 	free_array(str);
 	data->executor = parse_pipeline(data->cmd, data);
 	count_pipes(data->lexer_list, data);

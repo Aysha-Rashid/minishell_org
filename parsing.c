@@ -91,33 +91,36 @@ char	*env_str(t_env *env)
 	return (str);
 }
 
-char	*cmd_file(char **cmd, char **paths)
+char	*cmd_file(char *cmd, char **paths)
 {
 	char	*cmd_file;
+	char	**str;
 	int		i;
 
 	if (!cmd)
 		return (NULL);
 	i = 0;
+	str = ft_split(cmd, ' ');
 	cmd_file = NULL;
-	if (!access(cmd[0], F_OK))
-		execve(cmd[0], cmd, paths);
-	else
-		return(ft_error(2, cmd[0], 1), NULL);
+	if (!access(str[0], F_OK))
+	{
+		execve(cmd, str, paths);
+		return (ft_error(2, str[0], 1), free_array(str), NULL);
+	}
 	while (paths[i])
 	{
-		cmd_file = ft_strjoin(paths[i], cmd[0]);
+		cmd_file = ft_strjoin(paths[i], str[0]);
 		if (!(access(cmd_file, F_OK | X_OK)))
 		{
-			ft_putendl_fd(cmd[1], 2);
-			execve(cmd_file, cmd, paths);
+			execve(cmd_file, str, paths);
 			free(cmd_file);
+			free_array(str);
 			exit(1);
 		}
 		free(cmd_file);
 		i++;
 	}
-	return (ft_error(2, cmd[0], 0), NULL);
+	return (ft_error(2, str[0], 0), free_array(str), NULL);
 }
 
 char	*given_path(char *cmd)

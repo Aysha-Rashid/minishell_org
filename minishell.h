@@ -83,7 +83,7 @@ int			ft_env(t_data *data, char *str);
 int			parse_env(t_data *data, char **env);
 t_env		*allocate_env(char **env);
 char		*find_paths_and_split(char **env);
-char		*cmd_file(char **cmd, char **paths);
+char		*cmd_file(char *cmd, char **paths);
 char		*given_path(char *cmd);
 
 int			find_pwd(t_data *data);
@@ -149,7 +149,7 @@ int			check_pipes_n_execute(t_data *data);
 int			execution(t_executor *executor, t_data *data);
 int			builtin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
-int			check_builtin(char **str);
+int			check_builtin(char *str);
 
 int			parsing_lexar(t_data *data, t_lexer *lexar);
 int			double_token_error(char *str);
@@ -173,6 +173,7 @@ size_t		dollar_sign(char *str);
 char		*search_env_variable2(t_env *envp, char *key);
 void		print_after_equal2(char *temp);
 int			name_error2(char *name, char *str, char *message);
+void		exit_and_free(t_data *data, int *end, char *str, int status);
 
 //redirection
 int			is_type(t_lexer *lexer, char *str);

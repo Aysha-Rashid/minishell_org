@@ -41,7 +41,7 @@ int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 {
 	if (to_remove)
 	{
-		if (prev->next)
+		if (prev)
 			prev->next = to_remove->next;
 		else
 			data->envp = to_remove->next;
@@ -65,7 +65,7 @@ int	ft_unset(char *str, t_data *data)
 	if (ft_strlen(token[0]) != 5)
 		return (free_array(token), ft_error(2, str, data->no_path), 1);
 	if (!unset_loop(data, current, token))
-		return (free_array(token));
+		return (free_array(token), 0);
 	return (free_array(token), 1);
 }
 
@@ -74,26 +74,25 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 	int		i;
 	t_env	*remove;
 	t_env	*prev;
+	char	*str;
 
 	i = 1;
 	while (token[i])
 	{
-		token[i] = remove_all_qoutes(token[i]);
-		if (!validate_input(token[i], current, "unset"))
+		str = remove_all_qoutes(token[i]);
+		if (!validate_input(str, current, "unset"))
 			i++;
-		if (!token[i])
-			return (1);
-		remove = search_env_variable(data->envp, token[i]);
+		remove = search_env_variable(data->envp, str);
 		current = data->envp;
 		prev = NULL;
 		while (current && current != remove)
 		{
-			check_unset_arg(token[i], data);
+			check_unset_arg(str, data);
 			prev = current;
 			current = current->next;
 		}
 		remove_env_variable(data, remove, prev);
 		i++;
 	}
-	return (1);
+	return (free(str), 1);
 }

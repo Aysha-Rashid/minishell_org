@@ -124,6 +124,7 @@ int	declare_sorted(t_env *head)
 int	ft_export(char *str, t_data *data)
 {
 	char	**token;
+	char	*temp;
 	int		i;
 
 	if (!data->envp->value && data->envp->next == NULL)
@@ -138,11 +139,12 @@ int	ft_export(char *str, t_data *data)
 		return (declare_sorted(data->envp), free_array(token));
 	while (token[i])
 	{
-		token[i] = remove_all_qoutes(token[i]);
-		if (!already_there(token[i], data)
-			&& validate_input(token[i], data->envp, "export"))
-			env_add(token[i], data);
+		temp = remove_all_qoutes(token[i]);
+		if (!already_there(temp, data)
+			&& validate_input(temp, data->envp, "export"))
+			env_add(temp, data);
+		free(temp);
 		i++;
 	}
-	return (free_array(token));
+	return (free_array(token), 0);
 }

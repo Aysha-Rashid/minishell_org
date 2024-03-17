@@ -19,8 +19,8 @@ int	builtin_command(char *str, t_data *data)
 		return (ft_env(data, str), 0);
 	else if (!ft_strncmp(str, "export", 6))
 		return (ft_export(str, data), 0);
-	else if (str && (!ft_strncmp(str, "pwd", 4)
-			|| !ft_strncmp(str, "PWD", 4)))
+	else if (str && (!ft_strncmp(str, "pwd", 3)
+			|| !ft_strncmp(str, "PWD", 3)))
 		return (ft_pwd(data), 0);
 	else if (str && (!ft_strncmp(str, "echo", 4)
 			|| (!ft_strncmp(str, "ECHO", 4))
@@ -76,6 +76,5 @@ int	main(int argc, char **argv, char **env)
 	find_pwd(&data);
 	prompt_loop(*argv, &data);
 	ft_free_all(&data);
-	// rl_clear_history();
 	return (0);
 }

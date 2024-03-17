@@ -56,7 +56,6 @@ void	change_pwd(t_data *tools)
 {
 	char	*tmp;
 
-	// find_pwd(tools);
 	tmp = ft_strdup(tools->pwd);
 	if (!tmp)
 		return ;
