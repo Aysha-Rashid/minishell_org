@@ -17,11 +17,6 @@ int 	g_sig_interrupt = 0;
 t_executor	*init_executor(t_data *data, char *cmd)
 {
 	data->executor = (t_executor *)malloc(sizeof(t_executor));
-	if (!data->executor)
-	{
-		ft_putstr_fd("execution memory", 1);
-		return (0);
-	}
 	data->executor->cmd = ft_strdup(cmd);
 	// data->executor->here_name = "home";
 	data->executor->pipes = 0;
@@ -63,9 +58,12 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 
 void	execute_command(char *cmd, t_data *data, int *end)
 {
+	char **str;
+
+	str = ft_split(cmd, ' ');
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
 		exit (0);
-	if (check_builtin(&cmd) >= 0)
+	if (check_builtin(str) >= 0)
 	{
 		builtin_command(cmd, data);
 		exit(0);
@@ -77,7 +75,7 @@ void	execute_command(char *cmd, t_data *data, int *end)
 		exit(0);
 	}
 	else
-		cmd_file(cmd, data->envp->path);
+		cmd_file(str, data->envp->path);
 	close_and_free_all(data, end);
 	exit(1);
 }

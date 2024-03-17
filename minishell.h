@@ -83,7 +83,7 @@ int			ft_env(t_data *data, char *str);
 int			parse_env(t_data *data, char **env);
 t_env		*allocate_env(char **env);
 char		*find_paths_and_split(char **env);
-char		*cmd_file(char *cmd, char **paths);
+char		*cmd_file(char **cmd, char **paths);
 char		*given_path(char *cmd);
 
 int			find_pwd(t_data *data);
