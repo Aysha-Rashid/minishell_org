@@ -53,7 +53,6 @@ int	check_pipes_n_execute(t_data *data)
 	// if (parsing_lexar(data, temp))
 	// 	return (1);
 	// data->cmd = remove_all_qoutes(data->cmd);
-	// ft_expansion(data);
 	str = ft_split(data->cmd, ' ');
 	builtin_index = check_builtin(data->cmd);
 	free_array(str);
@@ -61,8 +60,12 @@ int	check_pipes_n_execute(t_data *data)
 	count_pipes(data->lexer_list, data);
 	if (builtin_index >= 0 && data->executor->pipes == 0)
 		builtin_command(data->cmd, data);
+	else if (ft_expansion(data))
+		ft_error(2, data->cmd, 0);
 	else
+	{
 		execution(data->executor, data);
+	}
 	free_lexer_list(data->lexer_list);
 	free_executor(data->executor);
 	return (0);

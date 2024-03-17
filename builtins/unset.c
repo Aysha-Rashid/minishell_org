@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int	invalid_identifier(char *str, char *name)
+int	invalid_identifier(t_data *data, char *str, char *name)
 {
 	int	error;
 
@@ -23,16 +23,24 @@ int	invalid_identifier(char *str, char *name)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(name, 2);
 		ft_putstr_fd(": `", 2);
-		ft_putstr_fd(str, 2);
+		if (str[0] == '$')
+			ft_expansion3(data, str, 1);
+		else
+			ft_putstr_fd(str, 2);
 		ft_putendl_fd("': not a valid identifier", 2);
 		error = 1;
 	}
 	return (error);
 }
 
-int	validate_input(char *token, t_env *current, char *name)
+int	validate_input(t_data *data, char *token, t_env *current, char *name)
 {
-	if (invalid_identifier(token, name) || !current)
+	// char	*str;
+
+	// str = ft_expansion3(data, token, 1);
+	if (token[0] == '$')
+		invalid_identifier(data, token, name);
+	else if (invalid_identifier(data, token, name) || !current)
 		return (0);
 	return (1);
 }
@@ -80,7 +88,7 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 	while (token[i])
 	{
 		str = remove_all_qoutes(token[i]);
-		if (!validate_input(str, current, "unset"))
+		if (!validate_input(data, str, current, "unset"))
 			i++;
 		remove = search_env_variable(data->envp, str);
 		current = data->envp;

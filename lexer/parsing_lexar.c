@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int parsing_lexar(t_data *data, t_lexer *lexar)
+int	parsing_lexar(t_data *data, t_lexer *lexar)
 {
 	char	**str;
 	size_t	len;
@@ -93,7 +93,7 @@ int	double_token_error(char *str)
 			error = "`||'";
 		else if (ft_strcmp(str, "newline") == 0)
 			error = "`newline'";
-		name_error("syntax error near unexpected token ", NULL, error);
+		name_error("syntax error near unexpected token ", NULL, error, 0);
 		return (1);
 	}
 	return (0);

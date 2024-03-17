@@ -19,15 +19,15 @@ int	ft_error(int i, char *str, int no_path)
 	else if (i == 2)
 	{
 		if (no_path)
-			name_error(str, NULL, "No such file or directory");
+			name_error(str, NULL, "No such file or directory", 0);
 		else
-			name_error(str, NULL, "command not found");
+			name_error(str, NULL, "command not found", 0);
 	}
 	else if (i == 3)
 		ft_putstr_fd("unable to assign memory\n", 2);
 	else if (i == 4)
-		name_error(str, NULL, "Permission denied");
+		name_error(str, NULL, "Permission denied", 0);
 	else if (i == 5)
-		name_error(str, NULL, "No options allowed");
+		name_error(str, NULL, "No options allowed", 0);
 	return (1);
 }

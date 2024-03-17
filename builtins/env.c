@@ -70,9 +70,9 @@ int	ft_env(t_data *data, char *str)
 
 	temp = data->envp;
 	if (!data->envp || data->no_path)
-		return (name_error(str, NULL, "No such file or directory"), 1);
+		return (name_error(str, NULL, "No such file or directory", 0), 1);
 	if (ft_strlen(str) != 3)
-		return (name_error(str, NULL, "command not found"));
+		return (name_error(str, NULL, "command not found", 0));
 	if (temp)
 	{
 		while (temp)

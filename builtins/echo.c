@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	check_and_write(char *str)
+void	check_and_write(char *str, t_data *data)
 {
 	int		i;
 	int		len;
@@ -20,7 +20,9 @@ void	check_and_write(char *str)
 
 	i = 0;
 	len = ft_strlen(str);
-	while (i < len)
+	if (str[i] == '$')
+		ft_expansion3(data, str, 1);
+	while (i < len && str[i] != '$')
 	{
 		if (str[i] == '\'' || str[i] == '"')
 		{
@@ -58,7 +60,7 @@ int	quote(char *l)
 	return (1);
 }
 
-int	ft_echo(char *argv)
+int	ft_echo(char *argv, t_data *data)
 {
 	char	**token;
 	int		n_option;
@@ -76,7 +78,7 @@ int	ft_echo(char *argv)
 	}
 	while (token[i])
 	{
-		check_and_write(token[i]);
+		check_and_write(token[i], data);
 		if (token[i + 1] && token[i][0] != '\0')
 			write(1, " ", 1);
 		i++;

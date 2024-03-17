@@ -31,12 +31,16 @@ void	print_after_equal2(char *temp)
 	ft_putstr_fd(equal_pos + 1, 1);
 }
 
-int	name_error2(char *name, char *str, char *message)
+int	name_error2(char *name, char *str, char *message, int flag)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	print_after_equal2(name);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putendl_fd(message, STDERR_FILENO);
+	if (!flag)
+	{	ft_putstr_fd("minishell: ", STDERR_FILENO);
+		print_after_equal2(name);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(str, STDERR_FILENO);
+		ft_putendl_fd(message, STDERR_FILENO);
+	}
+	else
+		print_after_equal2(name);
 	return (0);
 }

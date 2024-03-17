@@ -36,7 +36,7 @@ int	find_current_path(t_data *data, char *str)
 	ret = chdir(temp);
 	if (ret != 0)
 		return (name_error("cd", data->old_pwd,
-				": No such file or directory"), free(temp), 1);
+				": No such file or directory", 0), free(temp), 1);
 	return (free(temp), ret);
 }
 
@@ -86,7 +86,7 @@ int	ft_cd(char *str, t_data *data)
 		if (changed != 0)
 		{
 			name_error("cd", temp[1],
-				": No such file or directory ");
+				": No such file or directory ", 0);
 			return (free_array(temp), 0);
 		}
 	}

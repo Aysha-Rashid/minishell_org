@@ -62,12 +62,18 @@ size_t	size_of_env(char **head)
 	return (i);
 }
 
-int	name_error(char *name, char *str, char *message)
+int	name_error(char *name, char *str, char *message, int flag)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(name, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putendl_fd(message, STDERR_FILENO);
+	if (!flag)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(name, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(str, STDERR_FILENO);
+		ft_putendl_fd(message, STDERR_FILENO);
+	}
+	else
+		ft_putendl_fd(message, STDERR_FILENO);
+
 	return (0);
 }

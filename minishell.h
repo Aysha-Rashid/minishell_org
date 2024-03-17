@@ -106,9 +106,9 @@ int			check_unset_arg(char *token, t_data *data);
 int			free_array(char **str);
 int			free_env_list(t_env *head);
 void		free_lexer_list(t_lexer *list);
-int			name_error(char *name, char *str, char *message);
+int			name_error(char *name, char *str, char *message, int flag);
 void		ft_free_all(t_data *data);
-int			validate_input(char *token, t_env *current, char *name);
+int			validate_input(t_data *data, char *token, t_env *current, char *name);
 
 size_t		len_of_values(t_env *lst);
 size_t		size_of_env(char **head);
@@ -123,8 +123,8 @@ void		ft_signals(void);
 void		check_signal(char *input, t_data *data);
 
 //echo
-int			ft_echo(char *argv);
-void		check_and_write(char *str);
+int			ft_echo(char *argv, t_data *data);
+void		check_and_write(char *str, t_data *data);
 
 //parse
 int			quote(char *l);
@@ -168,11 +168,11 @@ void		ft_dup_fd(int *end);
 
 //expansion
 int			ft_expansion(t_data *data);
-int			ft_expansion3(t_data *data, char *str);
+int			ft_expansion3(t_data *data, char *str, int flag);
 size_t		dollar_sign(char *str);
 char		*search_env_variable2(t_env *envp, char *key);
 void		print_after_equal2(char *temp);
-int			name_error2(char *name, char *str, char *message);
+int			name_error2(char *name, char *str, char *message, int flag);
 void		exit_and_free(t_data *data, int *end, char *str, int status);
 
 //redirection
