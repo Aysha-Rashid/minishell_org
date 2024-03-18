@@ -12,6 +12,20 @@
 
 #include "../minishell.h"
 
+void	name_error3(char *exit_status, char *message, int flag)
+{
+	// printf("%d\n", flag);
+	if (!flag)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(exit_status, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(message, STDERR_FILENO);
+	}
+	else if (flag == 2)
+		ft_putstr_fd(exit_status, 1);
+}
+
 void	check_and_write(char *str, t_data *data)
 {
 	int		i;
@@ -21,7 +35,7 @@ void	check_and_write(char *str, t_data *data)
 	i = 0;
 	len = ft_strlen(str);
 	if (str[i] == '$')
-		ft_expansion3(data, str, 1);
+		ft_expansion3(data, str, 2);
 	while (i < len && str[i] != '$')
 	{
 		if (str[i] == '\'' || str[i] == '"')
