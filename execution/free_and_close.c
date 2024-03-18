@@ -33,8 +33,8 @@ void	close_and_free_all(t_data *data, int *end)
 {
 	close(end[0]);
 	close(end[1]);
-	close(data->executor->in);
-	close(data->executor->out);
+	// close(data->executor->in);
+	// close(data->executor->out);
 	free_lexer_list(data->lexer_list);
 	free_array(data->envp->path);
 	free_executor(data->executor);
@@ -48,9 +48,9 @@ void	ft_dup_fd(int *end)
 	close(end[1]);
 }
 
-void	exit_and_free(t_data *data, int *end, char *str, int status)
+void	exit_and_free(t_data *data, int *end, int status)
 {
 	close_and_free_all(data, end);
-	free(str);
+	// free(str);
 	exit(status);
 }

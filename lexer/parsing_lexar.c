@@ -58,7 +58,7 @@ int	parsing_lexar(t_data *data, t_lexer *lexar)
 					return (free_array(str),1);
 				else
 				{
-					int flags = O_CREAT | O_RDWR | (lexar->token == OUTEOF ? O_APPEND : O_TRUNC);
+					int flags = O_CREAT | O_RDWR | (lexar->token == APPEND ? O_APPEND : O_TRUNC);
 					data->executor->out = open(str[len - 1], flags, 0644);
 					if (data->executor->out == -1)
 						return (ft_error(4, str[len - 1], 0), free_array(str), 1);

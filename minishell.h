@@ -26,7 +26,7 @@ typedef enum s_tokens
 {
 	PIPE = 1,
 	OUTFILE,
-	OUTEOF,
+	APPEND,
 	INFILE,
 	HEREDOC,
 }	t_tokens;
@@ -52,14 +52,12 @@ typedef struct s_executor
 {
 	// int					*pid;
 	int					pipes;
-	int					heredoc;
-	char				*here_name;
+	// int					heredoc;
+	// char				*here_name;
 	int					in;
 	int					out;
-	// char				*in_file;
-	// char				*out_file;
+	int					append;
 	char				*cmd;
-	// char				*hd_file_name;
 	struct s_executor	*next;
 	struct s_executor	*prev;
 }				t_executor;
@@ -103,12 +101,6 @@ t_env		*search_env_variable(t_env *envp, char *key);
 
 int			check_unset_arg(char *token, t_data *data);
 
-int			free_array(char **str);
-int			free_env_list(t_env *head);
-void		free_lexer_list(t_lexer *list);
-int			name_error(char *name, char *str, char *message, int flag);
-void		ft_free_all(t_data *data);
-int			validate_input(t_data *data, char *token, t_env *current, char *name);
 
 size_t		len_of_values(t_env *lst);
 size_t		size_of_env(char **head);
@@ -151,31 +143,40 @@ int			builtin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
 int			check_builtin(char *str);
 
+t_executor	*init_executor(t_data *data, char *cmd);
+t_executor	*parse_pipeline(char *cmd, t_data *data);
+void		ft_dup_fd(int *end);
+
+//lexer_parsing
 int			parsing_lexar(t_data *data, t_lexer *lexar);
 int			double_token_error(char *str);
 void		ft_lexerclear(t_lexer **lst);
-t_executor	*init_executor(t_data *data, char *cmd);
-t_executor	*parse_pipeline(char *cmd, t_data *data);
-// void		assign_fd(t_executor *executor, int fd_in, int *end);
-// void		handle_heredoc(int fd_in, t_executor *executor, int end[]);
-// void		ft_close_fd(t_executor *executor, int fd, int end);
-void		free_executor(t_executor *executor);
-void		close_and_free_all(t_data *data, int *end);
-void		ft_dup_fd(int *end);
-// void		execute_pipe(t_data *data);
-// void		wait_pid(int *pid, int amount, t_data *data);
-
-
 //expansion
+
 int			ft_expansion(t_data *data);
 int			ft_expansion3(t_data *data, char *str, int flag);
 size_t		dollar_sign(char *str);
 char		*search_env_variable2(t_env *envp, char *key);
 void		print_after_equal2(char *temp);
+
+void		free_executor(t_executor *executor);
+void		close_and_free_all(t_data *data, int *end);
 int			name_error2(char *name, char *str, char *message, int flag);
-void		exit_and_free(t_data *data, int *end, char *str, int status);
+void		exit_and_free(t_data *data, int *end, int status);
+int			free_array(char **str);
+int			free_env_list(t_env *head);
+void		free_lexer_list(t_lexer *list);
+int			name_error(char *name, char *str, char *message, int flag);
+void		ft_free_all(t_data *data);
+void		check_command(char *str, char *cmd, int *end, t_data *data);
+int			validate_input(t_data *data, char *token,
+				t_env *current, char *name);
 
 //redirection
 int			is_type(t_lexer *lexer, char *str);
-int			check_line(t_executor *executor, t_data *data);
+int			is_redir(t_lexer *lexer);
+void		redir_and_execute(t_data *data, t_executor *executor);
+void		redir(t_data *data);
+// int			check_line(t_executor *executor, t_data *data);
+
 extern		int g_sig_interrupt;

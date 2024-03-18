@@ -57,14 +57,16 @@ int	check_pipes_n_execute(t_data *data)
 	builtin_index = check_builtin(data->cmd);
 	free_array(str);
 	data->executor = parse_pipeline(data->cmd, data);
+	// data->redirection = parse_redirection(data->cmd, data);
 	count_pipes(data->lexer_list, data);
 	if (builtin_index >= 0 && data->executor->pipes == 0)
 		builtin_command(data->cmd, data);
-	else if (ft_expansion(data))
-		ft_error(2, data->cmd, 0);
+	else if (ft_strchr(data->cmd, '$') && ft_expansion(data))
+		ft_error(2, data->cmd,0);
 	else
 	{
-		execution(data->executor, data);
+		// execution(data->executor, data);
+		redir_and_execute(data, data->executor);
 	}
 	free_lexer_list(data->lexer_list);
 	free_executor(data->executor);
@@ -103,7 +105,15 @@ int	is_type(t_lexer *lexer, char *str)
 		return (1);
 	if (ft_strchr(str, 'H') && lexer->token == HEREDOC)
 		return (1);
-	if (ft_strchr(str, 'A') && lexer->token == OUTEOF)
+	if (ft_strchr(str, 'A') && lexer->token == APPEND)
+		return (1);
+	return (0);
+}
+
+int is_redir(t_lexer *lexer)
+{
+	if (lexer->token == INFILE || lexer->token == OUTFILE
+		|| lexer->token == APPEND || lexer->token == HEREDOC)
 		return (1);
 	return (0);
 }

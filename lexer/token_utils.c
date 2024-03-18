@@ -38,7 +38,7 @@ int	handle_token(char *str, int i, t_lexer **lexer_list)
 	token = check_token(str[i]);
 	if (token == OUTFILE && check_token(str[i + 1] == OUTFILE))
 	{
-		if (!add_node(NULL, OUTEOF, lexer_list))
+		if (!add_node(NULL, APPEND, lexer_list))
 			return (-1);
 		return (2);
 	}

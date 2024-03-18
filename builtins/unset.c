@@ -39,7 +39,10 @@ int	validate_input(t_data *data, char *token, t_env *current, char *name)
 
 	// str = ft_expansion3(data, token, 1);
 	if (token[0] == '$')
+	{
 		invalid_identifier(data, token, name);
+		return (0);
+	}
 	else if (invalid_identifier(data, token, name) || !current)
 		return (0);
 	return (1);
@@ -93,9 +96,9 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 		remove = search_env_variable(data->envp, str);
 		current = data->envp;
 		prev = NULL;
+		check_unset_arg(str, data);
 		while (current && current != remove)
 		{
-			check_unset_arg(str, data);
 			prev = current;
 			current = current->next;
 		}

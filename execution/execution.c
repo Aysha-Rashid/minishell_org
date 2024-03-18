@@ -20,9 +20,9 @@ t_executor	*init_executor(t_data *data, char *cmd)
 	data->executor->cmd = ft_strdup(cmd);
 	// data->executor->here_name = "home";
 	data->executor->pipes = 0;
-	data->executor->heredoc = 0;
-	data->executor->in = 0;
-	data->executor->out = 0;
+	// data->executor->in = 0;
+	// data->executor->out = 0;
+	// data->executor->heredoc = 0;
 	data->executor->next = NULL;
 	// data->executor->prev = NULL;
 	return (data->executor);
@@ -61,27 +61,37 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	char	*str;
 
 	str = ft_strtrim(cmd, " ");
-	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
-		exit (0);
-	if (check_builtin(str) >= 0)
-	{
-		if (builtin_command(str, data))
-			exit_and_free(data, end, str, 0);
-		exit_and_free(data, end, str, 1);
+	check_command(str, cmd, end, data);
+	free(str);
+	cmd_file(cmd, data->envp->path);
+	close_and_free_all(data, end);
+	exit(1);
+}
 
+void	check_command(char *str, char *cmd, int *end, t_data *data)
+{
+	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
+	{
+		ft_expansion3(data, str, 1);
+		free(str);
+		exit_and_free(data, end, 1);
 	}
 	else if (data->no_path)
 	{
-		ft_error(2, cmd, data->no_path);
-		exit_and_free(data, end, str, 0);
-	}
-	else
-	{
 		free(str);
-		cmd_file(cmd, data->envp->path);
+		ft_error(2, cmd, data->no_path);
+		exit_and_free(data, end, 0);
 	}
-	close_and_free_all(data, end);
-	exit(1);
+	if (check_builtin(str) >= 0)
+	{
+		if (builtin_command(str, data))
+		{
+			free(str);
+			exit_and_free(data, end, 0);
+		}
+		free(str);
+		exit_and_free(data, end, 1);
+	}
 }
 
 int	execution(t_executor *executor, t_data *data)
@@ -114,6 +124,48 @@ int	execution(t_executor *executor, t_data *data)
 	return (0);
 }
 
+void	redir_and_execute(t_data *data, t_executor *executor)
+{
+	if (is_redir(data->lexer_list))
+		redir(data);
+	else
+		execution(executor, data);
+}
+
+void redir(t_data *data)
+{
+	char	**tokens;
+	int		i;
+
+	tokens = ft_split(data->cmd, ' ');
+	i = 0;
+	while (tokens[i])
+	{
+		if (!ft_strcmp(tokens[i], "<"))
+		{
+			data->executor->in = open(tokens[i + 1], O_RDONLY);
+			if (data->executor->in == -1)
+				perror("Error opening input file");
+		}
+		else if (!ft_strcmp(tokens[i], ">"))
+		{
+			data->executor->out = open(tokens[i + 1], O_CREAT | O_WRONLY
+					| O_TRUNC, 0644);
+			if (data->executor->out == -1)
+				perror("Error opening output file");
+		}
+		else if (!ft_strcmp(tokens[i], ">>"))
+		{
+			data->executor->out = open(tokens[i + 1], O_CREAT | O_WRONLY
+					| O_APPEND, 0644);
+			if (data->executor->out == -1)
+				perror("Error opening output file");
+		}
+		i++;
+	}
+	free_array(tokens);
+}
+
 int	check_builtin(char *str)
 {
 	int			i;
@@ -139,5 +191,5 @@ int	check_builtin(char *str)
 			return (free_array(temp), i);
 		i++;
 	}
-	return (free_array(temp),-1);
+	return (free_array(temp), -1);
 }

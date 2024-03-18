@@ -36,7 +36,7 @@ int	ft_expansion(t_data *data)
 	splitted = ft_split(data->cmd, ' ');
 	j = dollar_sign(splitted[0]);
 	if (j == 0)
-		return (ft_error(2, splitted[0], 0), 0);
+		return (ft_error(2, splitted[0], 0), free_array(splitted), 0);
 	while (splitted[i])
 	{
 		ft_expansion3(data, splitted[i], 0);
