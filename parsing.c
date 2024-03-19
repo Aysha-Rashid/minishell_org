@@ -91,6 +91,18 @@ char	*env_str(t_env *env)
 	return (str);
 }
 
+void print_2d(char **a)
+{
+	int i =0;
+	while(a[i])
+	{
+		ft_putstr_fd(a[i],2);
+		ft_putstr_fd("",2);
+		// printf("%s\n", a[0]);
+		i++;
+	}
+}
+
 char	*cmd_file(char *cmd, char **paths)
 {
 	char	*cmd_file;
@@ -101,6 +113,7 @@ char	*cmd_file(char *cmd, char **paths)
 		return (NULL);
 	i = 0;
 	str = ft_split(cmd, ' ');
+	// print_2d(str);
 	cmd_file = NULL;
 	if (!access(str[0], F_OK))
 	{

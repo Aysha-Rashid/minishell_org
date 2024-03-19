@@ -41,11 +41,26 @@ void	close_and_free_all(t_data *data, int *end)
 	ft_free_all(data);
 }
 
-void	ft_dup_fd(int *end)
+void	ft_dup_fd(int in_file, int out_file, int *end)
 {
-	dup2(end[1], STDOUT_FILENO);
-	close(end[0]);
-	close(end[1]);
+	if (in_file != STDIN_FILENO)
+	{
+		dup2(in_file, STDIN_FILENO);
+		close(in_file);
+	}
+	if (out_file != STDOUT_FILENO)
+	{
+		dup2(out_file, STDOUT_FILENO);
+		close(out_file);
+	}
+	else
+	{
+		dup2(end[1], STDOUT_FILENO);
+		close (end[0]);
+		close (end[1]);
+	}
+	close (end[0]);
+	close (end[1]);
 }
 
 void	exit_and_free(t_data *data, int *end, int status)

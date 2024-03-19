@@ -20,8 +20,8 @@ t_executor	*init_executor(t_data *data, char *cmd)
 	data->executor->cmd = ft_strdup(cmd);
 	// data->executor->here_name = "home";
 	data->executor->pipes = 0;
-	// data->executor->in = 0;
-	// data->executor->out = 0;
+	data->executor->in = 0;
+	data->executor->out = 0;
 	// data->executor->heredoc = 0;
 	data->executor->next = NULL;
 	// data->executor->prev = NULL;
@@ -94,42 +94,176 @@ void	check_command(char *str, char *cmd, int *end, t_data *data)
 	}
 }
 
+// int	execution(t_executor *executor, t_data *data)
+// {
+// 	int		end[2];
+// 	int		pid;
+
+// 	executor->cmd = remove_redir_or_files(executor->cmd);
+// 	while (executor)
+// 	{
+// 		pipe(end);
+// 		pid = fork();
+// 		if (pid < 0)
+// 			return (ft_putstr_fd("fork error", 1), 1);
+// 		else if (pid == 0)
+// 		{
+// 			if (executor->next)
+// 				ft_dup_fd(executor->in, executor->out, end);
+// 			execute_command(executor->cmd, data, end);
+// 		}
+// 		else
+// 		{
+// 			if (executor->next)
+// 				close(end[1]);
+// 			// if (executor->in != 0)
+// 			// if (executor->out != 0)
+// 			// 	close(executor->out);
+// 		}
+// 		executor->in = end[0];
+// 		close(end[1]);
+// 		executor = executor->next;
+// 		while (wait(&data->status_code) > 0);
+// 	}
+// 	return (0);
+// }
+
 int	execution(t_executor *executor, t_data *data)
 {
-	int		end[2];
+	// int		prev_end[2] = { STDIN_FILENO, STDOUT_FILENO };
+	int		curr_end[2];
 	int		pid;
 
+	executor->cmd = remove_redir_or_files(executor->cmd);
 	while (executor)
 	{
-		pipe(end);
+		pipe(curr_end); // Create pipe for current command
 		pid = fork();
 		if (pid < 0)
-			return (ft_putstr_fd("fork error", 1), 1);
+		{
+			perror("fork error");
+			return 1;
+		}
 		else if (pid == 0)
 		{
 			if (executor->next)
-				ft_dup_fd(end);
-			execute_command(executor->cmd, data, end);
+			{
+				close(curr_end[0]);
+				dup2(curr_end[1], STDOUT_FILENO); // Redirect stdout to write end of current pipe
+				// ft_dup_fd(executor->in, executor->out, curr_end);
+				close(curr_end[1]);
+				if (ft_strchr(data->cmd, '<'))
+				{
+					dup2(executor->in, STDIN_FILENO); // Redirect stdin
+					close(executor->in); // Close input file descriptor
+				}
+				if (ft_strchr(data->cmd, '>'))
+				{
+					dup2(executor->out, STDOUT_FILENO); // Redirect stdin
+					close(executor->out); // Close input file descriptor
+				}
+			}
+			execute_command(executor->cmd, data, curr_end);
+			exit(0); // Ensure child process exits after command execution
 		}
 		else
 		{
-			if (executor->next)
-				close(end[1]);
+			close(curr_end[1]);
+			if (executor->in != STDIN_FILENO)
+				close(executor->in);
+			executor->in = curr_end[0];
+			wait(NULL);
 		}
 		executor = executor->next;
-		close(end[0]);
-		close(end[1]);
-		while (wait(&data->status_code) > 0);
 	}
 	return (0);
 }
+
+// int	execution(t_executor *executor, t_data *data)
+// {
+// 	int		curr_end[2];
+// 	int		pid;
+
+// 	while (executor)
+// 	{
+// 		pipe(curr_end); // Create pipe for current command
+// 		pid = fork();
+// 		if (pid < 0)
+// 		{
+// 			perror("fork error");
+// 			return 1;
+// 		}
+// 		else if (pid == 0)
+// 		{
+// 			if (executor->next)
+// 			{
+// 				close(curr_end[0]);
+// 				dup2(curr_end[1], STDOUT_FILENO); // Redirect stdout to write end of current pipe
+// 				close(curr_end[1]);
+// 			}
+
+// 			// Check for input redirection '<' in the command
+// 			char *input_file = NULL;
+// 			if ((input_file = strchr(executor->cmd, '<')) != NULL)
+// 			{
+// 				// Extract input file name
+// 				input_file = strtok(input_file + 1, " ");
+// 				ft_putstr_fd(input_file, 2);
+// 				// input_file = strtok(NULL, " ");
+// 				if (input_file != NULL)
+// 				{
+// 					int input_fd = open(input_file, O_RDONLY);
+// 					if (input_fd == -1)
+// 					{
+// 						perror("Error opening input file");
+// 						exit(1); // Exit child process with an error
+// 					}
+// 					dup2(input_fd, STDIN_FILENO); // Redirect stdin
+// 					close(input_fd); // Close input file descriptor
+// 				}
+// 			}
+
+// 			// Check for output redirection '>' in the command
+// 			char *output_file = NULL;
+// 			if ((output_file = strchr(executor->cmd, '>')) != NULL)
+// 			{
+// 				// Extract output file name
+// 				output_file = strtok(output_file + 1, " ");
+// 				// output_file = strtok(NULL, " ");
+// 				if (output_file != NULL)
+// 				{
+// 					int output_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+// 					if (output_fd == -1)
+// 					{
+// 						perror("Error opening output file");
+// 						exit(1); // Exit child process with an error
+// 					}
+// 					dup2(output_fd, STDOUT_FILENO); // Redirect stdout
+// 					close(output_fd); // Close output file descriptor
+// 				}
+// 			}
+
+// 			execute_command(executor->cmd, data, curr_end);
+// 			exit(0); // Ensure child process exits after command execution
+// 		}
+// 		else
+// 		{
+// 			close(curr_end[1]);
+// 			if (executor->in != STDIN_FILENO)
+// 				close(executor->in);
+// 			executor->in = curr_end[0];
+// 			wait(NULL);
+// 		}
+// 		executor = executor->next;
+// 	}
+// 	return 0;
+// }
 
 void	redir_and_execute(t_data *data, t_executor *executor)
 {
 	if (is_redir(data->lexer_list))
 		redir(data);
-	else
-		execution(executor, data);
+	execution(executor, data);
 }
 
 void redir(t_data *data)
@@ -192,4 +326,29 @@ int	check_builtin(char *str)
 		i++;
 	}
 	return (free_array(temp), -1);
+}
+
+char	*remove_redir_or_files(char *cmd)
+{
+	int		i;
+	int		j;
+	char	*dest;
+
+	j = 0;
+	i = 0;
+	dest = (char *)malloc(sizeof(char ) * (ft_strlen(cmd) + 1));
+	while (cmd[i])
+	{
+		if ((cmd[i] == '<' || cmd[i] == '>') && cmd[i + 1] == ' ')
+		{
+			i++;
+			if (cmd[i] == ' ' && cmd[i])
+				i++;
+			while (cmd[i] && cmd[i] != ' ')
+				i++;
+		}
+		dest[j++] = cmd[i++];
+	}
+	dest[j] = '\0';
+	return (dest);
 }
