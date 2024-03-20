@@ -47,8 +47,8 @@ int	read_words(int i, char *str, t_lexer **lexer_list)
 	j = 0;
 	while (str[i + j] && !(check_token(str[i + j])))
 	{
-		j = j + handle_quotes(i + j, str, 34);
-		j = j + handle_quotes(i + j, str, 39);
+		// j = j + handle_quotes(i + j, str, 34);
+		// j = j + handle_quotes(i + j, str, 39);
 		if (is_whitespace(str[i + j]))
 			break ;
 		else
@@ -57,7 +57,7 @@ int	read_words(int i, char *str, t_lexer **lexer_list)
 	temp = ft_substr(str, i, j);
 	if (!temp)
 		return (0);
-	if ((add_node(temp, 0, lexer_list) == 0))
+	if (!add_node(temp, 0, lexer_list))
 		return (free(temp), 0);
 	free(temp);
 	return (j);

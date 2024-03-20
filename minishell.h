@@ -145,7 +145,6 @@ int			check_builtin(char *str);
 
 t_executor	*init_executor(t_data *data, char *cmd);
 t_executor	*parse_pipeline(char *cmd, t_data *data);
-void		ft_dup_fd(int in_file, int out_file, int *end);
 //lexer_parsing
 int			parsing_lexar(t_data *data, t_lexer *lexar);
 int			double_token_error(char *str);
@@ -173,10 +172,13 @@ int			validate_input(t_data *data, char *token,
 
 //redirection
 int			is_type(t_lexer *lexer, char *str);
-int			is_redir(t_lexer *lexer);
+int			is_redir(char *cmd);
 void		redir_and_execute(t_data *data, t_executor *executor);
-void		redir(t_data *data);
+void		redir(t_executor *executor);
 char		*remove_redir_or_files(char *cmd);
+int	    	ft_open(t_executor *executor, char *redir, char *file);
+void		ft_dup_fd(t_data *data, t_executor *executor, int *end, int next);
+void		dup_check(int file, int dupped);
 // int			check_line(t_executor *executor, t_data *data);
 
 extern		int g_sig_interrupt;

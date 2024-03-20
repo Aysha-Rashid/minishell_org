@@ -41,31 +41,42 @@ void	close_and_free_all(t_data *data, int *end)
 	ft_free_all(data);
 }
 
-void	ft_dup_fd(int in_file, int out_file, int *end)
+void	ft_dup_fd(t_data *data, t_executor *executor, int *end, int next)
 {
-	if (in_file != STDIN_FILENO)
+	if (next == 1)
 	{
-		dup2(in_file, STDIN_FILENO);
-		close(in_file);
-	}
-	if (out_file != STDOUT_FILENO)
-	{
-		dup2(out_file, STDOUT_FILENO);
-		close(out_file);
+		close(executor->out);
+		if (ft_strchr(data->cmd, '<'))
+		{
+			if (executor->in != STDIN_FILENO)
+				dup_check(executor->in, STDIN_FILENO);
+		}
+		dup2(end[1], STDOUT_FILENO);
+		close(end[1]);
+		close(end[0]);
 	}
 	else
 	{
-		dup2(end[1], STDOUT_FILENO);
-		close (end[0]);
-		close (end[1]);
+		if (ft_strchr(data->cmd, '>') || ft_strchr(data->cmd, '<'))
+		{
+			close(end[1]);
+			close(end[0]);
+			if (executor->in != STDIN_FILENO)
+				dup_check(executor->in, STDIN_FILENO);
+			if (executor->out != STDOUT_FILENO)
+				dup_check(executor->out, STDOUT_FILENO);
+		}
 	}
-	close (end[0]);
-	close (end[1]);
+}
+
+void	dup_check(int file, int dupped)
+{
+	dup2(file, dupped);
+	close(file);
 }
 
 void	exit_and_free(t_data *data, int *end, int status)
 {
 	close_and_free_all(data, end);
-	// free(str);
 	exit(status);
 }

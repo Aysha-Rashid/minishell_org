@@ -57,63 +57,43 @@ int	check_pipes_n_execute(t_data *data)
 	builtin_index = check_builtin(data->cmd);
 	free_array(str);
 	data->executor = parse_pipeline(data->cmd, data);
-	// data->redirection = parse_redirection(data->cmd, data);
 	count_pipes(data->lexer_list, data);
 	if (builtin_index >= 0 && data->executor->pipes == 0)
 		builtin_command(data->cmd, data);
 	else if (ft_strchr(data->cmd, '$') && ft_expansion(data))
 		ft_error(2, data->cmd,0);
 	else
-	{
-		// execution(data->executor, data);
-		redir_and_execute(data, data->executor);
-	}
+		execution(data->executor, data);
 	free_lexer_list(data->lexer_list);
 	free_executor(data->executor);
 	return (0);
 }
 
-int	check_line(t_executor *executor, t_data *data)
+
+t_executor	*parse_pipeline(char *cmd, t_data *data)
 {
-	(void)executor;
-	while (data->lexer_list)
+	t_executor	*head;
+	t_executor	*tail;
+	t_executor	*executor;
+	char		**token;
+	int			i;
+
+	i = 0;
+	head = NULL;
+	tail = NULL;
+	token = ft_split(cmd, '|');
+	while (token[i])
 	{
-		if (is_type(data->lexer_list, "IOH") && (!data->lexer_list->next
-				|| is_type(data->lexer_list, "IOHAP")))
+		executor = init_executor(data, token[i++]);
+		if (head == NULL)
+			head = executor;
+		else
 		{
-			ft_putstr_fd("error", 1);
-			return (0);
+			tail->next = executor;
+			executor->prev = tail;
 		}
-		if (is_type(data->lexer_list, "PA") && (!data->lexer_list->prev
-				|| is_type(data->lexer_list, "IOHAP")))
-		{
-			ft_putstr_fd("error", 1);
-			return (0);
-		}
-		data->lexer_list = data->lexer_list->next;
+		tail = executor;
 	}
-	return (1);
-}
-
-int	is_type(t_lexer *lexer, char *str)
-{
-	if (ft_strchr(str, 'P') && lexer->token == PIPE)
-		return (1);
-	if (ft_strchr(str, 'I') && lexer->token == INFILE)
-		return (1);
-	if (ft_strchr(str, 'O') && lexer->token == OUTFILE)
-		return (1);
-	if (ft_strchr(str, 'H') && lexer->token == HEREDOC)
-		return (1);
-	if (ft_strchr(str, 'A') && lexer->token == APPEND)
-		return (1);
-	return (0);
-}
-
-int is_redir(t_lexer *lexer)
-{
-	if (lexer->token == INFILE || lexer->token == OUTFILE
-		|| lexer->token == APPEND || lexer->token == HEREDOC)
-		return (1);
-	return (0);
+	free_array(token);
+	return (head);
 }

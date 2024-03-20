@@ -21,7 +21,6 @@ t_lexer	*ft_lexernew(char *str, int token)
 		return (0);
 	new_element->str = str;
 	new_element->token = token;
-	new_element->i = 0;
 	new_element->next = NULL;
 	new_element->prev = NULL;
 	return (new_element);
