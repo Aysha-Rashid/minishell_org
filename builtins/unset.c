@@ -35,9 +35,6 @@ int	invalid_identifier(t_data *data, char *str, char *name)
 
 int	validate_input(t_data *data, char *token, t_env *current, char *name)
 {
-	// char	*str;
-
-	// str = ft_expansion3(data, token, 1);
 	if (token[0] == '$')
 	{
 		invalid_identifier(data, token, name);

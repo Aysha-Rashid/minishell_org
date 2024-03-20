@@ -169,6 +169,8 @@ void		ft_free_all(t_data *data);
 void		check_command(char *str, char *cmd, int *end, t_data *data);
 int			validate_input(t_data *data, char *token,
 				t_env *current, char *name);
+void		name_error3(char *exit_status, char *message, int flag);
+int		invalid_identifier(t_data *data, char *str, char *name);
 
 //redirection
 int			is_type(t_lexer *lexer, char *str);

@@ -44,7 +44,7 @@ void	check_command(char *str, char *cmd, int *end, t_data *data)
 		free(str);
 		exit_and_free(data, end, 1);
 	}
-	else if (data->no_path)
+	if (data->no_path)
 	{
 		free(str);
 		ft_error(2, cmd, data->no_path);

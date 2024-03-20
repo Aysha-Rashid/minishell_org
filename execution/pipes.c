@@ -61,7 +61,7 @@ int	check_pipes_n_execute(t_data *data)
 	if (builtin_index >= 0 && data->executor->pipes == 0)
 		builtin_command(data->cmd, data);
 	else if (ft_strchr(data->cmd, '$') && ft_expansion(data))
-		ft_error(2, data->cmd,0);
+		ft_error(2, data->cmd,  0);
 	else
 		execution(data->executor, data);
 	free_lexer_list(data->lexer_list);
