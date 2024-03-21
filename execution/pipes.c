@@ -24,23 +24,8 @@ void	check_n_execute(char *str, t_data *data)
 		ft_free_all(data);
 		exit(0);
 	}
-	if (!token_reader(data))
-		ft_error(3, NULL, data->no_path);
 	if (check_pipes_n_execute(data))
 		return ;
-}
-
-void	count_pipes(t_lexer *lexer, t_data *data)
-{
-	t_lexer	*tmp;
-
-	tmp = lexer;
-	while (tmp)
-	{
-		if (tmp->token == PIPE)
-			data->executor->pipes++;
-		tmp = tmp->next;
-	}
 }
 
 int	check_pipes_n_execute(t_data *data)
@@ -57,18 +42,16 @@ int	check_pipes_n_execute(t_data *data)
 	builtin_index = check_builtin(data->cmd);
 	free_array(str);
 	data->executor = parse_pipeline(data->cmd, data);
-	count_pipes(data->lexer_list, data);
-	if (builtin_index >= 0 && data->executor->pipes == 0)
+	if (builtin_index >= 0 && !check_redir_pipe(data->cmd))
 		builtin_command(data->cmd, data);
 	else if (ft_strchr(data->cmd, '$') && ft_expansion(data))
-		ft_error(2, data->cmd,  0);
+		ft_error(2, data->cmd, 0);
 	else
 		execution(data->executor, data);
-	free_lexer_list(data->lexer_list);
+	// free_lexer_list(data->lexer_list);
 	free_executor(data->executor);
 	return (0);
 }
-
 
 t_executor	*parse_pipeline(char *cmd, t_data *data)
 {
@@ -96,4 +79,18 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	}
 	free_array(token);
 	return (head);
+}
+
+int	check_redir_pipe(char *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == '<' || cmd[i] == '>' || cmd[i] == '|')
+			return (1);
+		i++;
+	}
+	return (0);
 }

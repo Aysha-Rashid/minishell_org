@@ -6,18 +6,18 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:59:09 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/20 17:46:08 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/21 14:54:33 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	is_redir(char *cmd)
-{
-	if (ft_strchr(cmd, '<') || ft_strchr(cmd, '>'))
-		return (1);
-	return (0);
-}
+// int	is_redir(char *cmd)
+// {
+// 	if (ft_strchr(cmd, '<') || ft_strchr(cmd, '>'))
+// 		return (1);
+// 	return (0);
+// }
 
 char	*remove_redir_or_files(char *cmd)
 {
@@ -32,16 +32,17 @@ char	*remove_redir_or_files(char *cmd)
 		return (NULL);
 	while (cmd[i])
 	{
-		if ((cmd[i] == '<' || cmd[i] == '>') && cmd[i + 1] == ' ')
+		if ((cmd[i] == '<' || cmd[i] == '>') && cmd[i] != ' ')
 		{
 			i++;
+			if (cmd[i] == '<' || cmd[i] == '>')
+				i++;
 			while (cmd[i] && (cmd[i] == ' ' || cmd[i] == '\t'))
 				i++;
 			while (cmd[i] && cmd[i] != ' ' && cmd[i] != '\t')
 				i++;
 		}
-		else
-			dest[j++] = cmd[i++];
+		dest[j++] = cmd[i++];
 	}
 	dest[j] = '\0';
 	return (dest);
@@ -86,3 +87,16 @@ int	ft_open(t_executor *executor, char *redir, char *file)
 	}
 	return (0);
 }
+
+// void	count_pipes(t_data *data)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (data->cmd[i])
+// 	{
+// 		if (data->cmd[i] == '|')
+// 			data->executor->pipes++;
+// 		i++;
+// 	}
+// }

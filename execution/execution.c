@@ -17,7 +17,7 @@ t_executor	*init_executor(t_data *data, char *cmd)
 {
 	data->executor = (t_executor *)malloc(sizeof(t_executor));
 	data->executor->cmd = ft_strdup(cmd);
-	data->executor->pipes = 0;
+	// data->executor->pipes = 0;
 	data->executor->in = STDIN_FILENO;
 	data->executor->out = STDOUT_FILENO;
 	data->executor->next = NULL;
@@ -33,33 +33,19 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	free(str);
 	cmd_file(cmd, data->envp->path);
 	close_and_free_all(data, end);
+	// close(data->executor->out);
+	// close(data->executor->in);
 	exit(1);
 }
 
-void	check_command(char *str, char *cmd, int *end, t_data *data)
+void	child_process(t_data *data, t_executor *executor, int *end)
 {
-	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
-	{
-		ft_expansion3(data, str, 1);
-		free(str);
-		exit_and_free(data, end, 1);
-	}
-	if (data->no_path)
-	{
-		free(str);
-		ft_error(2, cmd, data->no_path);
-		exit_and_free(data, end, 0);
-	}
-	if (check_builtin(str) >= 0)
-	{
-		if (builtin_command(str, data))
-		{
-			free(str);
-			exit_and_free(data, end, 0);
-		}
-		free(str);
-		exit_and_free(data, end, 1);
-	}
+	executor->cmd = remove_redir_or_files(executor->cmd);
+	if (executor->next)
+		ft_dup_fd(data, executor, end, 1);
+	else
+		ft_dup_fd(data, executor, end, 0);
+	execute_command(executor->cmd, data, end);
 }
 
 int	execution(t_executor *executor, t_data *data)
@@ -75,20 +61,13 @@ int	execution(t_executor *executor, t_data *data)
 		if (pid < 0)
 			return (perror("fork error"), 0);
 		else if (pid == 0)
-		{
-			executor->cmd = remove_redir_or_files(executor->cmd);
-			if (executor->next)
-				ft_dup_fd(data, executor, end, 1);
-			else
-				ft_dup_fd(data, executor, end, 0);
-			execute_command(executor->cmd, data, end);
-		}
-		if (!executor->next)
-			close(end[0]);
+			child_process(data, executor, end);
 		executor = executor->next;
 		close(end[1]);
+		close(end[0]);
 		wait(NULL);
 	}
+	// ft_dup_fd(data, executor, end,0);
 	return (0);
 }
 

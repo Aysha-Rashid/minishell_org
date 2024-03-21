@@ -51,7 +51,7 @@ typedef struct s_lexer
 typedef struct s_executor
 {
 	// int					*pid;
-	int					pipes;
+	// int					pipes;
 	// int					heredoc;
 	// char				*here_name;
 	int					in;
@@ -106,7 +106,7 @@ size_t		len_of_values(t_env *lst);
 size_t		size_of_env(char **head);
 char		*ft_strcpy(char	*dest, char *src);
 
-void		count_pipes(t_lexer *lexer, t_data *data);
+void		count_pipes(t_data *data);
 
 //signals
 void		sigint_handler(int signum);
@@ -176,6 +176,7 @@ int		invalid_identifier(t_data *data, char *str, char *name);
 int			is_type(t_lexer *lexer, char *str);
 int			is_redir(char *cmd);
 void		redir_and_execute(t_data *data, t_executor *executor);
+int			check_redir_pipe(char *cmd);
 void		redir(t_executor *executor);
 char		*remove_redir_or_files(char *cmd);
 int	    	ft_open(t_executor *executor, char *redir, char *file);

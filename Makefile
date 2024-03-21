@@ -21,6 +21,7 @@ SRC = main.c\
 		execution/execution.c\
 		execution/free_and_close.c\
 		execution/redirection.c\
+		execution/execution_utils.c\
 		expansion/expansion1.c\
 		expansion/expansion_utils.c\
 

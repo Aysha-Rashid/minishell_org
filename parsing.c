@@ -113,13 +113,7 @@ char	*cmd_file(char *cmd, char **paths)
 		return (NULL);
 	i = 0;
 	str = ft_split(cmd, ' ');
-	// print_2d(str);
 	cmd_file = NULL;
-	// if (!access(str[0], F_OK))
-	// {
-	// 	execve(cmd, str, paths);
-	// 	return (ft_error(2, str[0], 1), free_array(str), NULL);
-	// }
 	if (given_path(str[0]))
 	{
 		execve(cmd, str, paths);
