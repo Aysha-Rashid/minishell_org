@@ -139,7 +139,8 @@ int	ft_export(char *str, t_data *data)
 		return (declare_sorted(data->envp), free_array(token));
 	while (token[i])
 	{
-		temp = remove_all_qoutes(token[i]);
+		temp = token[i];
+		// temp = remove_all_qoutes(token[i]);
 		if (!already_there(temp, data)
 			&& validate_input(data, temp, data->envp, "export"))
 			env_add(temp, data);

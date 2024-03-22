@@ -182,6 +182,7 @@ char		*remove_redir_or_files(char *cmd);
 int	    	ft_open(t_executor *executor, char *redir, char *file);
 void		ft_dup_fd(t_data *data, t_executor *executor, int *end, int next);
 void		dup_check(int file, int dupped);
+char		*remove_quotes(char *str);
 // int			check_line(t_executor *executor, t_data *data);
 
 extern		int g_sig_interrupt;

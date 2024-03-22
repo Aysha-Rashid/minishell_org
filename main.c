@@ -38,6 +38,7 @@ int	builtin_command(char *str, t_data *data)
 void	prompt_loop(char *str, t_data *data)
 {
 	char	*trimmed_cmd;
+	char	*remove;
 
 	while (1)
 	{
@@ -45,8 +46,10 @@ void	prompt_loop(char *str, t_data *data)
 		str = readline("\033[96mminishell$ \033[0m");
 		check_signal(str, data);
 		trimmed_cmd = ft_strtrim(str, " ");
-		data->cmd = ft_strdup(trimmed_cmd);
+		remove = remove_quotes(trimmed_cmd);
+		data->cmd = ft_strdup(remove);
 		free(trimmed_cmd);
+		free(remove);
 		free(str);
 		check_n_execute(data->cmd, data);
 		add_history(data->cmd);

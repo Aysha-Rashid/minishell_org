@@ -6,7 +6,7 @@
 /*   By: ayal-ras <ayal-ras@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 14:40:08 by ayal-ras          #+#    #+#             */
-/*   Updated: 2024/03/21 14:44:27 by ayal-ras         ###   ########.fr       */
+/*   Updated: 2024/03/22 11:09:56 by ayal-ras         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	check_command(char *str, char *cmd, int *end, t_data *data)
 {
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
 	{
-		ft_expansion3(data, str, 1);
+		ft_expansion3(data, str, 0);
 		free(str);
 		exit_and_free(data, end, 1);
 	}

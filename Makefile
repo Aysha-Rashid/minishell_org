@@ -29,7 +29,7 @@ OBJ = $(SRC:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 # 033 is a esc in octal ascii, 0 sets all the text attributes to 0 and 32 is green
 
 COLOUR_GREEN=\033[0;32m

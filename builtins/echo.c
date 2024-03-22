@@ -80,6 +80,7 @@ int	ft_echo(char *argv, t_data *data)
 	int		n_option;
 	int		i;
 
+	(void)data;
 	token = ft_split(argv, ' ');
 	n_option = 0;
 	i = 1;
@@ -93,6 +94,7 @@ int	ft_echo(char *argv, t_data *data)
 	while (token[i])
 	{
 		check_and_write(token[i], data);
+		// ft_putstr_fd(token[i], 1);
 		if (token[i + 1] && token[i][0] != '\0')
 			write(1, " ", 1);
 		i++;

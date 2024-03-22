@@ -40,7 +40,9 @@ void	execute_command(char *cmd, t_data *data, int *end)
 
 void	child_process(t_data *data, t_executor *executor, int *end)
 {
-	executor->cmd = remove_redir_or_files(executor->cmd);
+	// executor->cmd = remove_redir_or_files(executor->cmd);
+	// heredoc
+	// ft_putendl_fd(executor->cmd, 2);
 	if (executor->next)
 		ft_dup_fd(data, executor, end, 1);
 	else
@@ -56,18 +58,21 @@ int	execution(t_executor *executor, t_data *data)
 	while (executor)
 	{
 		redir(executor);
-		pipe(end);
+		executor->cmd = remove_redir_or_files(executor->cmd);
+		if (executor->next)
+			pipe(end);
 		pid = fork();
 		if (pid < 0)
 			return (perror("fork error"), 0);
 		else if (pid == 0)
 			child_process(data, executor, end);
 		executor = executor->next;
-		close(end[1]);
-		close(end[0]);
-		wait(NULL);
+		// ft_putnbr_fd(end[0], 2);
+		// ft_putnbr_fd(end[1], 2);
+		waitpid(pid , &data->status_code, 0);
 	}
-	// ft_dup_fd(data, executor, end,0);
+	// wait(NULL);
+	ft_putstr_fd("comes here", 2);
 	return (0);
 }
 
@@ -97,4 +102,33 @@ int	check_builtin(char *str)
 		i++;
 	}
 	return (free_array(temp), -1);
+}
+
+char	*remove_quotes(char *str)
+{
+	int		i;
+	char	quote;
+	int		len;
+	char	*ptr;
+	int		j;
+
+	i = 0;
+	j = 0;
+	len = ft_strlen(str);
+	ptr = malloc(len + 1);
+	while (i < len)
+	{
+		if (str[i] == '\'' || str[i] == '"')
+		{
+			quote = str[i++];
+			while (ft_isalpha(str[i]) && i < len && str[i] != quote)
+				ptr[j++] = str[i++];
+			if (i < len)
+				i++;
+		}
+		else
+			ptr[j++] = str[i++];
+	}
+	ptr[j] = '\0';
+	return (ptr);
 }

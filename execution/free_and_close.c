@@ -31,8 +31,9 @@ void	free_lexer_list(t_lexer *list)
 
 void	close_and_free_all(t_data *data, int *end)
 {
-	close(end[0]);
-	close(end[1]);
+	(void)end;
+	// close(end[0]);
+	// close(end[1]);
 	// close(data->executor->in);
 	// close(data->executor->out);
 	// free_lexer_list(data->lexer_list);
@@ -46,15 +47,13 @@ void	ft_dup_fd(t_data *data, t_executor *executor, int *end, int next)
 {
 	if (next == 1)
 	{
-		close(executor->out);
+		// close(executor->out);
 		if (ft_strchr(data->cmd, '<'))
 		{
 			if (executor->in != STDIN_FILENO)
 				dup_check(executor->in, STDIN_FILENO);
 		}
 		dup2(end[1], STDOUT_FILENO);
-		close(end[1]);
-		close(end[0]);
 	}
 	else
 	{
@@ -65,9 +64,9 @@ void	ft_dup_fd(t_data *data, t_executor *executor, int *end, int next)
 			if (executor->out != STDOUT_FILENO)
 				dup_check(executor->out, STDOUT_FILENO);
 		}
-		close(end[1]);
-		close(end[0]);
 	}
+	// close(end[1]);
+	// close(end[0]);
 }
 
 void	dup_check(int file, int dupped)

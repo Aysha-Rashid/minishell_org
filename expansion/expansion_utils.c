@@ -28,7 +28,7 @@ void	print_after_equal2(char *temp)
 	char	*equal_pos;
 
 	equal_pos = ft_strchr(temp, '=');
-	ft_putstr_fd(equal_pos + 1, 1);
+	ft_putstr_fd(equal_pos + 1, 2);
 }
 
 int	name_error2(char *name, char *str, char *message, int flag)
