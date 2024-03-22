@@ -185,4 +185,6 @@ void		dup_check(int file, int dupped);
 char		*remove_quotes(char *str);
 // int			check_line(t_executor *executor, t_data *data);
 
+void		ft_sig2(int signum);
+
 extern		int g_sig_interrupt;

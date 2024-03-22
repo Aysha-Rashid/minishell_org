@@ -41,6 +41,9 @@ int	name_error2(char *name, char *str, char *message, int flag)
 		ft_putendl_fd(message, STDERR_FILENO);
 	}
 	else
+	{
 		print_after_equal2(name);
+		write(1, "\n", 2);
+	}
 	return (0);
 }
