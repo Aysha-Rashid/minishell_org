@@ -184,4 +184,6 @@ void		ft_dup_fd(t_data *data, t_executor *executor, int *end, int next);
 void		dup_check(int file, int dupped);
 // int			check_line(t_executor *executor, t_data *data);
 
+void		ft_sig2(int signum);
+
 extern		int g_sig_interrupt;

@@ -12,6 +12,18 @@
 
 #include "../minishell.h"
 
+void	ft_sig2(int signum)
+{
+	if (signum == SIGQUIT)
+	{
+		ft_putendl_fd("Quit: 3", 2);
+	}
+	else if (signum == SIGINT)
+	{
+		ft_putendl_fd(" ", 2);
+	}
+}
+
 void	sigint_handler(int signum)
 {
 	if (signum == SIGINT)

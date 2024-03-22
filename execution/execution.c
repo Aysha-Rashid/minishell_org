@@ -55,6 +55,10 @@ int	execution(t_executor *executor, t_data *data)
 
 	while (executor)
 	{
+		if (signal(SIGQUIT, ft_sig2))
+			data->status_code = 131;
+		if (signal(SIGINT, ft_sig2))
+			data->status_code = 130;
 		redir(executor);
 		pipe(end);
 		pid = fork();
