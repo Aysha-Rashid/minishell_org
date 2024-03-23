@@ -17,9 +17,9 @@ t_executor	*init_executor(t_data *data, char *cmd)
 {
 	data->executor = (t_executor *)malloc(sizeof(t_executor));
 	data->executor->cmd = ft_strdup(cmd);
-	// data->executor->pipes = 0;
 	data->executor->in = STDIN_FILENO;
 	data->executor->out = STDOUT_FILENO;
+	data->executor->heredoc = NULL;
 	data->executor->next = NULL;
 	return (data->executor);
 }
@@ -33,21 +33,21 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	free(str);
 	cmd_file(cmd, data->envp->path);
 	close_and_free_all(data, end);
-	// close(data->executor->out);
-	// close(data->executor->in);
 	exit(1);
 }
 
 void	child_process(t_data *data, t_executor *executor, int *end)
 {
-	// executor->cmd = remove_redir_or_files(executor->cmd);
 	// heredoc
 	// ft_putendl_fd(executor->cmd, 2);
 	if (executor->next)
 		ft_dup_fd(data, executor, end, 1);
 	else
 		ft_dup_fd(data, executor, end, 0);
+	// close(end[0]);
+	// close(end[1]);
 	execute_command(executor->cmd, data, end);
+	exit(0);
 }
 
 int	execution(t_executor *executor, t_data *data)
@@ -55,6 +55,8 @@ int	execution(t_executor *executor, t_data *data)
 	int	end[2];
 	int	pid;
 
+	end[0] = 3;
+	end[1] = 4;
 	while (executor)
 	{
 		if (signal(SIGQUIT, ft_sig2))
@@ -70,13 +72,16 @@ int	execution(t_executor *executor, t_data *data)
 			return (perror("fork error"), 0);
 		else if (pid == 0)
 			child_process(data, executor, end);
-		executor = executor->next;
-		// ft_putnbr_fd(end[0], 2);
-		// ft_putnbr_fd(end[1], 2);
-		waitpid(pid , &data->status_code, 0);
+		else
+		{
+			executor = executor->next;
+			if (executor)
+				close(end[1]);
+			else
+				close(end[0]);
+		}
 	}
-	// wait(NULL);
-	ft_putstr_fd("comes here", 2);
+	while(waitpid(-1, &data->status_code, 0) > 0);
 	return (0);
 }
 

@@ -48,9 +48,7 @@ int	check_pipes_n_execute(t_data *data)
 	if (builtin_index >= 0 && !check_redir_pipe(data->cmd))
 		builtin_command(data->cmd, data);
 	else
-	{
 		execution(data->executor, data);
-	}
 	// free_lexer_list(data->lexer_list);
 	free_executor(data->executor);
 	return (0);
@@ -70,14 +68,12 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	token = ft_split(cmd, '|');
 	while (token[i])
 	{
-		executor = init_executor(data, token[i++]);
+		executor = init_executor(data, token[i]);
+		i++;
 		if (head == NULL)
 			head = executor;
 		else
-		{
 			tail->next = executor;
-			executor->prev = tail;
-		}
 		tail = executor;
 	}
 	free_array(token);

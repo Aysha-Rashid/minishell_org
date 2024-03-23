@@ -22,14 +22,14 @@
 #include <readline/history.h>
 #include "libft/libft.h"
 
-typedef enum s_tokens
-{
-	PIPE = 1,
-	OUTFILE,
-	APPEND,
-	INFILE,
-	HEREDOC,
-}	t_tokens;
+// typedef enum s_tokens
+// {
+// 	PIPE = 1,
+// 	OUTFILE,
+// 	APPEND,
+// 	INFILE,
+// 	HEREDOC,
+// }	t_tokens;
 
 typedef struct s_env
 {
@@ -39,27 +39,22 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
-typedef struct s_lexer
-{
-	int				i;
-	char			*str;
-	t_tokens		token;
-	struct s_lexer	*next;
-	struct s_lexer	*prev;
-}				t_lexer;
+// typedef struct s_lexer
+// {
+// 	int				i;
+// 	char			*str;
+// 	t_tokens		token;
+// 	struct s_lexer	*next;
+// 	struct s_lexer	*prev;
+// }				t_lexer;
 
 typedef struct s_executor
 {
-	// int					*pid;
-	// int					pipes;
-	// int					heredoc;
-	// char				*here_name;
 	int					in;
 	int					out;
-	int					append;
+	char				*heredoc;
 	char				*cmd;
 	struct s_executor	*next;
-	struct s_executor	*prev;
 }				t_executor;
 
 typedef struct s_data
@@ -72,7 +67,7 @@ typedef struct s_data
 	char			*old_pwd;
 	t_env			*envp;
 	t_executor		*executor;
-	t_lexer			*lexer_list;
+	// t_lexer			*lexer_list;
 }				t_data;
 
 void		ft_putstrn_fd(const char *str, size_t n, int fd);
@@ -124,15 +119,15 @@ int			ft_error(int i, char *str, int no_path);
 
 //lexer
 int			token_reader(t_data *data);
-int			read_words(int i, char *str, t_lexer **lexer_list);
-int			add_node(char *str, t_tokens token, t_lexer **lexer_list);
+// int			read_words(int i, char *str, t_lexer **lexer_list);
+// int			add_node(char *str, t_tokens token, t_lexer **lexer_list);
 int			skip_spaces(char *str, int i);
 int			is_whitespace(char c);
-t_lexer		*ft_lexernew(char *str, int token);
-int			ft_lexeradd_back(t_lexer **list, t_lexer *new);
+// t_lexer		*ft_lexernew(char *str, int token);
+// int			ft_lexeradd_back(t_lexer **list, t_lexer *new);
 int			handle_quotes(int i, char *str, char del);
-t_tokens	check_token(int n);
-int			handle_token(char *str, int i, t_lexer **lexer_list);
+// t_tokens	check_token(int n);
+// int			handle_token(char *str, int i, t_lexer **lexer_list);
 char		*return_woqoutes(char *str, char del);
 char		*remove_all_qoutes(char *str);
 //execution
@@ -146,9 +141,9 @@ int			check_builtin(char *str);
 t_executor	*init_executor(t_data *data, char *cmd);
 t_executor	*parse_pipeline(char *cmd, t_data *data);
 //lexer_parsing
-int			parsing_lexar(t_data *data, t_lexer *lexar);
+// int			parsing_lexar(t_data *data, t_lexer *lexar);
 int			double_token_error(char *str);
-void		ft_lexerclear(t_lexer **lst);
+// void		ft_lexerclear(t_lexer **lst);
 //expansion
 
 int			ft_expansion(t_data *data);
@@ -163,7 +158,7 @@ int			name_error2(char *name, char *str, char *message, int flag);
 void		exit_and_free(t_data *data, int *end, int status);
 int			free_array(char **str);
 int			free_env_list(t_env *head);
-void		free_lexer_list(t_lexer *list);
+// void		free_lexer_list(t_lexer *list);
 int			name_error(char *name, char *str, char *message, int flag);
 void		ft_free_all(t_data *data);
 void		check_command(char *str, char *cmd, int *end, t_data *data);
@@ -173,7 +168,7 @@ void		name_error3(char *exit_status, char *message, int flag);
 int		invalid_identifier(t_data *data, char *str, char *name);
 
 //redirection
-int			is_type(t_lexer *lexer, char *str);
+// int			is_type(t_lexer *lexer, char *str);
 int			is_redir(char *cmd);
 void		redir_and_execute(t_data *data, t_executor *executor);
 int			check_redir_pipe(char *cmd);
