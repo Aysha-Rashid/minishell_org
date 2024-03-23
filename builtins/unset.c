@@ -20,26 +20,46 @@ int	invalid_identifier(t_data *data, char *str, char *name)
 	if (!(ft_isalpha(str[0])) && str[0] != '_'
 		&& str[0] != '\"' && str[0] != '\'')
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(name, 2);
-		ft_putstr_fd(": `", 2);
-		if (str[0] == '$')
-			ft_expansion3(data, str, 1);
-		else
-			ft_putstr_fd(str, 2);
-		ft_putendl_fd("': not a valid identifier", 2);
+		not_valid_message(str, name, data);
 		error = 1;
 	}
 	return (error);
 }
 
+int	invalid_unset_loop(char *token, char *name, t_data *data)
+{
+	int	i;
+	int	error;
+
+	error = 0;
+	i = 0;
+	if (!ft_strcmp(name, "unset"))
+	{
+		while (token[i])
+		{
+			if (!(ft_isalpha(token[i])) && !ft_isdigit(token[i])
+				&& token[i] != '_' && token[i] != '\"' && token[i] != '\'')
+			{
+				error = 1;
+				break ;
+			}
+			i++;
+		}
+	}
+	if (error == 1)
+	{
+		not_valid_message(token, name, data);
+		return (1);
+	}
+	return (0);
+}
+
 int	validate_input(t_data *data, char *token, t_env *current, char *name)
 {
-	if (token[0] == '$')
-	{
-		invalid_identifier(data, token, name);
+	if (invalid_unset_loop(token, name, data))
 		return (0);
-	}
+	else if (invalid_export_loop(token, name, data))
+		return (0);
 	else if (invalid_identifier(data, token, name) || !current)
 		return (0);
 	return (1);
@@ -67,8 +87,10 @@ int	ft_unset(char *str, t_data *data)
 {
 	char	**token;
 	t_env	*current;
+	char	*temp;
 
-	token = ft_split(str, ' ');
+	temp = remove_all_qoutes(data->cmd);
+	token = ft_split(temp, ' ');
 	current = data->envp;
 	if (ft_strlen(token[0]) != 5)
 		return (free_array(token), ft_error(2, str, data->no_path), 1);
@@ -82,18 +104,18 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 	int		i;
 	t_env	*remove;
 	t_env	*prev;
-	char	*str;
 
 	i = 1;
 	while (token[i])
 	{
-		str = remove_all_qoutes(token[i]);
-		if (!validate_input(data, str, current, "unset"))
+		if (!validate_input(data, token[i], current, "unset"))
 			i++;
-		remove = search_env_variable(data->envp, str);
+		if (token[i] == NULL)
+			return (1);
+		remove = search_env_variable(data->envp, token[i]);
 		current = data->envp;
 		prev = NULL;
-		check_unset_arg(str, data);
+		check_unset_arg(token[i], data);
 		while (current && current != remove)
 		{
 			prev = current;
@@ -102,5 +124,5 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 		remove_env_variable(data, remove, prev);
 		i++;
 	}
-	return (free(str), 1);
+	return (free(token[i]), 1);
 }

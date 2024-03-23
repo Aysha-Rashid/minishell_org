@@ -41,6 +41,8 @@ int	check_pipes_n_execute(t_data *data)
 	// 	return (1);
 	// data->cmd = remove_all_qoutes(data->cmd);
 	str = ft_split(data->cmd, ' ');
+	if (parse_command(str))
+		return (free_array(str), 1);
 	builtin_index = check_builtin(data->cmd);
 	free_array(str);
 	// if (ft_strchr(data->cmd, '|'))

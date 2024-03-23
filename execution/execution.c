@@ -38,8 +38,7 @@ void	execute_command(char *cmd, t_data *data, int *end)
 
 void	child_process(t_data *data, t_executor *executor, int *end)
 {
-	// heredoc
-	// ft_putendl_fd(executor->cmd, 2);
+	// heredoc(data, executor, end);
 	if (executor->next)
 		ft_dup_fd(data, executor, end, 1);
 	else
@@ -65,6 +64,7 @@ int	execution(t_executor *executor, t_data *data)
 			data->status_code = 130;
 		redir(executor);
 		executor->cmd = remove_redir_or_files(executor->cmd);
+		// ft_putstr_fd(executor->cmd, 2);
 		if (executor->next)
 			pipe(end);
 		pid = fork();
@@ -81,7 +81,9 @@ int	execution(t_executor *executor, t_data *data)
 				close(end[0]);
 		}
 	}
-	while(waitpid(-1, &data->status_code, 0) > 0);
+	while (waitpid(pid, &data->status_code, 0) > 0);
+	close(end[0]);
+	close(end[1]);
 	return (0);
 }
 
@@ -111,33 +113,4 @@ int	check_builtin(char *str)
 		i++;
 	}
 	return (free_array(temp), -1);
-}
-
-char	*remove_quotes(char *str)
-{
-	int		i;
-	char	quote;
-	int		len;
-	char	*ptr;
-	int		j;
-
-	i = 0;
-	j = 0;
-	len = ft_strlen(str);
-	ptr = malloc(len + 1);
-	while (i < len)
-	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			quote = str[i++];
-			while (ft_isalpha(str[i]) && i < len && str[i] != quote)
-				ptr[j++] = str[i++];
-			if (i < len)
-				i++;
-		}
-		else
-			ptr[j++] = str[i++];
-	}
-	ptr[j] = '\0';
-	return (ptr);
 }

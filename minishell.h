@@ -178,8 +178,11 @@ int	    	ft_open(t_executor *executor, char *redir, char *file);
 void		ft_dup_fd(t_data *data, t_executor *executor, int *end, int next);
 void		dup_check(int file, int dupped);
 char		*remove_quotes(char *str);
+int			invalid_unset_loop(char *token, char *name, t_data *data);
+int			invalid_export_loop(char *token, char *name, t_data *data);
 // int			check_line(t_executor *executor, t_data *data);
-
+void		not_valid_message(char *token, char *name, t_data *data);
+int			parse_command(char **token);
 void		ft_sig2(int signum);
 
 extern		int g_sig_interrupt;

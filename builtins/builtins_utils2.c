@@ -14,7 +14,7 @@
 
 int	check_unset_arg(char *token, t_data *data)
 {
-	if (ft_strcmp("PATH", token) == 0 || ft_strcmp("PATH=", token) == 0)
+	if (ft_strcmp("PATH", token) == 0)
 	{
 		if (!data->envp)
 			return (0);
@@ -24,32 +24,33 @@ int	check_unset_arg(char *token, t_data *data)
 	return (1);
 }
 
-t_env	*duplicate_env(t_env *env)
+int	invalid_export_loop(char *token, char *name, t_data *data)
 {
-	t_env	*head;
-	t_env	*temp;
+	int	i;
+	int	error;
 
-	temp = NULL;
-	head = NULL;
-	while (env != NULL)
+	error = 0;
+	i = 0;
+	if (!ft_strcmp(name, "export"))
 	{
-		if (head == NULL)
+		while (token[i])
 		{
-			head = malloc(sizeof(t_env));
-			temp = head;
+			if (!(ft_isalpha(token[i])) && !ft_isdigit(token[i])
+				&& token[i] != '_' && token[i] != '\"' && token[i] != '\''
+				&& token[i] != '=')
+			{
+				error = 1;
+				break ;
+			}
+			i++;
 		}
-		else
-		{
-			temp->next = malloc(sizeof(t_env));
-			temp = temp->next;
-		}
-		if (temp == NULL)
-			return (NULL);
-		temp->value = ft_strdup(env->value);
-		temp->next = NULL;
-		env = env->next;
 	}
-	return (head);
+	if (error == 1)
+	{
+		not_valid_message(token, name, data);
+		return (1);
+	}
+	return (0);
 }
 
 void	print_after_equal(char *temp)

@@ -34,7 +34,8 @@ void	print_after_equal2(char *temp)
 int	name_error2(char *name, char *str, char *message, int flag)
 {
 	if (!flag)
-	{	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		print_after_equal2(name);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putstr_fd(str, STDERR_FILENO);
@@ -43,7 +44,7 @@ int	name_error2(char *name, char *str, char *message, int flag)
 	else
 	{
 		print_after_equal2(name);
-		write(1, "\n", 2);
+		// write(1, "\n", 2); // issue happens when unsetting.
 	}
 	return (0);
 }

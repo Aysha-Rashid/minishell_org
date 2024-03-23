@@ -31,3 +31,15 @@ int	ft_error(int i, char *str, int no_path)
 		name_error(str, NULL, "No options allowed", 0);
 	return (1);
 }
+
+void	not_valid_message(char *token, char *name, t_data *data)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(name, 2);
+	ft_putstr_fd(": `", 2);
+	if (token[0] == '$')
+		ft_expansion3(data, token, 1);
+	else
+		ft_putstr_fd(token, 2);
+	ft_putendl_fd("': not a valid identifier", 2);
+}

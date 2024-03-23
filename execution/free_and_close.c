@@ -21,19 +21,11 @@ void	free_executor(t_executor *executor)
 	free(executor);
 }
 
-// void	free_lexer_list(t_lexer *list)
-// {
-// 	if (!list)
-// 		return ;
-// 	free_lexer_list(list->next);
-// 	free(list);
-// }
-
 void	close_and_free_all(t_data *data, int *end)
 {
 	(void)end;
-	// close(end[0]);
-	// close(end[1]);
+	close(end[0]);
+	close(end[1]);
 	// close(data->executor->in);
 	// close(data->executor->out);
 	// free_lexer_list(data->lexer_list);
@@ -53,7 +45,6 @@ void	ft_dup_fd(t_data *data, t_executor *executor, int *end, int next)
 			if (executor->in != STDIN_FILENO)
 				dup_check(executor->in, STDIN_FILENO);
 		}
-		// dup2(end[0], STDIN_FILENO);
 		close (end[0]);
 		dup2(end[1], STDOUT_FILENO);
 		close (end[1]);
@@ -70,15 +61,13 @@ void	ft_dup_fd(t_data *data, t_executor *executor, int *end, int next)
 		close(end[1]);
 		dup2(end[0], STDIN_FILENO);
 		close(end[0]);
-		// else
-		// dup2(end[1], STDOUT_FILENO);
 	}
 }
 
 void	dup_check(int file, int dupped)
 {
 	if (dup2(file, dupped) == -1)
-		ft_putstr_fd("ERROR", 2);
+		exit(1);
 	close(file);
 }
 

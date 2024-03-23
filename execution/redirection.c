@@ -12,13 +12,6 @@
 
 #include "../minishell.h"
 
-// int	is_redir(char *cmd)
-// {
-// 	if (ft_strchr(cmd, '<') || ft_strchr(cmd, '>'))
-// 		return (1);
-// 	return (0);
-// }
-
 char	*remove_redir_or_files(char *cmd)
 {
 	char	*dest;
@@ -88,15 +81,40 @@ int	ft_open(t_executor *executor, char *redir, char *file)
 	return (0);
 }
 
-// void	count_pipes(t_data *data)
+// void	heredoc(t_data *data, t_executor *executor, int *end)
 // {
-// 	int	i;
-
-// 	i = 0;
-// 	while (data->cmd[i])
+// 	if (!ft_strcmp(executor->cmd, "<<"))
 // 	{
-// 		if (data->cmd[i] == '|')
-// 			data->executor->pipes++;
-// 		i++;
+// 		// with pipe and redirection and without pipe and redirection
 // 	}
 // }
+
+int	parse_command(char **token)
+{
+	int		i;
+	char	*message;
+	char	check;
+
+	message = "syntax error near unexpected token ";
+	i = 0;
+	while (token[i] && token[i + 1])
+	{
+		check = ft_strchr(token[i + 1], '<') || ft_strchr(token[i + 1], '>')
+			|| ft_strchr(token[i + 1], '|');
+		// if (ft_strcmp(token[0], ">") && check)
+		// 	return (name_error(NULL, message, token[i + 1], 0), 1); // if the greater then sign is in the beginning
+		if (ft_strchr(token[i], '<') && check)
+			return (name_error(NULL, message, token[i + 1], 0), 1);
+		if ((!ft_strcmp(token[i], "<<") || !ft_strcmp(token[i], ">>")) && check)
+			return (name_error(NULL, message, token[i + 1], 0), 1);
+		if (!ft_strcmp(token[i], "|") && !ft_strcmp(token[i + 1], "|"))
+			return (name_error(NULL, message, " `|'", 0), 1);
+		i++;
+	}
+	if (token[i + 1] == NULL && !ft_strncmp(token[i], "||", 2))
+		return (name_error(NULL, message, "||", 0), 1);
+	if ((token[i + 1] == NULL) && (ft_strchr(token[i], '<')
+			|| ft_strchr(token[i], '>') || ft_strchr(token[i], '|')))
+		return (name_error(NULL, message, "`newline'", 0), 1);
+	return (0);
+}

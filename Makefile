@@ -12,11 +12,6 @@ SRC = main.c\
 		builtins/unset.c\
 		signals/signals.c\
 		errors.c\
-		lexer/handle_quotes.c\
-		lexer/lexer_utils.c\
-		lexer/token_reader.c\
-		lexer/token_utils.c\
-		lexer/parsing_lexar.c\
 		execution/pipes.c\
 		execution/execution.c\
 		execution/free_and_close.c\

@@ -37,3 +37,57 @@ void	check_command(char *str, char *cmd, int *end, t_data *data)
 		exit_and_free(data, end, 1);
 	}
 }
+
+char	*remove_all_qoutes(char *str)
+{
+	char	*ptr;
+	int		i;
+	int		j;
+
+	if (!str || str[0] == '\0')
+		return (NULL);
+	ptr = malloc(ft_strlen(str) + 1);
+	if (ptr == NULL)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[j] != ' ' && str[j])
+	{
+		if (str[j] != '\'' && str[j] != '"')
+			ptr[i++] = str[j];
+		j++;
+	}
+	while (str[j])
+		ptr[i++] = str[j++];
+	ptr[i] = '\0';
+	return (ptr);
+}
+
+char	*remove_quotes(char *str)
+{
+	int		i;
+	char	quote;
+	int		len;
+	char	*ptr;
+	int		j;
+
+	i = 0;
+	j = 0;
+	len = ft_strlen(str);
+	ptr = malloc(len + 1);
+	while (i < len)
+	{
+		if (str[i] == '\'' || str[i] == '"')
+		{
+			quote = str[i++];
+			while (ft_isalpha(str[i]) && i < len && str[i] != quote)
+				ptr[j++] = str[i++];
+			if (i < len)
+				i++;
+		}
+		else
+			ptr[j++] = str[i++];
+	}
+	ptr[j] = '\0';
+	return (ptr);
+}
