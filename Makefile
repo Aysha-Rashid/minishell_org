@@ -19,6 +19,8 @@ SRC = main.c\
 		execution/execution_utils.c\
 		expansion/expansion1.c\
 		expansion/expansion_utils.c\
+		get_next_line.c\
+		get_next_line_utils.c\
 
 OBJ = $(SRC:.c=.o)
 

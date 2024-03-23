@@ -87,10 +87,9 @@ int	ft_unset(char *str, t_data *data)
 {
 	char	**token;
 	t_env	*current;
-	char	*temp;
 
-	temp = remove_all_qoutes(data->cmd);
-	token = ft_split(temp, ' ');
+	ft_putstr_fd(str, 2);
+	token = ft_split(str, ' ');
 	current = data->envp;
 	if (ft_strlen(token[0]) != 5)
 		return (free_array(token), ft_error(2, str, data->no_path), 1);

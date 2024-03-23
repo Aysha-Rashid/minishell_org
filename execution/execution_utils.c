@@ -38,29 +38,51 @@ void	check_command(char *str, char *cmd, int *end, t_data *data)
 	}
 }
 
-char	*remove_all_qoutes(char *str)
-{
-	char	*ptr;
-	int		i;
-	int		j;
+// char	*remove_all_qoutes(char *str)
+// {
+// 	char	*ptr;
+// 	int		i;
+// 	int		j;
 
-	if (!str || str[0] == '\0')
-		return (NULL);
-	ptr = malloc(ft_strlen(str) + 1);
-	if (ptr == NULL)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (str[j] != ' ' && str[j])
-	{
-		if (str[j] != '\'' && str[j] != '"')
-			ptr[i++] = str[j];
-		j++;
-	}
-	while (str[j])
-		ptr[i++] = str[j++];
-	ptr[i] = '\0';
-	return (ptr);
+// 	if (!str || str[0] == '\0')
+// 		return (NULL);
+// 	ptr = malloc(ft_strlen(str) + 1);
+// 	if (ptr == NULL)
+// 		return (NULL);
+// 	i = 0;
+// 	j = 0;
+// 	while (str[j] != ' ' && str[j])
+// 	{
+// 		if (str[j] != '\'' && str[j] != '"')
+// 			ptr[i++] = str[j];
+// 		j++;
+// 	}
+// 	while (str[j])
+// 		ptr[i++] = str[j++];
+// 	ptr[i] = '\0';
+// 	return (ptr);
+// }
+char *remove_all_qoutes(char *str)
+{
+    char *ptr;
+    int i = 0;
+    int j = 0;
+    int len = ft_strlen(str);
+
+    if (!str || str[0] == '\0')
+        return NULL;
+    ptr = malloc(len + 1);
+    if (ptr == NULL)
+        return NULL;
+    if (str[0] == '\'' || str[0] == '"')
+        j++;
+    while (str[j] != '\0' && j < len - 1)
+        ptr[i++] = str[j++];
+    if (str[len - 1] == '\'' || str[len - 1] == '"')
+        j++;
+    ptr[i] = '\0';
+
+    return ptr;
 }
 
 char	*remove_quotes(char *str)
@@ -73,6 +95,8 @@ char	*remove_quotes(char *str)
 
 	i = 0;
 	j = 0;
+	if (!str)
+		return (0);
 	len = ft_strlen(str);
 	ptr = malloc(len + 1);
 	while (i < len)

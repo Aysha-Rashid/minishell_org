@@ -34,24 +34,22 @@ int	check_pipes_n_execute(t_data *data)
 {
 	char		builtin_index;
 	char		**str;
+	char		*temp;
 
 	if (!quote(data->cmd))
 		return (ft_error(1, NULL, data->no_path));
-	// if (parsing_lexar(data, temp))
-	// 	return (1);
-	// data->cmd = remove_all_qoutes(data->cmd);
 	str = ft_split(data->cmd, ' ');
 	if (parse_command(str))
 		return (free_array(str), 1);
-	builtin_index = check_builtin(data->cmd);
+	temp = remove_quotes(data->cmd);
+	builtin_index = check_builtin(temp);
 	free_array(str);
-	// if (ft_strchr(data->cmd, '|'))
+	free(temp);
 	data->executor = parse_pipeline(data->cmd, data);
 	if (builtin_index >= 0 && !check_redir_pipe(data->cmd))
 		builtin_command(data->cmd, data);
 	else
 		execution(data->executor, data);
-	// free_lexer_list(data->lexer_list);
 	free_executor(data->executor);
 	return (0);
 }

@@ -64,7 +64,6 @@ int	execution(t_executor *executor, t_data *data)
 			data->status_code = 130;
 		redir(executor);
 		executor->cmd = remove_redir_or_files(executor->cmd);
-		// ft_putstr_fd(executor->cmd, 2);
 		if (executor->next)
 			pipe(end);
 		pid = fork();

@@ -75,7 +75,6 @@ int	ft_cd(char *str, t_data *data)
 	temp = ft_split(str, ' ');
 	if (!temp || ft_strlen(temp[0]) != 2)
 		return (free_array(temp), ft_error(2, str, data->no_path));
-	temp[1] = remove_all_qoutes(temp[1]);
 	if (temp[1] == NULL)
 		changed = find_current_path(data, "HOME=");
 	else if (!(ft_strncmp(temp[1], "-", 1)) && ft_strlen(temp[1]) == 1)

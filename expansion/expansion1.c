@@ -81,6 +81,7 @@ int	ft_expansion3(t_data *data, char *str, int flag)
 			else
 			{
 				exp = search_env_variable2(data->envp, &str[j]);
+			// ft_putstr_fd(exp, 2);
 				if (!exp)
 					return (free(exit_status), 0);
 				return (ft_specified_error(exp, flag), free(exit_status), 1);

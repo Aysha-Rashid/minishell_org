@@ -22,6 +22,7 @@
 #include <readline/history.h>
 #include "libft/libft.h"
 
+#define BUFFER_SIZE 42
 // typedef enum s_tokens
 // {
 // 	PIPE = 1,
@@ -183,6 +184,15 @@ int			invalid_export_loop(char *token, char *name, t_data *data);
 // int			check_line(t_executor *executor, t_data *data);
 void		not_valid_message(char *token, char *name, t_data *data);
 int			parse_command(char **token);
+char		*remove_all_qoutes(char *str);
 void		ft_sig2(int signum);
-
+//get_next_line
+char		*remaining(char *buffer);
+char		*new_line(char *str);
+char		*get_next_line(int fd);
+char		*read_lines(int fd, char *store);
+char		*ft_get_strdup(char	*s1);
+char		*ft_get_strjoin(char *s1, char *s2);
+char		*ft_str_init(void);
+char		*ft_get_strchr(const char *s, char c);
 extern		int g_sig_interrupt;

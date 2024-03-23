@@ -14,31 +14,33 @@
 
 int	builtin_command(char *str, t_data *data)
 {
-	if (str && (!ft_strncmp(str, "env", 3)
-			|| !ft_strncmp(str, "ENV", 3)))
-		return (ft_env(data, str), 0);
-	else if (!ft_strncmp(str, "export", 6))
-		return (ft_export(str, data), 0);
+	char		*temp;
+
+	temp = remove_quotes(data->cmd); // removes some extra characters
+	if (str && (!ft_strncmp(temp, "env", 3)
+			|| !ft_strncmp(temp, "ENV", 3)))
+		return (ft_env(data, temp), free(temp), 0);
+	else if (!ft_strncmp(temp, "export", 6))
+		return (ft_export(temp, data), free(temp), 0);
 	else if (str && (!ft_strncmp(str, "pwd", 3)
 			|| !ft_strncmp(str, "PWD", 3)))
-		return (ft_pwd(data), 0);
-	else if (str && (!ft_strncmp(str, "echo", 4)
+		return (ft_pwd(data), free(temp), 0);
+	else if (temp && (!ft_strncmp(str, "echo", 4)
 			|| (!ft_strncmp(str, "ECHO", 4))
 			|| (!ft_strncmp(str, "echo -n", 7))))
-		return (ft_echo(str, data));
-	else if (str && (!(ft_strncmp(str, "cd", 2))))
-		return (ft_cd(str, data), 0);
+		return (ft_echo(str, data), free(temp), 0);
+	else if (temp && (!(ft_strncmp(temp, "cd", 2))))
+		return (ft_cd(temp, data), free(temp), 0);
 	else if (str && (!ft_strncmp(str, "unset", 5)))
 		return (ft_unset(str, data), 0);
 	else if (!*str)
-		return (0);
+		return (free(temp), 0);
 	return (0);
 }
 
 void	prompt_loop(char *str, t_data *data)
 {
 	char	*trimmed_cmd;
-	char	*remove;
 
 	while (1)
 	{
@@ -46,10 +48,8 @@ void	prompt_loop(char *str, t_data *data)
 		str = readline("\033[96mminishell$ \033[0m");
 		check_signal(str, data);
 		trimmed_cmd = ft_strtrim(str, " ");
-		remove = remove_quotes(trimmed_cmd);
-		data->cmd = ft_strdup(remove);
+		data->cmd = ft_strdup(trimmed_cmd);
 		free(trimmed_cmd);
-		free(remove);
 		free(str);
 		check_n_execute(data->cmd, data);
 		add_history(data->cmd);

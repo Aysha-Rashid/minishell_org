@@ -83,11 +83,24 @@ int	ft_open(t_executor *executor, char *redir, char *file)
 
 // void	heredoc(t_data *data, t_executor *executor, int *end)
 // {
-// 	if (!ft_strcmp(executor->cmd, "<<"))
+// 	char	**str;
+// 	int		i;
+// 	char	*delimiter;
+
+// 	i = 0;
+// 	str = ft_split(executor->cmd, ' ');
+// 	while(str[i])
 // 	{
-// 		// with pipe and redirection and without pipe and redirection
+// 		if (!ft_strcmp(str[i], "<<"))
+// 		{
+// 			delimiter = ft_strdup(str[i + 1]);
+// 			// with pipe and redirection and without pipe and redirection
+// 		}
+// 		i++;
 // 	}
 // }
+// write in stdin
+// keep writing until you came across the delimiter
 
 int	parse_command(char **token)
 {
