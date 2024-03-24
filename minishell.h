@@ -62,7 +62,7 @@ typedef struct s_data
 {
 	// int				*pid;
 	int				no_path;
-	int				status_code;
+	// int				status_code;
 	char			*cmd;
 	char			*pwd;
 	char			*old_pwd;
@@ -195,6 +195,10 @@ char		*ft_get_strdup(char	*s1);
 char		*ft_get_strjoin(char *s1, char *s2);
 char		*ft_str_init(void);
 char		*ft_get_strchr(const char *s, char c);
+<<<<<<< HEAD
 int			heredoc(t_data *data, t_executor *executor, int *end);
 char		*remove_heredoc(char *cmd);
 extern		int g_sig_interrupt;
+=======
+int	g_signal;
+>>>>>>> e55641556991ae8e9ba7e2ae046ec2feb59dda2e

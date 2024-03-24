@@ -60,12 +60,8 @@ int	execution(t_executor *executor, t_data *data)
 	here = 0;
 	while (executor)
 	{
-		if (signal(SIGQUIT, ft_sig2))
-			data->status_code = 131;
-		if (signal(SIGINT, ft_sig2))
-			data->status_code = 130;
-		here = heredoc(data, executor, end);
-		executor->cmd = remove_heredoc(executor->cmd);
+		signal(SIGQUIT, ft_sig2);
+		signal(SIGINT, ft_sig2);
 		redir(executor);
 		if (executor->next)
 			pipe(end);
