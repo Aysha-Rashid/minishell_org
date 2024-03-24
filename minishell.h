@@ -62,7 +62,7 @@ typedef struct s_data
 {
 	// int				*pid;
 	int				no_path;
-	int				status_code;
+	// int				status_code;
 	char			*cmd;
 	char			*pwd;
 	char			*old_pwd;
@@ -195,4 +195,4 @@ char		*ft_get_strdup(char	*s1);
 char		*ft_get_strjoin(char *s1, char *s2);
 char		*ft_str_init(void);
 char		*ft_get_strchr(const char *s, char c);
-extern		int g_sig_interrupt;
+int	g_signal;

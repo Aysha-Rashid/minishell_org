@@ -14,7 +14,6 @@
 
 void	name_error3(char *exit_status, char *message, int flag)
 {
-	// printf("%d\n", flag);
 	if (!flag)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);

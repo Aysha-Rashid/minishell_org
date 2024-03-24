@@ -69,7 +69,8 @@ int	ft_expansion3(t_data *data, char *str, int flag)
 	char	*exit_status;
 	int		j;
 
-	exit_status = ft_itoa(data->status_code);
+	// exit_status = ft_itoa(data->status_code);
+	exit_status = ft_itoa(g_signal);
 	j = dollar_sign(str);
 	while (str[j])
 	{

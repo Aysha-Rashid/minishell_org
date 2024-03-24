@@ -58,10 +58,8 @@ int	execution(t_executor *executor, t_data *data)
 	end[1] = 4;
 	while (executor)
 	{
-		if (signal(SIGQUIT, ft_sig2))
-			data->status_code = 131;
-		if (signal(SIGINT, ft_sig2))
-			data->status_code = 130;
+		signal(SIGQUIT, ft_sig2);
+		signal(SIGINT, ft_sig2);
 		redir(executor);
 		executor->cmd = remove_redir_or_files(executor->cmd);
 		if (executor->next)
@@ -80,7 +78,7 @@ int	execution(t_executor *executor, t_data *data)
 				close(end[0]);
 		}
 	}
-	while (waitpid(pid, &data->status_code, 0) > 0);
+	while (waitpid(pid, &g_signal, 0) > 0);
 	close(end[0]);
 	close(end[1]);
 	return (0);
