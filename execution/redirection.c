@@ -28,7 +28,7 @@ char	*remove_redir_or_files(char *cmd)
 		if ((cmd[i] == '<' || cmd[i] == '>') && cmd[i] != ' ')
 		{
 			i++;
-			if (cmd[i] == '<' || cmd[i] == '>')
+			if (cmd[i] == '>')
 				i++;
 			while (cmd[i] && (cmd[i] == ' ' || cmd[i] == '\t'))
 				i++;
@@ -81,24 +81,50 @@ int	ft_open(t_executor *executor, char *redir, char *file)
 	return (0);
 }
 
-// void	heredoc(t_data *data, t_executor *executor, int *end)
-// {
-// 	char	**str;
-// 	int		i;
-// 	char	*delimiter;
+int	heredoc(t_data *data, t_executor *executor, int *end)
+{
+	char	**str;
+	char	*temp;
+	char	*line;
+	int		i;
+	char	*delimiter;
 
-// 	i = 0;
-// 	str = ft_split(executor->cmd, ' ');
-// 	while(str[i])
-// 	{
-// 		if (!ft_strcmp(str[i], "<<"))
-// 		{
-// 			delimiter = ft_strdup(str[i + 1]);
-// 			// with pipe and redirection and without pipe and redirection
-// 		}
-// 		i++;
-// 	}
-// }
+	(void)data;
+	i = 0;
+	temp = NULL;
+	delimiter = NULL;
+	str = ft_split(executor->cmd, ' ');
+	while (str[i])
+	{
+		if (!ft_strcmp(str[i], "<<") && str[i + 1])
+		{
+			temp = ft_strjoin(str[i + 1], "\n");
+			delimiter = ft_strdup(temp);
+			break ;
+			// with pipe and redirection and without pipe and redirection
+		}
+		i++;
+	}
+	free(temp);
+	free_array(str);
+	if (!delimiter)
+		return 0;
+	while (1)
+	{
+		ft_putstr_fd("> ", STDOUT_FILENO);
+		line = get_next_line(STDIN_FILENO);
+		if (!ft_strcmp(line, delimiter))
+		{
+			free(line);
+			break ;
+		}
+		ft_putstr_fd(line, end[0]);
+		free(line);
+	}
+	free(delimiter);
+	return (1);
+	// close(end[0]);
+}
 // write in stdin
 // keep writing until you came across the delimiter
 
@@ -130,4 +156,33 @@ int	parse_command(char **token)
 			|| ft_strchr(token[i], '>') || ft_strchr(token[i], '|')))
 		return (name_error(NULL, message, "`newline'", 0), 1);
 	return (0);
+}
+
+char	*remove_heredoc(char *cmd)
+{
+	char	*dest;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	dest = (char *)malloc(sizeof(char) * (ft_strlen(cmd) + 1));
+	if (!dest)
+		return (NULL);
+	while (cmd[i])
+	{
+		if ((cmd[i] == '<') && cmd[i] != ' ')
+		{
+			i++;
+			if (cmd[i] == '<')
+				i++;
+			while (cmd[i] && (cmd[i] == ' ' || cmd[i] == '\t'))
+				i++;
+			while (cmd[i] && cmd[i] != ' ' && cmd[i] != '\t')
+				i++;
+		}
+		dest[j++] = cmd[i++];
+	}
+	dest[j] = '\0';
+	return (dest);
 }

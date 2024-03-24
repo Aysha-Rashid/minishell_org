@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 int 	g_sig_interrupt = 0;
 
 t_executor	*init_executor(t_data *data, char *cmd)
@@ -38,32 +39,34 @@ void	execute_command(char *cmd, t_data *data, int *end)
 
 void	child_process(t_data *data, t_executor *executor, int *end)
 {
-	// heredoc(data, executor, end);
+	executor->cmd = remove_redir_or_files(executor->cmd);
 	if (executor->next)
 		ft_dup_fd(data, executor, end, 1);
 	else
 		ft_dup_fd(data, executor, end, 0);
-	// close(end[0]);
-	// close(end[1]);
+	close(end[0]);
+	close(end[1]);
 	execute_command(executor->cmd, data, end);
-	exit(0);
 }
 
 int	execution(t_executor *executor, t_data *data)
 {
 	int	end[2];
 	int	pid;
+	int	here;
 
 	end[0] = 3;
 	end[1] = 4;
+	here = 0;
 	while (executor)
 	{
 		if (signal(SIGQUIT, ft_sig2))
 			data->status_code = 131;
 		if (signal(SIGINT, ft_sig2))
 			data->status_code = 130;
+		here = heredoc(data, executor, end);
+		executor->cmd = remove_heredoc(executor->cmd);
 		redir(executor);
-		executor->cmd = remove_redir_or_files(executor->cmd);
 		if (executor->next)
 			pipe(end);
 		pid = fork();
@@ -71,20 +74,58 @@ int	execution(t_executor *executor, t_data *data)
 			return (perror("fork error"), 0);
 		else if (pid == 0)
 			child_process(data, executor, end);
-		else
-		{
-			executor = executor->next;
-			if (executor)
-				close(end[1]);
-			else
-				close(end[0]);
-		}
+		executor = executor->next;
 	}
-	while (waitpid(pid, &data->status_code, 0) > 0);
-	close(end[0]);
 	close(end[1]);
+	close(end[0]);
+	while (waitpid(-1, &data->status_code, 0) >= 0);
 	return (0);
 }
+
+// int execution(t_executor *executor, t_data *data) {
+//     int prev_read_fd = STDIN_FILENO; // Initialize the read file descriptor with stdin
+//     int fds[2]; // File descriptors for pipe
+//     int pid;
+
+    // while (executor) {
+    //     // Create a pipe for communication between processes
+    //     if (pipe(fds) == -1) {
+    //         perror("pipe error");
+    //         return -1;
+    //     }
+
+    //     // Fork a child process
+    //     pid = fork();
+    //     if (pid == -1) {
+    //         perror("fork error");
+    //         return -1;
+    //     } else if (pid == 0) { // Child process
+    //         // Redirect input to come from the previous process's output
+    //         dup2(prev_read_fd, STDIN_FILENO);
+    //         close(fds[0]); // Close unused read end of pipe
+
+    //         // Redirect output to go to the next process's input
+    //         if (executor->next) {
+    //             dup2(fds[1], STDOUT_FILENO);
+    //         }
+
+    //         // Execute the command
+    //         execute_command(executor->cmd, data, NULL);
+    //         exit(1);
+    //     } else { // Parent process
+    //         close(fds[1]); // Close unused write end of pipe
+    //         close(prev_read_fd); // Close previous process's output
+    //         prev_read_fd = fds[0]; // Update previous read file descriptor for next process
+    //         executor = executor->next;
+    //     }
+    // }
+
+    // Wait for all child processes to finish
+// 	while (waitpid(-1, &data->status_code, 0) > 0)
+// 	;
+//     return 0;
+// }
+
 
 int	check_builtin(char *str)
 {

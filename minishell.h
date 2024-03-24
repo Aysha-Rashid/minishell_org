@@ -195,4 +195,6 @@ char		*ft_get_strdup(char	*s1);
 char		*ft_get_strjoin(char *s1, char *s2);
 char		*ft_str_init(void);
 char		*ft_get_strchr(const char *s, char c);
+int			heredoc(t_data *data, t_executor *executor, int *end);
+char		*remove_heredoc(char *cmd);
 extern		int g_sig_interrupt;

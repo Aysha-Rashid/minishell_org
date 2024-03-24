@@ -67,7 +67,10 @@ void	ft_dup_fd(t_data *data, t_executor *executor, int *end, int next)
 void	dup_check(int file, int dupped)
 {
 	if (dup2(file, dupped) == -1)
+	{
+		ft_putstr_fd("dup error",2);
 		exit(1);
+	}
 	close(file);
 }
 
