@@ -14,17 +14,6 @@
 
 int 	g_sig_interrupt = 0;
 
-t_executor	*init_executor(t_data *data, char *cmd)
-{
-	data->executor = (t_executor *)malloc(sizeof(t_executor));
-	data->executor->cmd = ft_strdup(cmd);
-	data->executor->in = STDIN_FILENO;
-	data->executor->out = STDOUT_FILENO;
-	data->executor->heredoc = NULL;
-	data->executor->next = NULL;
-	return (data->executor);
-}
-
 void	execute_command(char *cmd, t_data *data, int *end)
 {
 	char	*str;
@@ -37,116 +26,84 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	exit(1);
 }
 
-void	child_process(t_data *data, t_executor *executor, int *end)
+void	closing_execution(int pid, int *prev_pipe)
 {
+	int	status;
+
+	status = 0;
+	// (void)prev_pipe;
+	close(prev_pipe[1]);
+	close(prev_pipe[0]);
+	pid = waitpid(-1, &status, 0);
+	while (pid > 0)
+	{
+		pid = waitpid(-1, &status, 0);
+		WIFEXITED(status);
+		// WIFSIGNALED(status);
+	}
+}
+
+void	parent_process(t_executor *executor, int *prev_pipe, int *cur_pipe)
+{
+	if (executor->prev)
+	{
+		close(prev_pipe[0]);
+		close(prev_pipe[1]);
+	}
+	prev_pipe[0] = cur_pipe[0];
+	prev_pipe[1] = cur_pipe[1];
+}
+
+void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
+{
+	// heredoc(data, executor, prev, int *cur);
+	// int check;
+	// check = 0;
 	executor->cmd = remove_redir_or_files(executor->cmd);
-	if (executor->next)
-		ft_dup_fd(data, executor, end, 1);
-	else
-		ft_dup_fd(data, executor, end, 0);
-	close(end[0]);
-	close(end[1]);
-	execute_command(executor->cmd, data, end);
+	if (prev[0] != STDIN_FILENO)
+	{
+		dup_check(prev[0], STDIN_FILENO);
+		close(prev[0]);
+		close(prev[1]);
+	}
+	if (cur != NULL && cur[1] != STDOUT_FILENO)
+	{
+		close(cur[0]);
+		dup2(cur[1], STDOUT_FILENO);
+		close(cur[1]);
+	}
+	execute_command(executor->cmd, data, cur);
 }
 
 int	execution(t_executor *executor, t_data *data)
 {
-	int	end[2];
+	int	cur_pipe[2];
+	int	prev_pipe[2];
 	int	pid;
-	int	here;
 
-	end[0] = 3;
-	end[1] = 4;
-	here = 0;
+	if (pipe(prev_pipe) == -1) {
+		perror("pipe error");
+		return 1; // Return an error code to indicate failure
+	}
 	while (executor)
 	{
 		signal(SIGQUIT, ft_sig2);
 		signal(SIGINT, ft_sig2);
 		redir(executor);
 		if (executor->next)
-			pipe(end);
+			pipe(cur_pipe);
 		pid = fork();
 		if (pid < 0)
 			return (perror("fork error"), 0);
 		else if (pid == 0)
-			child_process(data, executor, end);
+		{
+			close(prev_pipe[1]);
+			child_process(data, executor, prev_pipe, cur_pipe);
+		}
+		else
+			parent_process(executor, prev_pipe, cur_pipe);
 		executor = executor->next;
 	}
-	close(end[1]);
-	close(end[0]);
-	while (waitpid(-1, &data->status_code, 0) >= 0);
+	closing_execution(pid, prev_pipe);
 	return (0);
-}
-
-// int execution(t_executor *executor, t_data *data) {
-//     int prev_read_fd = STDIN_FILENO; // Initialize the read file descriptor with stdin
-//     int fds[2]; // File descriptors for pipe
-//     int pid;
-
-    // while (executor) {
-    //     // Create a pipe for communication between processes
-    //     if (pipe(fds) == -1) {
-    //         perror("pipe error");
-    //         return -1;
-    //     }
-
-    //     // Fork a child process
-    //     pid = fork();
-    //     if (pid == -1) {
-    //         perror("fork error");
-    //         return -1;
-    //     } else if (pid == 0) { // Child process
-    //         // Redirect input to come from the previous process's output
-    //         dup2(prev_read_fd, STDIN_FILENO);
-    //         close(fds[0]); // Close unused read end of pipe
-
-    //         // Redirect output to go to the next process's input
-    //         if (executor->next) {
-    //             dup2(fds[1], STDOUT_FILENO);
-    //         }
-
-    //         // Execute the command
-    //         execute_command(executor->cmd, data, NULL);
-    //         exit(1);
-    //     } else { // Parent process
-    //         close(fds[1]); // Close unused write end of pipe
-    //         close(prev_read_fd); // Close previous process's output
-    //         prev_read_fd = fds[0]; // Update previous read file descriptor for next process
-    //         executor = executor->next;
-    //     }
-    // }
-
-    // Wait for all child processes to finish
-// 	while (waitpid(-1, &data->status_code, 0) > 0)
-// 	;
-//     return 0;
-// }
-
-
-int	check_builtin(char *str)
-{
-	int			i;
-	char		**temp;
-	static char	*builtins[] = {
-		"echo",
-		"cd",
-		"pwd",
-		"export",
-		"unset",
-		"env",
-		"exit",
-		"ENV",
-		"PWD",
-		"ECHO",
-	};
-
-	i = 0;
-	temp = ft_split(str, ' ');
-	while (i < 10)
-	{
-		if (ft_strcmp(builtins[i], temp[0]) == 0)
-			return (free_array(temp), i);
-		i++;
-	}
-	return (free_array(temp), -1);
 }

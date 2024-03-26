@@ -12,6 +12,16 @@
 
 #include "../minishell.h"
 
+void	sig_handlers(int signum)
+{
+	signum++;
+	g_signal = 1;
+	ft_putstr_fd("\n", 2);
+	rl_on_new_line();
+	rl_redisplay();
+	exit(1);
+}
+
 char	*remove_redir_or_files(char *cmd)
 {
 	char	*dest;
@@ -28,7 +38,7 @@ char	*remove_redir_or_files(char *cmd)
 		if ((cmd[i] == '<' || cmd[i] == '>') && cmd[i] != ' ')
 		{
 			i++;
-			if (cmd[i] == '>')
+			if (cmd[i] == '>' || cmd[i] == '<')
 				i++;
 			while (cmd[i] && (cmd[i] == ' ' || cmd[i] == '\t'))
 				i++;
@@ -108,9 +118,10 @@ int	heredoc(t_data *data, t_executor *executor, int *end)
 	free(temp);
 	free_array(str);
 	if (!delimiter)
-		return 0;
+		return (0);
 	while (1)
 	{
+		signal(SIGINT, sig_handlers);
 		ft_putstr_fd("> ", STDOUT_FILENO);
 		line = get_next_line(STDIN_FILENO);
 		if (!ft_strcmp(line, delimiter))
@@ -140,13 +151,11 @@ int	parse_command(char **token)
 	{
 		check = ft_strchr(token[i + 1], '<') || ft_strchr(token[i + 1], '>')
 			|| ft_strchr(token[i + 1], '|');
-		// if (ft_strcmp(token[0], ">") && check)
-		// 	return (name_error(NULL, message, token[i + 1], 0), 1); // if the greater then sign is in the beginning
 		if (ft_strchr(token[i], '<') && check)
 			return (name_error(NULL, message, token[i + 1], 0), 1);
 		if ((!ft_strcmp(token[i], "<<") || !ft_strcmp(token[i], ">>")) && check)
 			return (name_error(NULL, message, token[i + 1], 0), 1);
-		if (!ft_strcmp(token[i], "|") && !ft_strcmp(token[i + 1], "|"))
+		if ((!ft_strcmp(token[i], "|") && !ft_strcmp(token[i + 1], "|")) || !ft_strcmp(token[0], "|"))
 			return (name_error(NULL, message, " `|'", 0), 1);
 		i++;
 	}

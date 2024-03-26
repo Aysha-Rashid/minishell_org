@@ -56,6 +56,7 @@ typedef struct s_executor
 	char				*heredoc;
 	char				*cmd;
 	struct s_executor	*next;
+	struct s_executor	*prev;
 }				t_executor;
 
 typedef struct s_data
@@ -176,7 +177,7 @@ int			check_redir_pipe(char *cmd);
 void		redir(t_executor *executor);
 char		*remove_redir_or_files(char *cmd);
 int	    	ft_open(t_executor *executor, char *redir, char *file);
-void		ft_dup_fd(t_data *data, t_executor *executor, int *end, int next);
+void		ft_dup_fd(t_data *data, t_executor *executor, int *end);
 void		dup_check(int file, int dupped);
 char		*remove_quotes(char *str);
 int			invalid_unset_loop(char *token, char *name, t_data *data);
@@ -195,10 +196,9 @@ char		*ft_get_strdup(char	*s1);
 char		*ft_get_strjoin(char *s1, char *s2);
 char		*ft_str_init(void);
 char		*ft_get_strchr(const char *s, char c);
-<<<<<<< HEAD
 int			heredoc(t_data *data, t_executor *executor, int *end);
 char		*remove_heredoc(char *cmd);
+void		sig_handlers(int signum);
+// void		rl_replace_line(const char *text, int clear_undo);
 extern		int g_sig_interrupt;
-=======
 int	g_signal;
->>>>>>> e55641556991ae8e9ba7e2ae046ec2feb59dda2e

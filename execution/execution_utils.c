@@ -12,6 +12,18 @@
 
 #include "../minishell.h"
 
+t_executor	*init_executor(t_data *data, char *cmd)
+{
+	data->executor = (t_executor *)malloc(sizeof(t_executor));
+	data->executor->cmd = ft_strdup(cmd);
+	data->executor->in = STDIN_FILENO;
+	data->executor->out = STDOUT_FILENO;
+	data->executor->heredoc = NULL;
+	data->executor->next = NULL;
+	data->executor->prev = NULL;
+	return (data->executor);
+}
+
 void	check_command(char *str, char *cmd, int *end, t_data *data)
 {
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
@@ -37,6 +49,35 @@ void	check_command(char *str, char *cmd, int *end, t_data *data)
 		exit_and_free(data, end, 1);
 	}
 }
+
+int	check_builtin(char *str)
+{
+	int			i;
+	char		**temp;
+	static char	*builtins[] = {
+		"echo",
+		"cd",
+		"pwd",
+		"export",
+		"unset",
+		"env",
+		"exit",
+		"ENV",
+		"PWD",
+		"ECHO",
+	};
+
+	i = 0;
+	temp = ft_split(str, ' ');
+	while (i < 10)
+	{
+		if (ft_strcmp(builtins[i], temp[0]) == 0)
+			return (free_array(temp), i);
+		i++;
+	}
+	return (free_array(temp), -1);
+}
+
 
 // char	*remove_all_qoutes(char *str)
 // {

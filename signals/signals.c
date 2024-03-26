@@ -28,7 +28,7 @@ void	ft_sig2(int signum)
 }
 
 void	sigint_handler(int signum)
-{	
+{
 	if (signum == SIGQUIT)
 	{
 		rl_redisplay();
