@@ -17,11 +17,14 @@ int 	g_sig_interrupt = 0;
 void	execute_command(char *cmd, t_data *data, int *end)
 {
 	char	*str;
+	char	*temp;
 
-	str = ft_strtrim(cmd, " ");
+	temp = remove_all_qoutes(cmd);
+	str = ft_strtrim(temp, " ");
 	check_command(str, cmd, end, data);
 	free(str);
-	cmd_file(cmd, data->envp->path);
+	cmd_file(temp, data->envp->path);
+	// free(cmd);
 	close_and_free_all(data, end);
 	exit(1);
 }
@@ -86,7 +89,8 @@ int	execution(t_executor *executor, t_data *data)
 	{
 		signal(SIGQUIT, ft_sig2);
 		signal(SIGINT, ft_sig2);
-		redir(executor);
+		if (redir(executor) == 0)
+			return (1);
 		if (executor->next)
 			pipe(cur_pipe);
 		pid = fork();

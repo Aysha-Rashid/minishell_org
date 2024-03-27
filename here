@@ -1,4 +1,4 @@
-42_minishell_tester
+42tester
 Makefile
 builtins
 errors.c
@@ -10,16 +10,20 @@ get_next_line.o
 get_next_line_utils.c
 get_next_line_utils.o
 here
+hello
+hellothere
 leaks.sh
 libft
 main.c
 main.o
+mini_tester
 minishell
 minishell.h
 minishell_tester
 notes
 parsing.c
 parsing.o
+pwd
 signals
 there
 valgrind_readline_leaks_ignore.txt

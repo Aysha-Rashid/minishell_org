@@ -174,7 +174,7 @@ int		invalid_identifier(t_data *data, char *str, char *name);
 int			is_redir(char *cmd);
 void		redir_and_execute(t_data *data, t_executor *executor);
 int			check_redir_pipe(char *cmd);
-void		redir(t_executor *executor);
+int			redir(t_executor *executor);
 char		*remove_redir_or_files(char *cmd);
 int	    	ft_open(t_executor *executor, char *redir, char *file);
 void		ft_dup_fd(t_data *data, t_executor *executor, int *end);

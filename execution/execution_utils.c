@@ -102,27 +102,29 @@ int	check_builtin(char *str)
 // 	ptr[i] = '\0';
 // 	return (ptr);
 // }
-char *remove_all_qoutes(char *str)
+char	*remove_all_qoutes(char *str)
 {
-    char *ptr;
-    int i = 0;
-    int j = 0;
-    int len = ft_strlen(str);
+	char	*ptr;
+	int		i;
+	int		j;
+	int		len;
 
-    if (!str || str[0] == '\0')
-        return NULL;
-    ptr = malloc(len + 1);
-    if (ptr == NULL)
-        return NULL;
-    if (str[0] == '\'' || str[0] == '"')
-        j++;
-    while (str[j] != '\0' && j < len - 1)
-        ptr[i++] = str[j++];
-    if (str[len - 1] == '\'' || str[len - 1] == '"')
-        j++;
-    ptr[i] = '\0';
-
-    return ptr;
+	i = 0;
+	j = 0;
+	len = ft_strlen(str);
+	if (!str || str[0] == '\0')
+		return (NULL);
+	ptr = malloc(len + 1);
+	if (ptr == NULL)
+		return (NULL);
+	if (str[0] == '\'' || str[0] == '"')
+		j++;
+	while (str[j] != '\0' && j < len)
+		ptr[i++] = str[j++];
+	if (str[len - 1] == '\'' || str[len - 1] == '"')
+		i--;
+	ptr[i] = '\0';
+	return (ptr);
 }
 
 char	*remove_quotes(char *str)

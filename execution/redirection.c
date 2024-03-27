@@ -51,7 +51,7 @@ char	*remove_redir_or_files(char *cmd)
 	return (dest);
 }
 
-void	redir(t_executor *executor)
+int	redir(t_executor *executor)
 {
 	char	**tokens;
 	int		i;
@@ -60,19 +60,23 @@ void	redir(t_executor *executor)
 	tokens = ft_split(executor->cmd, ' ');
 	while (tokens[i])
 	{
-		ft_open(executor, tokens[i], tokens[i + 1]);
+		if (ft_open(executor, tokens[i], tokens[i + 1]))
+			return (0);
 		i++;
 	}
 	free_array(tokens);
+	return (1);
 }
 
 int	ft_open(t_executor *executor, char *redir, char *file)
 {
-	if (!ft_strcmp(redir, "<"))
+	if (ft_strchr(redir, '<'))
 	{
+		if (ft_strchr(redir, '\'') || ft_strchr(redir, '"'))
+			ft_error(2, redir, 1);
 		executor->in = open(file, O_RDONLY);
 		if (executor->in == -1)
-			return (perror("Error opening input file"), 1);
+			return (ft_error(2, file, 1), 1);
 	}
 	else if (!ft_strcmp(redir, ">"))
 	{
@@ -153,6 +157,15 @@ int	parse_command(char **token)
 			return (name_error(NULL, message, token[i + 1], 0), 1);
 		if ((!ft_strcmp(token[i], "<<") || !ft_strcmp(token[i], ">>")) && check)
 			return (name_error(NULL, message, token[i + 1], 0), 1);
+		// if ((token[i][0] == '\'' || token[i][0] == '\"') && (token[i][1] == '|'
+		// 	|| token[i][1] == '<' || token[i][1] == '>'))
+		// 	{
+		// 		if (token[i][1] == '|')
+		// 			return(ft_error(2, token[i], 1), 1);
+		// 		if (token[i][1] == '>' && token[i + 1])
+		// 			return(ft_error(2, token[i], 1), ft_error(2, token[i + 1], 1), 1);
+		// 		return (ft_error(2, token[i], 1), 0);
+		// 	}
 		if ((!ft_strcmp(token[i], "|") && !ft_strcmp(token[i + 1], "|")) || !ft_strcmp(token[0], "|"))
 			return (name_error(NULL, message, " `|'", 0), 1);
 		i++;

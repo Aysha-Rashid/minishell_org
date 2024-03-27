@@ -12,6 +12,7 @@
     "__split_buffer": "c",
     "initializer_list": "c",
     "ios": "c",
-    "unordered_map": "c"
+    "unordered_map": "c",
+    "locale": "c"
   }
 }

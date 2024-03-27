@@ -21,9 +21,7 @@ void	check_n_execute(char *str, t_data *data)
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 		ft_putendl_fd("exit", 1);
 		free_array(data->envp->path);
-		// free_executor(data->executor);
 		ft_free_all(data);
-		// free(data->executor->cmd);
 		exit(0);
 	}
 	if (check_pipes_n_execute(data))
@@ -41,11 +39,11 @@ int	check_pipes_n_execute(t_data *data)
 	str = ft_split(data->cmd, ' ');
 	if (parse_command(str))
 		return (free_array(str), 1);
+	data->executor = parse_pipeline(data->cmd, data);
 	temp = remove_quotes(data->cmd);
 	builtin_index = check_builtin(temp);
 	free_array(str);
 	free(temp);
-	data->executor = parse_pipeline(data->cmd, data);
 	if (builtin_index >= 0 && !check_redir_pipe(data->cmd))
 		builtin_command(data->cmd, data);
 	else
@@ -66,6 +64,7 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	head = NULL;
 	tail = NULL;
 	token = ft_split(cmd, '|');
+	// ft_putstr_fd(token[1], 2);
 	while (token[i])
 	{
 		executor = init_executor(data, token[i]);
