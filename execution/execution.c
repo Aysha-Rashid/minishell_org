@@ -26,17 +26,13 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	exit(1);
 }
 
-void	closing_execution(int pid, int *prev_pipe)
+void closing_execution(int pid)
 {
-	int	status;
+	int status;
 
 	status = 0;
-	// (void)prev_pipe;
-	close(prev_pipe[1]);
-	close(prev_pipe[0]);
 	pid = waitpid(-1, &status, 0);
-	while (pid > 0)
-	{
+	while (pid > 0) {
 		pid = waitpid(-1, &status, 0);
 		WIFEXITED(status);
 		// WIFSIGNALED(status);
@@ -63,14 +59,12 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 	if (prev[0] != STDIN_FILENO)
 	{
 		dup_check(prev[0], STDIN_FILENO);
-		close(prev[0]);
 		close(prev[1]);
 	}
-	if (cur != NULL && cur[1] != STDOUT_FILENO)
+	if (executor->next &&cur != NULL && cur[1] != STDOUT_FILENO)
 	{
+		dup_check(cur[1], STDOUT_FILENO);
 		close(cur[0]);
-		dup2(cur[1], STDOUT_FILENO);
-		close(cur[1]);
 	}
 	execute_command(executor->cmd, data, cur);
 }
@@ -78,13 +72,11 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 int	execution(t_executor *executor, t_data *data)
 {
 	int	cur_pipe[2];
-	int	prev_pipe[2];
+	int prev_pipe[2];
 	int	pid;
 
-	if (pipe(prev_pipe) == -1) {
-		perror("pipe error");
-		return 1; // Return an error code to indicate failure
-	}
+	prev_pipe[0] = STDIN_FILENO;
+	prev_pipe[1] = STDOUT_FILENO;
 	while (executor)
 	{
 		signal(SIGQUIT, ft_sig2);
@@ -96,14 +88,11 @@ int	execution(t_executor *executor, t_data *data)
 		if (pid < 0)
 			return (perror("fork error"), 0);
 		else if (pid == 0)
-		{
-			close(prev_pipe[1]);
 			child_process(data, executor, prev_pipe, cur_pipe);
-		}
 		else
 			parent_process(executor, prev_pipe, cur_pipe);
 		executor = executor->next;
 	}
-	closing_execution(pid, prev_pipe);
+	closing_execution(pid);
 	return (0);
 }

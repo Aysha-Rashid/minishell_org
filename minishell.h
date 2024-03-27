@@ -200,5 +200,5 @@ int			heredoc(t_data *data, t_executor *executor, int *end);
 char		*remove_heredoc(char *cmd);
 void		sig_handlers(int signum);
 // void		rl_replace_line(const char *text, int clear_undo);
-extern		int g_sig_interrupt;
-int	g_signal;
+// extern		int g_sig_interrupt;
+extern int	g_signal;

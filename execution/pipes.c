@@ -65,8 +65,8 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 
 	i = 0;
 	head = NULL;
-	tail = NULL;
 	prev = NULL;
+	tail = NULL;
 	token = ft_split(cmd, '|');
 	while (token[i])
 	{

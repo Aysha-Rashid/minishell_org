@@ -25,8 +25,6 @@ void	free_executor(t_executor *executor)
 void	close_and_free_all(t_data *data, int *end)
 {
 	(void)end;
-	close(end[0]);
-	close(end[1]);
 	// close(data->executor->in);
 	// close(data->executor->out);
 	// free_lexer_list(data->lexer_list);
@@ -43,7 +41,7 @@ void	dup_check(int file, int dupped)
 		ft_putstr_fd("dup error", 2);
 		exit(1);
 	}
-	// close(file);
+	close(file);
 }
 
 void	exit_and_free(t_data *data, int *end, int status)

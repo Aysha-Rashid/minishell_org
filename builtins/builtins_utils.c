@@ -12,6 +12,7 @@
 
 #include "../minishell.h"
 
+int g_signal;
 t_env	*search_env_variable(t_env *envp, char *key)
 {
 	while (envp)
