@@ -18,7 +18,7 @@ t_executor	*init_executor(t_data *data, char *cmd)
 	data->executor->cmd = ft_strdup(cmd);
 	data->executor->in = STDIN_FILENO;
 	data->executor->out = STDOUT_FILENO;
-	data->executor->heredoc = NULL;
+	// data->executor->heredoc = NULL;
 	data->executor->next = NULL;
 	data->executor->prev = NULL;
 	return (data->executor);
@@ -77,7 +77,6 @@ int	check_builtin(char *str)
 	}
 	return (free_array(temp), -1);
 }
-
 
 // char	*remove_all_qoutes(char *str)
 // {

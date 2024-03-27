@@ -100,6 +100,7 @@ int	heredoc(t_data *data, t_executor *executor, int *end)
 	char	*delimiter;
 
 	(void)data;
+	(void)end;
 	i = 0;
 	temp = NULL;
 	delimiter = NULL;
@@ -111,7 +112,6 @@ int	heredoc(t_data *data, t_executor *executor, int *end)
 			temp = ft_strjoin(str[i + 1], "\n");
 			delimiter = ft_strdup(temp);
 			break ;
-			// with pipe and redirection and without pipe and redirection
 		}
 		i++;
 	}
@@ -129,15 +129,13 @@ int	heredoc(t_data *data, t_executor *executor, int *end)
 			free(line);
 			break ;
 		}
-		ft_putstr_fd(line, end[0]);
+		// ft_putstr_fd(line, end[0]);
 		free(line);
 	}
 	free(delimiter);
 	return (1);
 	// close(end[0]);
 }
-// write in stdin
-// keep writing until you came across the delimiter
 
 int	parse_command(char **token)
 {

@@ -59,26 +59,23 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	t_executor	*head;
 	t_executor	*tail;
 	t_executor	*executor;
-	t_executor	*prev;
 	char		**token;
 	int			i;
 
 	i = 0;
 	head = NULL;
-	prev = NULL;
 	tail = NULL;
 	token = ft_split(cmd, '|');
 	while (token[i])
 	{
 		executor = init_executor(data, token[i]);
-		executor->prev = prev;
+		executor->prev = tail;
 		i++;
 		if (head == NULL)
 			head = executor;
 		else
 			tail->next = executor;
 		tail = executor;
-		prev = executor;
 	}
 	free_array(token);
 	return (head);

@@ -18,8 +18,8 @@ void	free_executor(t_executor *executor)
 		return ;
 	free(executor->cmd);
 	free_executor(executor->next);
-	// free_executor(executor->prev);
 	free(executor);
+	// free_executor(executor->prev);
 }
 
 void	close_and_free_all(t_data *data, int *end)

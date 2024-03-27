@@ -26,13 +26,14 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	exit(1);
 }
 
-void closing_execution(int pid)
+void	closing_execution(int pid)
 {
-	int status;
+	int	status;
 
 	status = 0;
 	pid = waitpid(-1, &status, 0);
-	while (pid > 0) {
+	while (pid > 0)
+	{
 		pid = waitpid(-1, &status, 0);
 		WIFEXITED(status);
 		// WIFSIGNALED(status);
@@ -52,27 +53,31 @@ void	parent_process(t_executor *executor, int *prev_pipe, int *cur_pipe)
 
 void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 {
-	// heredoc(data, executor, prev, int *cur);
+	heredoc(data, executor, prev);
 	// int check;
 	// check = 0;
-	executor->cmd = remove_redir_or_files(executor->cmd);
-	if (prev[0] != STDIN_FILENO)
+	if (ft_strchr(executor->cmd, '<') && executor->in != STDIN_FILENO)
+		dup_check(executor->in, STDIN_FILENO);
+	else if (prev[0] != STDIN_FILENO)
 	{
 		dup_check(prev[0], STDIN_FILENO);
 		close(prev[1]);
 	}
-	if (executor->next &&cur != NULL && cur[1] != STDOUT_FILENO)
+	if (ft_strchr(executor->cmd, '>') && executor->out != STDOUT_FILENO)
+		dup_check(executor->out, STDOUT_FILENO);
+	else if (executor->next && cur != NULL && cur[1] != STDOUT_FILENO)
 	{
 		dup_check(cur[1], STDOUT_FILENO);
 		close(cur[0]);
 	}
+	executor->cmd = remove_redir_or_files(executor->cmd);
 	execute_command(executor->cmd, data, cur);
 }
 
 int	execution(t_executor *executor, t_data *data)
 {
 	int	cur_pipe[2];
-	int prev_pipe[2];
+	int	prev_pipe[2];
 	int	pid;
 
 	prev_pipe[0] = STDIN_FILENO;

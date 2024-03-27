@@ -33,7 +33,7 @@ void	sigint_handler(int signum)
 	{
 		rl_redisplay();
 		signal(SIGQUIT, SIG_IGN);
-		ft_putstr_fd("\b\b\b\b\b\b\b\b\b", 2);
+		ft_putstr_fd("\b", 2);
 		g_signal = 0;
 	}
 	if (signum == SIGINT)
