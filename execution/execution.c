@@ -21,9 +21,10 @@ void	execute_command(char *cmd, t_data *data, int *end)
 
 	temp = remove_all_qoutes(cmd);
 	str = ft_strtrim(temp, " ");
+	free(temp);
 	check_command(str, cmd, end, data);
 	free(str);
-	cmd_file(temp, data->envp->path);
+	cmd_file(cmd, data->envp->path);
 	// free(cmd);
 	close_and_free_all(data, end);
 	exit(1);
@@ -57,8 +58,13 @@ void	parent_process(t_executor *executor, int *prev_pipe, int *cur_pipe)
 void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 {
 	heredoc(data, executor, prev);
+		// exit(0)
 	// int check;
 	// check = 0;
+	  if (ft_strcmp(executor->cmd, "<<")) {
+        // If the command contains a here document, we don't execute it directly
+        return;
+    }
 	if (ft_strchr(executor->cmd, '<') && executor->in != STDIN_FILENO)
 		dup_check(executor->in, STDIN_FILENO);
 	else if (prev[0] != STDIN_FILENO)
@@ -101,6 +107,12 @@ int	execution(t_executor *executor, t_data *data)
 		else
 			parent_process(executor, prev_pipe, cur_pipe);
 		executor = executor->next;
+		// if (prev_pipe[1] != STDOUT_FILENO)
+        //     close(prev_pipe[1]);
+        
+        // // If the command has a pipe, set the read end of the current pipe as the new previous pipe
+        // if (executor && executor->next)
+        //     prev_pipe[0] = cur_pipe[0];
 	}
 	closing_execution(pid);
 	return (0);

@@ -108,9 +108,9 @@ char	*cmd_file(char *cmd, char **paths)
 	char	*cmd_file;
 	char	**str;
 	int		i;
-
 	if (!cmd)
 		return (NULL);
+
 	i = 0;
 	str = ft_split(cmd, ' ');
 	cmd_file = NULL;
@@ -124,6 +124,8 @@ char	*cmd_file(char *cmd, char **paths)
 		cmd_file = ft_strjoin(paths[i], str[0]);
 		if (!(access(cmd_file, F_OK | X_OK)))
 		{
+			// free(data->executor->cmd);
+			free(cmd);
 			execve(cmd_file, str, paths);
 			free(cmd_file);
 			free_array(str);

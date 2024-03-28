@@ -70,10 +70,10 @@ int	redir(t_executor *executor)
 
 int	ft_open(t_executor *executor, char *redir, char *file)
 {
-	if (ft_strchr(redir, '<'))
+	if (!ft_strcmp(redir, ">"))
 	{
-		if (ft_strchr(redir, '\'') || ft_strchr(redir, '"'))
-			ft_error(2, redir, 1);
+		// if (ft_strchr(redir, '\'') || ft_strchr(redir, '"'))
+		// 	ft_error(2, redir, 1);
 		executor->in = open(file, O_RDONLY);
 		if (executor->in == -1)
 			return (ft_error(2, file, 1), 1);
@@ -133,7 +133,8 @@ int	heredoc(t_data *data, t_executor *executor, int *end)
 			free(line);
 			break ;
 		}
-		// ft_putstr_fd(line, end[0]);
+		if (!check_redir_pipe(executor->cmd))
+			ft_putstr_fd(line, end[0]);
 		free(line);
 	}
 	free(delimiter);
