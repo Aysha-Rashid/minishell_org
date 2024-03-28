@@ -130,6 +130,7 @@ int	heredoc(t_data *data, t_executor *executor, int *end)
 		line = get_next_line(STDIN_FILENO);
 		if (!ft_strcmp(line, delimiter))
 		{
+			i = 0;
 			free(line);
 			break ;
 		}
@@ -137,6 +138,8 @@ int	heredoc(t_data *data, t_executor *executor, int *end)
 		free(line);
 	}
 	free(delimiter);
+	if(i)
+		return(0);
 	return (1);
 	// close(end[0]);
 }
