@@ -14,11 +14,23 @@
 
 void	free_executor(t_executor *executor)
 {
-	if (!executor)
-		return ;
-	free(executor->cmd);
-	free_executor(executor->next);
-	free(executor);
+	// ft_putendl_fd("how many times", 1);
+	// ft_putendl_fd(executor->cmd, 2);
+	// if (!executor)
+	// 	return ;
+	// free(executor->cmd);
+	// free_executor(executor->next);
+	// free(executor);
+
+
+	if (executor) {
+        // Free the strdup'd command string
+        if (executor->cmd)
+            free(executor->cmd);
+        // Free the executor structure itself
+		free_executor(executor->next);
+    }
+        free(executor);
 	// free_executor(executor->prev);
 }
 

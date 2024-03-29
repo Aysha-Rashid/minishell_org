@@ -97,9 +97,9 @@ char	*cmd_file(char *cmd, char **paths)
 	char	*temp;
 	char	**str;
 	int		i;
-
 	if (!cmd)
 		return (NULL);
+
 	i = 0;
 	temp = remove_all_qoutes(cmd);
 	str = ft_split(temp, ' ');
@@ -114,6 +114,8 @@ char	*cmd_file(char *cmd, char **paths)
 		cmd_file = ft_strjoin(paths[i], str[0]);
 		if (!(access(cmd_file, F_OK | X_OK)))
 		{
+			// free(data->executor->cmd);
+			free(cmd);
 			execve(cmd_file, str, paths);
 			free(cmd_file);
 			free_array(str);
