@@ -17,13 +17,12 @@ int 	g_sig_interrupt = 0;
 void	execute_command(char *cmd, t_data *data, int *end)
 {
 	char	*str;
+	char *temp;
 
-<<<<<<< HEAD
 	str = ft_strtrim(cmd, " ");
 	check_command(str, cmd, end, data);
 	free(str);
 	cmd_file(cmd, data->envp->path);
-=======
 	temp = remove_all_qoutes(cmd);
 	str = ft_strtrim(temp, " ");
 	free(temp);
@@ -31,7 +30,6 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	free(str);
 	cmd_file(cmd, data->envp->path);
 	// free(cmd);
->>>>>>> 3db8560eae36504cc2a5f8deb81120c7eb3dba94
 	close_and_free_all(data, end);
 	exit(1);
 }
@@ -63,17 +61,13 @@ void	parent_process(t_executor *executor, int *prev_pipe, int *cur_pipe)
 
 void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 {
-<<<<<<< HEAD
-=======
-	heredoc(data, executor, prev);
 		// exit(0)
 	// int check;
 	// check = 0;
-	  if (ft_strcmp(executor->cmd, "<<")) {
-        // If the command contains a here document, we don't execute it directly
-        return;
-    }
->>>>>>> 3db8560eae36504cc2a5f8deb81120c7eb3dba94
+	//   if (ft_strcmp(executor->cmd, "<<")) {
+    //     // If the command contains a here document, we don't execute it directly
+    //     return;
+    // }
 	if (ft_strchr(executor->cmd, '<') && executor->in != STDIN_FILENO)
 		dup_check(executor->in, STDIN_FILENO);
 	else if (prev[0] != STDIN_FILENO)
@@ -104,7 +98,8 @@ int	execution(t_executor *executor, t_data *data)
 	{
 		signal(SIGQUIT, ft_sig2);
 		signal(SIGINT, ft_sig2);
-		// heredoc(executor, cur_pipe);
+		heredoc(executor, cur_pipe);
+	// heredoc(data, executor, prev);
 		if (redir(executor) == 0)
 			return (1);
 		if (executor->next)

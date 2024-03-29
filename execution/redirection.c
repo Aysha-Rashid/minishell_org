@@ -156,12 +156,12 @@ int	parse_command(char **token)
 {
 	int		i;
 	char	check;
-	char	*trim;
+	// char	*trim;
 	char	*message;
 
 	message = "syntax error near unexpected token ";
 	i = 0;
-	trim = NULL;
+	// trim = NULL;
 	while (token[i] && token[i + 1])
 	{
 		// ft_putstr_fd("comes", 2);
