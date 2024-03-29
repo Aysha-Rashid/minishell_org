@@ -14,8 +14,8 @@
 
 void	check_n_execute(char *str, t_data *data)
 {
-	if (!data->cmd || data->cmd[0] == '\0')
-		return ;
+	if (!str || str[0] == '\0')
+		prompt_loop(str, data);
 	if (str && (!(ft_strcmp(str, "exit"))))
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
@@ -36,16 +36,17 @@ int	check_pipes_n_execute(t_data *data)
 
 	if (!quote(data->cmd))
 		return (ft_error(1, NULL, data->no_path));
+	temp = remove_quotes(data->cmd);
+	// temp = ft_strdup(data->cmd);
+	data->executor = parse_pipeline(temp, data);
 	str = ft_split(data->cmd, ' ');
 	if (parse_command(str))
 		return (free_array(str), 1);
-	data->executor = parse_pipeline(data->cmd, data);
-	temp = remove_quotes(data->cmd);
+	// ft_putendl_fd(data->executor->cmd, 2);
 	builtin_index = check_builtin(temp);
-	free_array(str);
-	free(temp);
-	if (builtin_index >= 0 && !check_redir_pipe(data->cmd))
-		builtin_command(data->cmd, data);
+	// free_array(str);
+	if (builtin_index >= 0 && !check_redir_pipe(temp))
+		builtin_command(temp, data);
 	else
 		execution(data->executor, data);
 	free_executor(data->executor);
@@ -63,8 +64,9 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	i = 0;
 	head = NULL;
 	tail = NULL;
+	if (ft_strchr(cmd, '\'') || ft_strchr(cmd, '\"'))
+		return (init_executor(data, cmd));
 	token = ft_split(cmd, '|');
-	// ft_putstr_fd(token[1], 2);
 	while (token[i])
 	{
 		executor = init_executor(data, token[i]);

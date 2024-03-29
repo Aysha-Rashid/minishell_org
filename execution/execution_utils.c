@@ -18,7 +18,6 @@ t_executor	*init_executor(t_data *data, char *cmd)
 	data->executor->cmd = ft_strdup(cmd);
 	data->executor->in = STDIN_FILENO;
 	data->executor->out = STDOUT_FILENO;
-	// data->executor->heredoc = NULL;
 	data->executor->next = NULL;
 	data->executor->prev = NULL;
 	return (data->executor);
@@ -76,84 +75,4 @@ int	check_builtin(char *str)
 		i++;
 	}
 	return (free_array(temp), -1);
-}
-
-// char	*remove_all_qoutes(char *str)
-// {
-// 	char	*ptr;
-// 	int		i;
-// 	int		j;
-
-// 	if (!str || str[0] == '\0')
-// 		return (NULL);
-// 	ptr = malloc(ft_strlen(str) + 1);
-// 	if (ptr == NULL)
-// 		return (NULL);
-// 	i = 0;
-// 	j = 0;
-// 	while (str[j] != ' ' && str[j])
-// 	{
-// 		if (str[j] != '\'' && str[j] != '"')
-// 			ptr[i++] = str[j];
-// 		j++;
-// 	}
-// 	while (str[j])
-// 		ptr[i++] = str[j++];
-// 	ptr[i] = '\0';
-// 	return (ptr);
-// }
-char	*remove_all_qoutes(char *str)
-{
-	char	*ptr;
-	int		i;
-	int		j;
-	int		len;
-
-	i = 0;
-	j = 0;
-	len = ft_strlen(str);
-	if (!str || str[0] == '\0')
-		return (NULL);
-	ptr = malloc(len + 1);
-	if (ptr == NULL)
-		return (NULL);
-	if (str[0] == '\'' || str[0] == '"')
-		j++;
-	while (str[j] != '\0' && j < len)
-		ptr[i++] = str[j++];
-	if (str[len - 1] == '\'' || str[len - 1] == '"')
-		i--;
-	ptr[i] = '\0';
-	return (ptr);
-}
-
-char	*remove_quotes(char *str)
-{
-	int		i;
-	char	quote;
-	int		len;
-	char	*ptr;
-	int		j;
-
-	i = 0;
-	j = 0;
-	if (!str)
-		return (0);
-	len = ft_strlen(str);
-	ptr = malloc(len + 1);
-	while (i < len)
-	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			quote = str[i++];
-			while (ft_isalpha(str[i]) && i < len && str[i] != quote)
-				ptr[j++] = str[i++];
-			if (i < len)
-				i++;
-		}
-		else
-			ptr[j++] = str[i++];
-	}
-	ptr[j] = '\0';
-	return (ptr);
 }

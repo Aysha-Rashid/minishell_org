@@ -14,28 +14,28 @@
 
 int	builtin_command(char *str, t_data *data)
 {
-	char		*temp;
+	// char		*temp;
 
-	// temp = remove_all_qoutes(data->cmd); // removes some extra characters
-	temp = ft_strdup(str);
-	if (str && (!ft_strncmp(temp, "env", 3)
-			|| !ft_strncmp(temp, "ENV", 3)))
-		return (ft_env(data, temp), free(temp), 0);
-	else if (!ft_strncmp(temp, "export", 6))
-		return (ft_export(temp, data), free(temp), 0);
+	// temp = remove_quotes(data->cmd); // removes some extra characters
+	// temp = ft_strdup(str);
+	if (str && (!ft_strncmp(str, "env", 3)
+			|| !ft_strncmp(str, "ENV", 3)))
+		return (ft_env(data, str), 0);
+	else if (!ft_strncmp(str, "export", 6))
+		return (ft_export(str, data), 0);
 	else if (str && (!ft_strncmp(str, "pwd", 3)
 			|| !ft_strncmp(str, "PWD", 3)))
-		return (ft_pwd(data), free(temp), 0);
-	else if (temp && (!ft_strncmp(str, "echo", 4)
+		return (ft_pwd(data), 0);
+	else if (str && (!ft_strncmp(str, "echo", 4)
 			|| (!ft_strncmp(str, "ECHO", 4))
 			|| (!ft_strncmp(str, "echo -n", 7))))
-		return (ft_echo(str, data), free(temp), 0);
-	else if (temp && (!(ft_strncmp(temp, "cd", 2))))
-		return (ft_cd(temp, data), free(temp), 0);
+		return (ft_echo(str, data), 0);
+	else if (str && (!(ft_strncmp(str, "cd", 2))))
+		return (ft_cd(str, data), 0);
 	else if (str && (!ft_strncmp(str, "unset", 5)))
 		return (ft_unset(str, data), 0);
 	else if (!*str)
-		return (free(temp), 0);
+		return (0);
 	return (0);
 }
 

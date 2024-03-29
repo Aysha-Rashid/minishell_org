@@ -83,28 +83,46 @@ int	ft_open(t_executor *executor, char *redir, char *file)
 		executor->out = open(file, O_CREAT | O_WRONLY
 				| O_TRUNC, 0644);
 		if (executor->out == -1)
-			return (perror("Error opening output file"), 1);
+			return (ft_error(2, file, 1), 1);
 	}
 	else if (!ft_strcmp(redir, ">>"))
 	{
 		executor->out = open(file, O_CREAT | O_WRONLY
 				| O_APPEND, 0644);
 		if (executor->out == -1)
-			return (perror("Error opening output file"), 1);
+			return (ft_error(2, file, 1), 1);
 	}
 	return (0);
 }
 
-int	heredoc(t_data *data, t_executor *executor, int *end)
+void	heredoc_loop(char *delimiter, t_executor *executor, int *end)
+{
+	char	*line;
+
+	line = NULL;
+	while (1)
+	{
+		signal(SIGINT, sig_handlers);
+		ft_putstr_fd("> ", STDOUT_FILENO);
+		line = get_next_line(STDIN_FILENO);
+		if (!ft_strcmp(line, delimiter))
+		{
+			free(line);
+			break ;
+		}
+		if (executor->next)
+			ft_putstr_fd(line, end[1]);
+		free(line);
+	}
+}
+
+int	heredoc(t_executor *executor, int *end)
 {
 	char	**str;
 	char	*temp;
-	char	*line;
 	int		i;
 	char	*delimiter;
 
-	(void)data;
-	(void)end;
 	i = 0;
 	temp = NULL;
 	delimiter = NULL;
@@ -119,41 +137,35 @@ int	heredoc(t_data *data, t_executor *executor, int *end)
 		}
 		i++;
 	}
-	free(temp);
-	free_array(str);
 	if (!delimiter)
-		return (0);
-	while (1)
-	{
-		signal(SIGINT, sig_handlers);
-		ft_putstr_fd("> ", STDOUT_FILENO);
-		line = get_next_line(STDIN_FILENO);
-		if (!ft_strcmp(line, delimiter))
-		{
-			i = 0;
-			free(line);
-			break ;
-		}
-		// ft_putstr_fd(line, end[0]);
-		free(line);
-	}
-	free(delimiter);
-	if(i)
-		return(0);
-	return (1);
-	// close(end[0]);
+		return (free(temp), free_array(str), 0);
+	heredoc_loop(delimiter, executor, end);
+	return (free(temp), free_array(str), free(delimiter), 1);
+}
+
+void remove_whitespace(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
+		i++;
 }
 
 int	parse_command(char **token)
 {
 	int		i;
-	char	*message;
 	char	check;
+	char	*trim;
+	char	*message;
 
 	message = "syntax error near unexpected token ";
 	i = 0;
+	trim = NULL;
 	while (token[i] && token[i + 1])
 	{
+		// ft_putstr_fd("comes", 2);
+		remove_whitespace(token[i]);
 		check = ft_strchr(token[i + 1], '<') || ft_strchr(token[i + 1], '>')
 			|| ft_strchr(token[i + 1], '|');
 		if (ft_strchr(token[i], '<') && check)
@@ -180,6 +192,26 @@ int	parse_command(char **token)
 		return (name_error(NULL, message, "`newline'", 0), 1);
 	return (0);
 }
+
+// int	parse_com(char *cmd)
+// {
+// 	int	i;
+// 	char *check;
+// 	char	*message;
+
+// 	message = "syntax error near unexpected token ";
+// 	i = 0;
+// 	while (cmd[i])
+// 	{
+// 		if (cmd[i] == ' ' || cmd[i] == '\t')
+// 			i++;
+// 		check = check_pipe_and_redir_quote(cmd);
+// 		if (cmd[i] == '<' && check)
+// 			return (name_error(NULL, message, check, 0), 1);
+// 		i++;
+// 	}
+// 	return (0);
+// }
 
 char	*remove_heredoc(char *cmd)
 {
