@@ -23,7 +23,6 @@ void	ft_sig2(int signum)
 	{
 		g_signal = 130;
 		ft_putendl_fd(" ", 2);
-
 	}
 }
 
@@ -65,12 +64,6 @@ void	check_signal(char *input, t_data *data)
 {
 	if (handle_eof(input, data))
 		exit(0);
-	// if (g_sig_interrupt == 1)
-	// 	g_signal = 1;
-	// else
-	// 	g_signal = 0;
-	// if (ft_str != NULL)
-	// 	g_signal = 1;
 }
 
 void	ft_signals(void)

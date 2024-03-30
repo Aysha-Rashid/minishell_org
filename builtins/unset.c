@@ -88,7 +88,6 @@ int	ft_unset(char *str, t_data *data)
 	char	**token;
 	t_env	*current;
 
-	// ft_putstr_fd(str, 2);
 	token = ft_split(str, ' ');
 	current = data->envp;
 	if (ft_strlen(token[0]) != 5)

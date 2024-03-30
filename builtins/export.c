@@ -12,7 +12,6 @@
 
 #include "../minishell.h"
 
-
 void	sorted_env(char **env)
 {
 	size_t	i;

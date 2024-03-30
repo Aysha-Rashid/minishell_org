@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char	*remove_all_qoutes(char *str) // to remove the qoutes for all the character even pipes and redirections
+char	*remove_all_qoutes(char *str)
 {
 	int		i;
 	int		j;
@@ -42,29 +42,11 @@ char	*remove_all_qoutes(char *str) // to remove the qoutes for all the character
 	return (result);
 }
 
-// int	check_pipe_and_redir_quote(char *str)
-// {
-
-//     int i = 0;
-//     char quote = '\0';
-
-//     while (str[i] != '\0')
-//     {
-//         if ((str[i] == '\'' || str[i] == '"') && !quote)
-//             quote = str[i];
-//         else if (quote && str[i] == quote)
-//             quote = '\0';
-//         else if (!quote && (str[i] == '|' || str[i] == '<' || str[i] == '>'))
-//             return 1;
-//         i++;
-//     }
-//     return 0;
-// }
 int	check_pipe_and_redir_quote(char *str, int i, int j, char *result)
 {
-	if ((str[i] == '\'' || str[i] == '"'))
+	if (str[i] == '\'' || str[i] == '"')
 	{
-		if(str[i + 1] == '|')
+		if (str[i + 1] == '|')
 			result[j++] = str[i++];
 		result[j++] = str[i++];
 	}
@@ -103,4 +85,38 @@ char	*remove_quotes(char *str)
 	}
 	result[j] = '\0';
 	return (result);
+}
+
+int	contains_special_chars(const char str)
+{
+	if (str == '<' || str == '>' || str == '|')
+		return (1);
+	return (0);
+}
+
+int	parse_com(char *cmd)
+{
+	int		i;
+	char	*message;
+	int		len;
+
+	message = "syntax error near unexpected token ";
+	len = ft_strlen(cmd);
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == ' ' && cmd[i] == '\t')
+			i++;
+		if (cmd[i] == '|' && (cmd[i - 1] == '\0' || cmd[i + 1] == '\0'))
+			return (name_error(NULL, message, "`|'", 0), 1);
+		if (contains_special_chars(cmd[i])
+			&& contains_special_chars(cmd[i + 2]))
+			return (printf("minishell : %s", message),
+				printf("`%c'\n", cmd[i + 2]), 1);
+		if (cmd[i + 1] == '\0' && (cmd[len - 1] == '>'
+				|| cmd[len - 1] == '<' || cmd[len - 1] == '|'))
+			return (name_error(NULL, message, "`newline'", 0), 1);
+		i++;
+	}
+	return (0);
 }

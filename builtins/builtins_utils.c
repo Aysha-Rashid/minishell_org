@@ -12,7 +12,8 @@
 
 #include "../minishell.h"
 
-int g_signal;
+int	g_signal;
+
 t_env	*search_env_variable(t_env *envp, char *key)
 {
 	while (envp)
@@ -75,6 +76,5 @@ int	name_error(char *name, char *str, char *message, int flag)
 	}
 	else
 		ft_putendl_fd(message, STDERR_FILENO);
-
 	return (0);
 }

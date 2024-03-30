@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int 	g_sig_interrupt = 0;
+int	g_sig_interrupt = 0;
 
 void	execute_command(char *cmd, t_data *data, int *end)
 {
@@ -21,7 +21,6 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	str = ft_strtrim(cmd, " ");
 	check_command(str, cmd, end, data);
 	free(str);
-	// ft_putendl_fd(cmd, 2);
 	cmd_file(cmd, data->envp->path);
 	close_and_free_all(data, end);
 	exit(1);
@@ -35,17 +34,17 @@ void	closing_execution(int pid)
 	pid = waitpid(-1, &status, 0);
 	while (pid > 0)
 	{
-		// g_signal = WIFEXITED(status);
-		 if (WIFEXITED(status)) {
-            int exit_status = WEXITSTATUS(status);
-            // printf("Exit status of the last process: %d\n", exit_status);
-			if (exit_status == 1)
-				exit_status = 127;
+		if (WIFEXITED(status))
+		{
+			status = WEXITSTATUS(status);
+			// printf("Exit status of the last process: %d\n", status);
+			if (status == 1)
+				status = 127;
 			else if (g_signal == 2)
-				exit_status = 1;
-			g_signal = exit_status;
-            // exit_status contains the exit status of the last process in the pipeline
-        }
+				status = 1;
+			g_signal = status;
+			// status contains the exit status of the last process in the pipeline
+		}
 		pid = waitpid(-1, &status, 0);
 		// WIFSIGNALED(status);
 	}
@@ -64,13 +63,6 @@ void	parent_process(t_executor *executor, int *prev_pipe, int *cur_pipe)
 
 void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 {
-		// exit(0)
-	// int check;
-	// check = 0;
-	//   if (ft_strcmp(executor->cmd, "<<")) {
-    //     // If the command contains a here document, we don't execute it directly
-    //     return;
-    // }
 	heredoc(executor, cur, data);
 	if (ft_strchr(executor->cmd, '<') && executor->in != STDIN_FILENO)
 		dup_check(executor->in, STDIN_FILENO);
@@ -107,7 +99,6 @@ int	execution(t_executor *executor, t_data *data)
 		if (executor->next)
 			pipe(cur_pipe);
 		pid = fork();
-		// heredoc(executor, cur_pipe);
 		if (pid < 0)
 			return (perror("fork error"), 0);
 		else if (pid == 0)

@@ -97,16 +97,17 @@ char	*cmd_file(char *cmd, char **paths)
 	char	*temp;
 	char	**str;
 	int		i;
+
 	if (!cmd)
 		return (NULL);
-
 	i = 0;
 	temp = remove_all_qoutes(cmd);
 	str = ft_split(temp, ' ');
+	free(temp);
 	cmd_file = NULL;
 	if (given_path(str[0]))
 	{
-		execve(cmd, str, paths);
+		execve(str[0], str, paths);
 		return (ft_error(2, str[0], 1), free_array(str), NULL);
 	}
 	while (paths[i])
@@ -114,7 +115,6 @@ char	*cmd_file(char *cmd, char **paths)
 		cmd_file = ft_strjoin(paths[i], str[0]);
 		if (!(access(cmd_file, F_OK | X_OK)))
 		{
-			// free(data->executor->cmd);
 			free(cmd);
 			execve(cmd_file, str, paths);
 			free(cmd_file);

@@ -14,18 +14,17 @@
 
 t_executor	*init_executor(t_data *data, char *cmd)
 {
-	char *str;
+	char	*str;
 
 	data->executor = (t_executor *)malloc(sizeof(t_executor));
 	if (data->executor == NULL)
-		return NULL;
+		return (NULL);
 	str = ft_strdup(cmd);
 	data->executor->cmd = str;
 	data->executor->in = STDIN_FILENO;
 	data->executor->out = STDOUT_FILENO;
 	data->executor->next = NULL;
 	data->executor->prev = NULL;
-	// free(str);
 	return (data->executor);
 }
 
@@ -48,10 +47,8 @@ void	check_command(char *str, char *cmd, int *end, t_data *data)
 	}
 	if (builtin_index >= 0)
 	{
-		// ft_putnbr_fd(builtin_index, 2);
 		if (builtin_command(str, data))
 		{
-			// ft_putendl_fd(str, 2);
 			free(str);
 			exit_and_free(data, end, 0);
 		}

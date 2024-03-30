@@ -31,23 +31,22 @@ void	check_n_execute(char *str, t_data *data)
 int	check_pipes_n_execute(t_data *data)
 {
 	char		builtin_index;
-	char		**str;
 	char		*temp;
 
 	if (!quote(data->cmd))
 		return (ft_error(1, NULL, data->no_path));
 	temp = remove_quotes(data->cmd);
 	data->executor = parse_pipeline(temp, data);
-	str = ft_split(temp, ' ');
-	// if (parse_command(str))
-	// 	return (free_array(str), 1);
 	if (parse_com(temp))
-		return (free_array(str), 1);
+		return (free(temp), 1);
 	builtin_index = check_builtin(temp);
 	if (builtin_index >= 0 && !check_redir_pipe(temp))
 		builtin_command(temp, data);
 	else
+	{
+		free(temp);
 		execution(data->executor, data);
+	}
 	free_executor(data->executor);
 	return (0);
 }
@@ -68,6 +67,7 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	token = ft_split(cmd, '|');
 	while (token[i])
 	{
+		ft_putendl_fd(token[i], 2);
 		executor = init_executor(data, token[i]);
 		executor->prev = tail;
 		i++;
@@ -93,4 +93,33 @@ int	check_redir_pipe(char *cmd)
 		i++;
 	}
 	return (0);
+}
+
+char	*remove_redir_or_files(char *cmd)
+{
+	char	*dest;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	dest = (char *)malloc(sizeof(char) * (ft_strlen(cmd) + 1));
+	if (!dest)
+		return (NULL);
+	while (cmd[i])
+	{
+		if ((cmd[i] == '<' || cmd[i] == '>') && cmd[i] != ' ')
+		{
+			i++;
+			if (cmd[i] == '>' || cmd[i] == '<')
+				i++;
+			while (cmd[i] && (cmd[i] == ' ' || cmd[i] == '\t'))
+				i++;
+			while (cmd[i] && cmd[i] != ' ' && cmd[i] != '\t')
+				i++;
+		}
+		dest[j++] = cmd[i++];
+	}
+	dest[j] = '\0';
+	return (dest);
 }

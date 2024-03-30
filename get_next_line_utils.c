@@ -34,6 +34,7 @@ char	*ft_get_strdup(char	*s1)
 	}
 	return (ptr);
 }
+
 char	*ft_str_init(void)
 {
 	char	*str;

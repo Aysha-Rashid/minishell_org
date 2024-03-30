@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 char	*get_next_line(int fd)
 {
 	static char	*buffer;
@@ -48,7 +47,7 @@ char	*read_lines(int fd, char *store)
 		}
 		buffer[bytes] = '\0';
 		store = ft_get_strjoin(store, buffer);
-		if (ft_get_strchr(store, '\n') != NULL) 
+		if (ft_get_strchr(store, '\n') != NULL)
 			break ;
 	}
 	return (free(buffer), store);

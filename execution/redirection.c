@@ -19,35 +19,6 @@ void	sig_handlers(int signum)
 	exit(1);
 }
 
-char	*remove_redir_or_files(char *cmd)
-{
-	char	*dest;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	dest = (char *)malloc(sizeof(char) * (ft_strlen(cmd) + 1));
-	if (!dest)
-		return (NULL);
-	while (cmd[i])
-	{
-		if ((cmd[i] == '<' || cmd[i] == '>') && cmd[i] != ' ')
-		{
-			i++;
-			if (cmd[i] == '>' || cmd[i] == '<')
-				i++;
-			while (cmd[i] && (cmd[i] == ' ' || cmd[i] == '\t'))
-				i++;
-			while (cmd[i] && cmd[i] != ' ' && cmd[i] != '\t')
-				i++;
-		}
-		dest[j++] = cmd[i++];
-	}
-	dest[j] = '\0';
-	return (dest);
-}
-
 int	redir(t_executor *executor)
 {
 	int		i;
@@ -55,9 +26,10 @@ int	redir(t_executor *executor)
 
 	i = 0;
 	file = NULL;
-	while(executor->cmd[i])
+	while (executor->cmd[i])
 	{
-		if ((executor->cmd[i] == '>' || executor->cmd[i] == '<') && executor->cmd[i] != ' ')
+		if ((executor->cmd[i] == '>' || executor->cmd[i] == '<')
+			&& executor->cmd[i] != ' ')
 		{
 			i++;
 			if (executor->cmd[i] == '>' || executor->cmd[i] == '<')
@@ -95,7 +67,7 @@ int	ft_open(t_executor *executor, char *redir, char *file)
 		if (executor->out == -1)
 			return (printf("%s\n", strerror(errno)), 1);
 	}
-	else 
+	else
 		return (0);
 	return (0);
 }
@@ -105,7 +77,7 @@ void	heredoc_loop(char *delimiter, t_executor *executor, int *end)
 	char	*line;
 
 	line = NULL;
-		signal(SIGINT, sig_handlers);
+	signal(SIGINT, sig_handlers);
 	while (1)
 	{
 		ft_putstr_fd("> ", STDOUT_FILENO);
@@ -147,75 +119,4 @@ int	heredoc(t_executor *executor, int *end, t_data *data)
 		return (0);
 	heredoc_loop(delimiter, executor, end);
 	return (free(delimiter), 1);
-}
-
-void remove_whitespace(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
-		i++;
-}
-
-int contains_special_chars(const char str)
-{
-	if (str == '<' || str == '>' || str == '|')
-		return 1;
-	return 0;
-}
-
-// int	parse_command(char **token)
-// {
-// 	int	i;
-// 	int	len;
-// 	char	*message;
-
-// 	message = "syntax error near unexpected token ";
-// 	i = 0;
-// 	while (token[i])
-// 	{
-// 		len = ft_strlen(token[i]);
-// 		if (token[i + 1])
-// 		{
-// 			if (token[i][0] == '|' || !token[i - 1][0])
-// 			{
-// 				ft_putendl_fd(token[i], 2);
-//         	    return name_error(NULL, message, token[i], 0), 1;
-// 			}
-// 			if (contains_special_chars(token[i]) && contains_special_chars(token[i + 1]))
-// 			    return (name_error(NULL, message, token[i + 1], 0), 1);
-// 		}
-// 		if (token[i + 1] == NULL && (token[i][len - 1] == '>' || token[i][len - 1] == '<' || token[i][len - 1] == '|'))
-// 			return (name_error(NULL, message, "`newline'", 0), 1);
-//         i++;
-//     }
-// 	return (0);
-// }
-
-int	parse_com(char *cmd)
-{
-	int i;
-	char	*message;
-	int len;
-
-	message = "syntax error near unexpected token ";
-	len = ft_strlen(cmd);
-	i = 0;
-	while(cmd[i])
-	{
-		if (cmd[i] == ' ' && cmd[i] == '\t')
-			i++;
-		if (cmd[i] == '|' && (cmd[i - 1] == '\0' || cmd[i + 1] == '\0'))
-			return (name_error(NULL, message, "`|'", 0), 1);
-		if (contains_special_chars(cmd[i]) && contains_special_chars(cmd[i + 2]))
-		{
-			printf("minishell : %s", message);
-			return (printf("`%c'\n", cmd[i + 2]), 1);
-		}
-		if (cmd[i + 1] == '\0' && (cmd[len - 1]== '>' || cmd[len - 1] == '<' || cmd[len - 1] == '|'))
-			return (name_error(NULL, message, "`newline'", 0), 1);
-		i++;
-	}
-	return (0);
 }

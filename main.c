@@ -71,7 +71,6 @@ int	main(int argc, char **argv, char **env)
 	data.pwd = NULL;
 	data.old_pwd = NULL;
 	data.no_path = 0;
-	// data.status_code = 0;
 	g_signal = 0;
 	parse_env(&data, env);
 	find_pwd(&data);

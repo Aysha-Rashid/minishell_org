@@ -78,8 +78,6 @@ int			unset_loop(t_data *data, t_env *current, char **token);
 t_env		*search_env_variable(t_env *envp, char *key);
 
 int			check_unset_arg(char *token, t_data *data);
-
-
 size_t		len_of_values(t_env *lst);
 size_t		size_of_env(char **head);
 char		*ft_strcpy(char	*dest, char *src);
@@ -143,7 +141,7 @@ int			parse_command(char **token);
 int			parse_com(char *cmd);
 char		*remove_all_qoutes(char *str);
 int			quote(char *l);
-int	check_pipe_and_redir_quote(char *str, int i, int j, char *result);
+int			check_pipe_and_redir_quote(char *str, int i, int j, char *result);
 void		ft_sig2(int signum);
 //get_next_line
 char		*remaining(char *buffer);
@@ -156,7 +154,6 @@ char		*ft_str_init(void);
 char		*ft_get_strchr(const char *s, char c);
 
 int			heredoc(t_executor *executor, int *end, t_data *data);
-// char		*remove_heredoc(char *cmd);
 void		sig_handlers(int signum);
 int			parse_com(char *cmd);
 extern int	g_signal;
