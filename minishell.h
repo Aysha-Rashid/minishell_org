@@ -143,8 +143,7 @@ int			parse_command(char **token);
 int			parse_com(char *cmd);
 char		*remove_all_qoutes(char *str);
 int			quote(char *l);
-char		*check_pipe_and_redir_quote(char *str);
-
+int	check_pipe_and_redir_quote(char *str, int i, int j, char *result);
 void		ft_sig2(int signum);
 //get_next_line
 char		*remaining(char *buffer);
@@ -156,7 +155,7 @@ char		*ft_get_strjoin(char *s1, char *s2);
 char		*ft_str_init(void);
 char		*ft_get_strchr(const char *s, char c);
 
-int			heredoc(t_executor *executor, int *end);
+int			heredoc(t_executor *executor, int *end, t_data *data);
 // char		*remove_heredoc(char *cmd);
 void		sig_handlers(int signum);
 extern int	g_signal;

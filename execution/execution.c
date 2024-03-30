@@ -17,16 +17,15 @@ int 	g_sig_interrupt = 0;
 void	execute_command(char *cmd, t_data *data, int *end)
 {
 	char	*str;
-	char *temp;
+	// char *temp;
 
 	str = ft_strtrim(cmd, " ");
+	// check_command(str, cmd, end, data);
+	// free(str);
+	// cmd_file(cmd, data->envp->path);
 	check_command(str, cmd, end, data);
-	free(str);
-	cmd_file(cmd, data->envp->path);
-	temp = remove_all_qoutes(cmd);
-	str = ft_strtrim(temp, " ");
-	free(temp);
-	check_command(str, cmd, end, data);
+	// temp = remove_all_qoutes(cmd);
+	// free(temp);
 	free(str);
 	cmd_file(cmd, data->envp->path);
 	// free(cmd);
@@ -42,8 +41,18 @@ void	closing_execution(int pid)
 	pid = waitpid(-1, &status, 0);
 	while (pid > 0)
 	{
+		// g_signal = WIFEXITED(status);
+		 if (WIFEXITED(status)) {
+            int exit_status = WEXITSTATUS(status);
+            // printf("Exit status of the last process: %d\n", exit_status);
+			if (exit_status == 1)
+				exit_status = 127;
+			else if (g_signal == 2)
+				exit_status = 1;
+			g_signal = exit_status;
+            // exit_status contains the exit status of the last process in the pipeline
+        }
 		pid = waitpid(-1, &status, 0);
-		WIFEXITED(status);
 		// WIFSIGNALED(status);
 	}
 }
@@ -68,6 +77,7 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
     //     // If the command contains a here document, we don't execute it directly
     //     return;
     // }
+	heredoc(executor, cur, data);
 	if (ft_strchr(executor->cmd, '<') && executor->in != STDIN_FILENO)
 		dup_check(executor->in, STDIN_FILENO);
 	else if (prev[0] != STDIN_FILENO)
@@ -94,17 +104,16 @@ int	execution(t_executor *executor, t_data *data)
 
 	prev_pipe[0] = STDIN_FILENO;
 	prev_pipe[1] = STDOUT_FILENO;
+	signal(SIGQUIT, ft_sig2);
+	signal(SIGINT, ft_sig2);
 	while (executor)
 	{
-		signal(SIGQUIT, ft_sig2);
-		signal(SIGINT, ft_sig2);
-		heredoc(executor, cur_pipe);
-	// heredoc(data, executor, prev);
 		if (redir(executor) == 0)
 			return (1);
 		if (executor->next)
 			pipe(cur_pipe);
 		pid = fork();
+		// heredoc(executor, cur_pipe);
 		if (pid < 0)
 			return (perror("fork error"), 0);
 		else if (pid == 0)
@@ -112,12 +121,6 @@ int	execution(t_executor *executor, t_data *data)
 		else
 			parent_process(executor, prev_pipe, cur_pipe);
 		executor = executor->next;
-		// if (prev_pipe[1] != STDOUT_FILENO)
-        //     close(prev_pipe[1]);
-        
-        // // If the command has a pipe, set the read end of the current pipe as the new previous pipe
-        // if (executor && executor->next)
-        //     prev_pipe[0] = cur_pipe[0];
 	}
 	closing_execution(pid);
 	return (0);

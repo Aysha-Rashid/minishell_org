@@ -37,14 +37,12 @@ int	check_pipes_n_execute(t_data *data)
 	if (!quote(data->cmd))
 		return (ft_error(1, NULL, data->no_path));
 	temp = remove_quotes(data->cmd);
-	// temp = ft_strdup(data->cmd);
+	// ft_putendl_fd(temp,2);
 	data->executor = parse_pipeline(temp, data);
 	str = ft_split(data->cmd, ' ');
 	if (parse_command(str))
 		return (free_array(str), 1);
-	// ft_putendl_fd(data->executor->cmd, 2);
 	builtin_index = check_builtin(temp);
-	// free_array(str);
 	if (builtin_index >= 0 && !check_redir_pipe(temp))
 		builtin_command(temp, data);
 	else
