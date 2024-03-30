@@ -17,18 +17,12 @@ int 	g_sig_interrupt = 0;
 void	execute_command(char *cmd, t_data *data, int *end)
 {
 	char	*str;
-	// char *temp;
 
 	str = ft_strtrim(cmd, " ");
-	// check_command(str, cmd, end, data);
-	// free(str);
-	// cmd_file(cmd, data->envp->path);
 	check_command(str, cmd, end, data);
-	// temp = remove_all_qoutes(cmd);
-	// free(temp);
 	free(str);
+	// ft_putendl_fd(cmd, 2);
 	cmd_file(cmd, data->envp->path);
-	// free(cmd);
 	close_and_free_all(data, end);
 	exit(1);
 }

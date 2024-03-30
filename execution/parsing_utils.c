@@ -85,14 +85,13 @@ char	*remove_quotes(char *str)
 	result = malloc(len + 1);
 	while (i < len)
 	{
-		// check_pipe_and_redir_quote(str, i, j, result);
-		if ((str[i] == '\'' || str[i] == '"'))
+		if (str[i] == '\'' || str[i] == '"')
 		{
-			if(str[i + 1] == '|' || str[i + 1] == '>' || str[i + 1] == '<')
-				result[j++] = str[i++];
 			result[j++] = str[i++];
+			if (str[i + 1] == '|' || str[i + 1] == '<' || str[i + 1] == '>')
+				result[j++] = str[i++];
 		}
-		if ((str[i] == '\'' || str[i] == '"'))
+		if (str[i] == '\'' || str[i] == '"')
 		{
 			quote = str[i++];
 			while (i < len && str[i] != quote)

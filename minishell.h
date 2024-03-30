@@ -158,4 +158,5 @@ char		*ft_get_strchr(const char *s, char c);
 int			heredoc(t_executor *executor, int *end, t_data *data);
 // char		*remove_heredoc(char *cmd);
 void		sig_handlers(int signum);
+int			parse_com(char *cmd);
 extern int	g_signal;

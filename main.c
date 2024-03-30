@@ -14,10 +14,6 @@
 
 int	builtin_command(char *str, t_data *data)
 {
-	// char		*temp;
-
-	// temp = remove_quotes(data->cmd); // removes some extra characters
-	// temp = ft_strdup(str);
 	if (str && (!ft_strncmp(str, "env", 3)
 			|| !ft_strncmp(str, "ENV", 3)))
 		return (ft_env(data, str), 0);

@@ -60,6 +60,8 @@ int	redir(t_executor *executor)
 		if ((executor->cmd[i] == '>' || executor->cmd[i] == '<') && executor->cmd[i] != ' ')
 		{
 			i++;
+			if (executor->cmd[i] == '>' || executor->cmd[i] == '<')
+				i++;
 			if (executor->cmd[i] == ' ' || executor->cmd[i] == '\t')
 				i++;
 			file = executor->cmd + i;
@@ -156,35 +158,64 @@ void remove_whitespace(char *str)
 		i++;
 }
 
-int contains_special_chars(const char *str) {
-    while (*str) {
-        if (*str == '<' || *str == '>' || *str == '|') {
-            return 1;
-        }
-        str++;
-    }
-    return 0;
+int contains_special_chars(const char str)
+{
+	if (str == '<' || str == '>' || str == '|')
+		return 1;
+	return 0;
 }
 
-int	parse_command(char **token)
+// int	parse_command(char **token)
+// {
+// 	int	i;
+// 	int	len;
+// 	char	*message;
+
+// 	message = "syntax error near unexpected token ";
+// 	i = 0;
+// 	while (token[i])
+// 	{
+// 		len = ft_strlen(token[i]);
+// 		if (token[i + 1])
+// 		{
+// 			if (token[i][0] == '|' || !token[i - 1][0])
+// 			{
+// 				ft_putendl_fd(token[i], 2);
+//         	    return name_error(NULL, message, token[i], 0), 1;
+// 			}
+// 			if (contains_special_chars(token[i]) && contains_special_chars(token[i + 1]))
+// 			    return (name_error(NULL, message, token[i + 1], 0), 1);
+// 		}
+// 		if (token[i + 1] == NULL && (token[i][len - 1] == '>' || token[i][len - 1] == '<' || token[i][len - 1] == '|'))
+// 			return (name_error(NULL, message, "`newline'", 0), 1);
+//         i++;
+//     }
+// 	return (0);
+// }
+
+int	parse_com(char *cmd)
 {
-	int	i;
-	int	len;
+	int i;
 	char	*message;
+	int len;
 
 	message = "syntax error near unexpected token ";
+	len = ft_strlen(cmd);
 	i = 0;
-	while (token[i])
+	while(cmd[i])
 	{
-		len = ft_strlen(token[i]);
-		if (token[i + 1])
+		if (cmd[i] == ' ' && cmd[i] == '\t')
+			i++;
+		if (cmd[i] == '|' && (cmd[i - 1] == '\0' || cmd[i + 1] == '\0'))
+			return (name_error(NULL, message, "`|'", 0), 1);
+		if (contains_special_chars(cmd[i]) && contains_special_chars(cmd[i + 2]))
 		{
-			if (contains_special_chars(token[i]) && contains_special_chars(token[i + 1]))
-			    return (name_error(NULL, message, token[i], 0), 1);
+			printf("minishell : %s", message);
+			return (printf("`%c'\n", cmd[i + 2]), 1);
 		}
-		if (token[i + 1] == NULL && (token[i][len - 1] == '>' || token[i][len - 1] == '<' || token[i][len - 1] == '|'))
+		if (cmd[i + 1] == '\0' && (cmd[len - 1]== '>' || cmd[len - 1] == '<' || cmd[len - 1] == '|'))
 			return (name_error(NULL, message, "`newline'", 0), 1);
-        i++;
-    }
+		i++;
+	}
 	return (0);
 }

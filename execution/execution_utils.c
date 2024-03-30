@@ -31,6 +31,9 @@ t_executor	*init_executor(t_data *data, char *cmd)
 
 void	check_command(char *str, char *cmd, int *end, t_data *data)
 {
+	int	builtin_index;
+
+	builtin_index = check_builtin(str);
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
 	{
 		ft_expansion3(data, str, 0);
@@ -43,10 +46,12 @@ void	check_command(char *str, char *cmd, int *end, t_data *data)
 		ft_error(2, cmd, data->no_path);
 		exit_and_free(data, end, 0);
 	}
-	if (check_builtin(str) >= 0)
+	if (builtin_index >= 0)
 	{
+		// ft_putnbr_fd(builtin_index, 2);
 		if (builtin_command(str, data))
 		{
+			// ft_putendl_fd(str, 2);
 			free(str);
 			exit_and_free(data, end, 0);
 		}
