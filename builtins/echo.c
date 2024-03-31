@@ -34,13 +34,15 @@ void	check_and_write(char *str, t_data *data)
 	i = 0;
 	len = ft_strlen(str);
 	if (str[i] == '$')
+	{
 		ft_expansion3(data, str, 2);
+		g_signal = 0;
+	}
 	while (i < len && str[i] != '$')
 	{
 		if (str[i] == '\'' || str[i] == '"')
 		{
-			quote = str[i];
-			i++;
+			quote = str[i++];
 			while (i < len && str[i] != quote)
 				ft_putchar_fd(str[i++], 1);
 			if (i < len)
@@ -79,7 +81,6 @@ int	ft_echo(char *argv, t_data *data)
 	int		n_option;
 	int		i;
 
-	(void)data;
 	token = ft_split(argv, ' ');
 	n_option = 0;
 	i = 1;
@@ -93,7 +94,6 @@ int	ft_echo(char *argv, t_data *data)
 	while (token[i])
 	{
 		check_and_write(token[i], data);
-		// ft_putstr_fd(token[i], 1);
 		if (token[i + 1] && token[i][0] != '\0')
 			write(1, " ", 1);
 		i++;

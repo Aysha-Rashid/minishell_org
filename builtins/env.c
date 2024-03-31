@@ -102,24 +102,3 @@ int	free_env_list(t_env *head)
 	}
 	return (0);
 }
-
-// void	free_data(t_data *data)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	free_env_list(data->envp);
-// 	if (data->envp && data->envp->path)
-// 	{
-// 		while (data->envp->path[i])
-// 		{
-// 			free(data->envp->path[i]);
-// 			i++;
-// 		}
-// 		free(data->envp->path);
-// 	}
-// 	free(data->envp);
-// 	free(data->pwd);
-// 	free(data->old_pwd);
-// 	free(data);
-// }

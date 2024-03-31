@@ -23,6 +23,9 @@
 #include "libft/libft.h"
 
 #define BUFFER_SIZE 42
+#define IN_HERE 30
+#define OUT_HERE 20
+
 
 typedef struct s_env
 {

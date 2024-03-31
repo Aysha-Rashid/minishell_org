@@ -34,16 +34,23 @@ void	closing_execution(int pid)
 	pid = waitpid(-1, &status, 0);
 	while (pid > 0)
 	{
-		if (WIFEXITED(status))
+		if (g_signal == 10)
 		{
+			g_signal = 1;
+		}
+		else if (WIFEXITED(status))
+		{
+			// ft_putnbr_fd(g_signal, 2);
+			// write(2, "\n", 1);
 			status = WEXITSTATUS(status);
 			// printf("Exit status of the last process: %d\n", status);
-			if (status == 1)
+			if (status == 1 && g_signal != IN_HERE)
 				status = 127;
+			if (status == 3)
+				status = 1;
 			else if (g_signal == 2)
 				status = 1;
 			g_signal = status;
-			// status contains the exit status of the last process in the pipeline
 		}
 		pid = waitpid(-1, &status, 0);
 		// WIFSIGNALED(status);
@@ -64,6 +71,7 @@ void	parent_process(t_executor *executor, int *prev_pipe, int *cur_pipe)
 void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 {
 	heredoc(executor, cur, data);
+	signal(SIGQUIT, ft_sig2);
 	if (ft_strchr(executor->cmd, '<') && executor->in != STDIN_FILENO)
 		dup_check(executor->in, STDIN_FILENO);
 	else if (prev[0] != STDIN_FILENO)
@@ -90,7 +98,6 @@ int	execution(t_executor *executor, t_data *data)
 
 	prev_pipe[0] = STDIN_FILENO;
 	prev_pipe[1] = STDOUT_FILENO;
-	signal(SIGQUIT, ft_sig2);
 	signal(SIGINT, ft_sig2);
 	while (executor)
 	{
@@ -105,6 +112,8 @@ int	execution(t_executor *executor, t_data *data)
 			child_process(data, executor, prev_pipe, cur_pipe);
 		else
 			parent_process(executor, prev_pipe, cur_pipe);
+		// signal(SIGQUIT, ft_sig2);
+		// signal(SIGINT, ft_sig2);
 		executor = executor->next;
 	}
 	closing_execution(pid);

@@ -67,7 +67,6 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	token = ft_split(cmd, '|');
 	while (token[i])
 	{
-		ft_putendl_fd(token[i], 2);
 		executor = init_executor(data, token[i]);
 		executor->prev = tail;
 		i++;

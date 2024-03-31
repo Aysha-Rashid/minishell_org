@@ -77,9 +77,12 @@ void	heredoc_loop(char *delimiter, t_executor *executor, int *end)
 	char	*line;
 
 	line = NULL;
-	signal(SIGINT, sig_handlers);
 	while (1)
 	{
+		g_signal = IN_HERE;
+		// signal(SIGINT, ft_sig2);
+		// signal(SIGQUIT, SIG_IGN);
+		// ft_putnbr_fd(g_signal, 2);
 		ft_putstr_fd("> ", STDOUT_FILENO);
 		line = get_next_line(STDIN_FILENO);
 		if (!ft_strcmp(line, delimiter))
@@ -88,7 +91,7 @@ void	heredoc_loop(char *delimiter, t_executor *executor, int *end)
 			break ;
 		}
 		if (executor->next)
-			ft_putstr_fd(line, end[1]);
+			ft_putstr_fd(line, end[0]);
 		free(line);
 	}
 }
@@ -97,6 +100,8 @@ int	heredoc(t_executor *executor, int *end, t_data *data)
 {
 	char	*temp;
 	int		i;
+	int		word_length;
+	int		word_start;
 	char	*delimiter;
 
 	i = 0;
@@ -107,9 +112,15 @@ int	heredoc(t_executor *executor, int *end, t_data *data)
 		if (data->cmd[i] == '<' && data->cmd[i + 1] == '<')
 		{
 			i += 2;
-			if ((data->cmd[i] == ' ' || data->cmd[i] == '\t') && data->cmd[i])
+			while ((data->cmd[i] == ' ' || data->cmd[i] == '\t')
+				&& data->cmd[i])
 				i++;
-			temp = data->cmd + i;
+			word_start = i;
+			while ((data->cmd[i] != ' ' && data->cmd[i] != '\t')
+				&& data->cmd[i])
+				i++;
+			word_length = i - word_start;
+			temp = ft_strndup(data->cmd + word_start, word_length);
 			delimiter = ft_strjoin(temp, "\n");
 			break ;
 		}
