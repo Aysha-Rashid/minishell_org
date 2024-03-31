@@ -14,13 +14,13 @@
 
 t_executor	*init_executor(t_data *data, char *cmd)
 {
-	char	*str;
+	// char	*str;
 
 	data->executor = (t_executor *)malloc(sizeof(t_executor));
 	if (data->executor == NULL)
 		return (NULL);
-	str = ft_strdup(cmd);
-	data->executor->cmd = str;
+	// str = ft_strdup(cmd);
+	data->executor->cmd = ft_strdup(cmd);
 	data->executor->in = STDIN_FILENO;
 	data->executor->out = STDOUT_FILENO;
 	data->executor->next = NULL;

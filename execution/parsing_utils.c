@@ -53,6 +53,13 @@ int	check_pipe_and_redir_quote(char *str, int i, int j, char *result)
 	return (0);
 }
 
+int	spec_char(const char str)
+{
+	if (str == '<' || str == '>' || str == '|')
+		return (1);
+	return (0);
+}
+
 char	*remove_quotes(char *str)
 {
 	int		i;
@@ -64,13 +71,15 @@ char	*remove_quotes(char *str)
 	len = ft_strlen(str);
 	i = 0;
 	j = 0;
+	quote = '\0';
 	result = malloc(len + 1);
 	while (i < len)
 	{
-		if (str[i] == '\'' || str[i] == '"')
+		if ((str[i] == '\'' || str[i] == '"')
+			&& str[i + 1] && spec_char(str[i + 1]))
 		{
 			result[j++] = str[i++];
-			if (str[i + 1] == '|' || str[i + 1] == '<' || str[i + 1] == '>')
+			if ((str[i + 1] == '|' || str[i + 1] == '<' || str[i + 1] == '>'))
 				result[j++] = str[i++];
 		}
 		if (str[i] == '\'' || str[i] == '"')
@@ -87,36 +96,31 @@ char	*remove_quotes(char *str)
 	return (result);
 }
 
-int	contains_special_chars(const char str)
-{
-	if (str == '<' || str == '>' || str == '|')
-		return (1);
-	return (0);
-}
-
 int	parse_com(char *cmd)
 {
 	int		i;
 	char	*message;
 	int		len;
 
-	message = "syntax error near unexpected token ";
 	len = ft_strlen(cmd);
+	message = "syntax error near unexpected token ";
 	i = 0;
 	while (cmd[i])
 	{
-		if (cmd[i] == ' ' && cmd[i] == '\t')
+		if (cmd[i] == ' ' || cmd[i] == '\t')
 			i++;
-		if (cmd[i] == '|' && (cmd[i - 1] == '\0' || cmd[i + 1] == '\0'))
+		if (cmd[i] == '|' && (i == 0 || cmd[i + 1] == '\0'))
 			return (name_error(NULL, message, "`|'", 0), 1);
-		if (contains_special_chars(cmd[i])
-			&& contains_special_chars(cmd[i + 2]))
-			return (printf("minishell : %s", message),
-				printf("`%c'\n", cmd[i + 2]), 1);
-		if (cmd[i + 1] == '\0' && (cmd[len - 1] == '>'
-				|| cmd[len - 1] == '<' || cmd[len - 1] == '|'))
-			return (name_error(NULL, message, "`newline'", 0), 1);
+		if (((cmd[i] == '>' && cmd[i + 1] == '>') || (cmd[i] == '<'
+					&& cmd[i + 1] == '<')) && (cmd[i + 3]
+				&& spec_char(cmd[i + 3])))
+			return (name_error(NULL, message, &cmd[i + 3], 0), 1);
+		if ((cmd[i] == '>' || cmd[i] == '<') && cmd[i + 1] != '\0'
+			&& cmd[i + 2] != '\0' && spec_char(cmd[i + 2]))
+			return (name_error(NULL, message, &cmd[i + 2], 0), 1);
 		i++;
 	}
+	if ((cmd[len - 1] == '>' || cmd[len - 1] == '<'))
+		return (name_error(NULL, message, "`newline'", 0), 1);
 	return (0);
 }

@@ -17,21 +17,21 @@ void	ft_sig2(int signum)
 	// ft_putnbr_fd(g_signal, 2);
 	if (signum == SIGQUIT)
 	{
-		// ft_putnbr_fd(g_signal, 2);
-		if (g_signal == IN_HERE)
-		{
-			ft_putstr_fd("here in signal", 2);
-			// signal(SIGQUIT, SIG_IGN);
-			ft_putstr_fd("\b\b", 2);
-			return ;
-		}
-		else
-		{
+		// // ft_putnbr_fd(g_signal, 2);
+		// if (g_signal == IN_HERE)
+		// {
+		// 	ft_putstr_fd("here in signal", 2);
+		// 	signal(SIGQUIT, SIG_IGN);
+		// 	ft_putstr_fd("\b\b", 2);
+		// 	return ;
+		// }
+		// else
+		// {
 			g_signal = 131;
 			ft_putendl_fd("Quit: 3", 2);
-		}
+		// }
 	}
-	else if (signum == SIGINT)
+	if (signum == SIGINT)
 	{
 		// ft_putnbr_fd(g_signal, 2);
 		// write(2, "\n", 1);

@@ -36,9 +36,9 @@ int	check_pipes_n_execute(t_data *data)
 	if (!quote(data->cmd))
 		return (ft_error(1, NULL, data->no_path));
 	temp = remove_quotes(data->cmd);
-	data->executor = parse_pipeline(temp, data);
 	if (parse_com(temp))
-		return (free(temp), 1);
+		return (1);
+	data->executor = parse_pipeline(temp, data);
 	builtin_index = check_builtin(temp);
 	if (builtin_index >= 0 && !check_redir_pipe(temp))
 		builtin_command(temp, data);

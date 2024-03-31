@@ -15,13 +15,10 @@
 void	free_executor(t_executor *executor)
 {
 	if (!executor)
-		return;
-	if (executor->cmd)
+		return ;
+	else if (executor->cmd)
 		free(executor->cmd);
 	free_executor(executor->next);
-	// }
-	// if (!executor && executor->cmd)
-	// 	free(executor->cmd);
 	free(executor);
 }
 

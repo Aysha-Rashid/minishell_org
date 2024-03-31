@@ -42,7 +42,8 @@ void	check_and_write(char *str, t_data *data)
 	{
 		if (str[i] == '\'' || str[i] == '"')
 		{
-			quote = str[i++];
+			quote = str[i];
+			i++;
 			while (i < len && str[i] != quote)
 				ft_putchar_fd(str[i++], 1);
 			if (i < len)

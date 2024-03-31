@@ -94,16 +94,13 @@ char	*env_str(t_env *env)
 char	*cmd_file(char *cmd, char **paths)
 {
 	char	*cmd_file;
-	char	*temp;
 	char	**str;
 	int		i;
 
 	if (!cmd)
 		return (NULL);
 	i = 0;
-	temp = remove_all_qoutes(cmd);
-	str = ft_split(temp, ' ');
-	free(temp);
+	str = ft_split(cmd, ' ');
 	cmd_file = NULL;
 	if (given_path(str[0]))
 	{
