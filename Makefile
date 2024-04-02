@@ -2,6 +2,10 @@ NAME = minishell
 
 SRC = main.c\
 		parsing.c\
+		errors.c\
+		utils.c\
+		get_next_line.c\
+		get_next_line_utils.c\
 		builtins/builtins_utils.c\
 		builtins/builtins_utils2.c\
 		builtins/env.c\
@@ -11,7 +15,6 @@ SRC = main.c\
 		builtins/cd.c\
 		builtins/unset.c\
 		signals/signals.c\
-		errors.c\
 		execution/pipes.c\
 		execution/execution.c\
 		execution/free_and_close.c\
@@ -21,8 +24,6 @@ SRC = main.c\
 		execution/heredoc.c\
 		expansion/expansion1.c\
 		expansion/expansion_utils.c\
-		get_next_line.c\
-		get_next_line_utils.c\
 
 OBJ = $(SRC:.c=.o)
 

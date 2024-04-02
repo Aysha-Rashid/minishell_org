@@ -20,32 +20,13 @@ void	check_n_execute(char *str, t_data *data)
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 		ft_putendl_fd("exit", 1);
-		free_array(data->envp->path);
+		if (data->envp->path != NULL)
+			free_array(data->envp->path);
 		ft_free_all(data);
 		exit(0);
 	}
 	if (check_pipes_n_execute(data))
 		return ;
-}
-
-int	only_tabs_and_space(char *str)
-{
-	int		i;
-	size_t	count;
-
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] == '\"' || str[i] == '\'')
-			count++;
-		if (str[i] == ' ' || str[i] == '\t')
-			count++;
-		i++;
-	}
-	if (count == (ft_strlen(str)))
-		return (1);
-	return (0);
 }
 
 int	check_pipes_n_execute(t_data *data)
@@ -56,7 +37,7 @@ int	check_pipes_n_execute(t_data *data)
 	if (!quote(data->cmd))
 		return (ft_error(1, NULL, data->no_path));
 	temp = remove_quotes(data->cmd);
-	if(!temp || only_tabs_and_space(temp))
+	if (!temp || only_tabs_and_space(temp))
 		return (1);
 	if (parse_com(temp))
 		return (free(temp), 1);
@@ -65,9 +46,7 @@ int	check_pipes_n_execute(t_data *data)
 	if (builtin_index >= 0 && !check_redir_pipe(temp))
 		builtin_command(temp, data);
 	else
-	{
 		execution(data->executor, data);
-	}
 	free_executor(data->executor);
 	return (0);
 }
@@ -101,49 +80,32 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	return (head);
 }
 
-int	check_redir_pipe(char *cmd)
+int	redir(t_executor *executor)
 {
-	int	i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] == '<' || cmd[i] == '>' || cmd[i] == '|')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-char	*remove_redir_or_files(char *cmd)
-{
-	char	*dest;
+	char	*redir;
 	int		i;
-	int		j;
 
+	redir = get_redir_and_files(executor->cmd);
 	i = 0;
-	j = 0;
-	if ((ft_strchr(cmd, '<') || ft_strchr(cmd, '>'))
-		&& (cmd[0] == '\'' || cmd[0] == '\"'))
-		return (cmd);
-	dest = (char *)malloc(sizeof(char) * (ft_strlen(cmd) + 1));
-	if (!dest)
-		return (NULL);
-	while (cmd[i])
+	while (executor->cmd[i])
 	{
-		if ((cmd[i] == '<' || cmd[i] == '>') && cmd[i] != ' ')
+		if ((executor->cmd[i] == '>' || executor->cmd[i] == '<')
+			&& executor->cmd[i] != ' ')
 		{
+			if (!open_files(executor->cmd, redir, i, executor))
+				return (free(redir), 0);
 			i++;
-			if (cmd[i] == '>' || cmd[i] == '<')
-				i++;
-			while (cmd[i] && (cmd[i] == ' ' || cmd[i] == '\t'))
-				i++;
-			while (cmd[i] && cmd[i] != ' ' && cmd[i] != '\t')
-				i++;
 		}
 		else
-			dest[j++] = cmd[i++];
+			i++;
 	}
-	dest[j] = '\0';
-	return (dest);
+	return (free(redir), 1);
+}
+
+void	init_pipe_n_signal(int *prev_pipe)
+{
+	prev_pipe[0] = STDIN_FILENO;
+	prev_pipe[1] = STDOUT_FILENO;
+	signal(SIGQUIT, ft_sig2);
+	signal(SIGINT, ft_sig2);
 }

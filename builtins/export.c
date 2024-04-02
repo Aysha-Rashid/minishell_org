@@ -21,7 +21,6 @@ void	sorted_env(char **env)
 
 	ordered = 0;
 	env_len = size_of_env(env);
-	ft_putstr_fd("sort __export prob", 2);
 	while (env && ordered == 0)
 	{
 		ordered = 1;
@@ -104,7 +103,6 @@ int	declare_sorted(t_env *head)
 	char	*str;
 	int		i;
 
-	ft_putstr_fd("declare sort problem", 2);
 	str = env_str(head);
 	temp = ft_split(str, '\n');
 	if (!temp || !str)

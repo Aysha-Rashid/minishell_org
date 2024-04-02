@@ -40,6 +40,19 @@ void	dup_check(int file, int dupped)
 	close(file);
 }
 
+int	free_array(char **str)
+{
+	int	i;
+
+	i = 0;
+	if (!str[i])
+		return (0);
+	while (str[i])
+		free(str[i++]);
+	free(str);
+	return (0);
+}
+
 void	exit_and_free(t_data *data, int *end, int status)
 {
 	close_and_free_all(data, end);

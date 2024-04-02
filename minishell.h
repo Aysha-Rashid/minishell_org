@@ -26,7 +26,6 @@
 #define IN_HERE 30
 #define OUT_HERE 20
 
-
 typedef struct s_env
 {
 	char			**path;
@@ -48,7 +47,6 @@ typedef struct s_executor
 typedef struct s_data
 {
 	int				no_path;
-	// int				status_code;
 	char			*cmd;
 	char			*pwd;
 	char			*old_pwd;
@@ -96,6 +94,8 @@ int			ft_echo(char *argv, t_data *data);
 void		check_and_write(char *str, t_data *data);
 
 //parse
+int			only_tabs_and_space(char *str);
+void		failed_execve(char *cmd_file, char **str);
 int			ft_error(int i, char *str, int no_path);
 void		free_executor(t_executor *executor);
 void		close_and_free_all(t_data *data, int *end);
@@ -111,7 +111,6 @@ int			validate_input(t_data *data, char *token,
 				t_env *current, char *name);
 void		name_error3(char *exit_status, char *message, int flag);
 int			invalid_identifier(t_data *data, char *str, char *name);
-char		*remove_all_qoutes(char *str);
 
 //execution
 void		check_n_execute(char *str, t_data *data);
@@ -120,6 +119,7 @@ int			execution(t_executor *executor, t_data *data);
 int			builtin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
 int			check_builtin(char *str);
+void		execute_binary_files(char **paths, char **str, char *cmd_file);
 t_executor	*init_executor(t_data *data, char *cmd);
 t_executor	*parse_pipeline(char *cmd, t_data *data);
 
@@ -140,12 +140,13 @@ char		*remove_quotes(char *str);
 int			invalid_unset_loop(char *token, char *name, t_data *data);
 int			invalid_export_loop(char *token, char *name, t_data *data);
 void		not_valid_message(char *token, char *name, t_data *data);
-int			parse_command(char **token);
 int			parse_com(char *cmd);
-char		*remove_all_qoutes(char *str);
 int			quote(char *l);
 int			check_pipe_and_redir_quote(char *str, int i);
 void		ft_sig2(int signum);
+int			open_files(char *cmd, char *redir, int i, t_executor *executor);
+char		*get_redir_and_files(char *cmd);
+void		init_pipe_n_signal(int *prev_pipe);
 //get_next_line
 char		*remaining(char *buffer);
 char		*new_line(char *str);
@@ -159,4 +160,5 @@ char		*ft_get_strchr(const char *s, char c);
 int			heredoc(t_executor *executor, int *end, t_data *data);
 void		sig_handlers(int signum);
 int			parse_com(char *cmd);
+
 extern int	g_signal;

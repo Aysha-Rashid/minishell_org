@@ -95,32 +95,17 @@ char	*cmd_file(char *cmd, char **paths)
 {
 	char	*cmd_file;
 	char	**str;
-	int		i;
 
 	if (!cmd)
 		return (NULL);
-	i = 0;
 	str = ft_split(cmd, ' ');
 	cmd_file = NULL;
 	if (given_path(str[0]))
 	{
 		execve(str[0], str, paths);
-		return (ft_error(2, str[0], 1), free_array(str), NULL);
+		failed_execve(cmd_file, str);
 	}
-	while (paths[i])
-	{
-		cmd_file = ft_strjoin(paths[i], str[0]);
-		if (!(access(cmd_file, F_OK | X_OK)))
-		{
-			// free(cmd);
-			execve(cmd_file, str, paths);
-			free(cmd_file);
-			free_array(str);
-			exit(1);
-		}
-		free(cmd_file);
-		i++;
-	}
+	execute_binary_files(paths, str, cmd_file);
 	return (ft_error(2, str[0], 0), free_array(str), NULL);
 }
 

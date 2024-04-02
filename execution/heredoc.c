@@ -15,6 +15,7 @@
 void	heredoc_loop(char *delimiter, int fd)
 {
 	char	*line;
+
 	line = NULL;
 	while (1)
 	{

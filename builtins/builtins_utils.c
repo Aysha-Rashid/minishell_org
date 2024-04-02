@@ -25,15 +25,15 @@ t_env	*search_env_variable(t_env *envp, char *key)
 	return (NULL);
 }
 
-int	free_array(char **str)
+int	validate_input(t_data *data, char *token, t_env *current, char *name)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
-		free(str[i++]);
-	free(str);
-	return (0);
+	if (invalid_unset_loop(token, name, data))
+		return (0);
+	else if (invalid_export_loop(token, name, data))
+		return (0);
+	else if (invalid_identifier(data, token, name) || !current)
+		return (0);
+	return (1);
 }
 
 size_t	len_of_values(t_env *lst)

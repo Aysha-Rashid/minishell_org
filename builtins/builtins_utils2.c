@@ -82,6 +82,7 @@ void	ft_free_all(t_data *data)
 {
 	free(data->pwd);
 	free(data->old_pwd);
-	free_env_list(data->envp);
+	if (data->envp != NULL)
+		free_env_list(data->envp);
 	free(data->cmd);
 }

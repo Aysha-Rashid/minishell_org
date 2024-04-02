@@ -16,10 +16,8 @@ void	ft_sig2(int signum)
 {
 	if (signum == SIGQUIT)
 	{
-		ft_putnbr_fd(g_signal, 2);
 		if (g_signal == IN_HERE)
 		{
-			ft_putstr_fd("here in signal", 2);
 			g_signal = IN_HERE;
 			signal(SIGQUIT, SIG_IGN);
 			return ;
@@ -85,6 +83,5 @@ void	check_signal(char *input, t_data *data)
 void	ft_signals(void)
 {
 	signal(SIGINT, sigint_handler);
-	// signal(SIGQUIT, SIG_IGN);
 	signal(SIGQUIT, sigint_handler);
 }

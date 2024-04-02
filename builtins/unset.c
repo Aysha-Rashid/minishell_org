@@ -54,17 +54,6 @@ int	invalid_unset_loop(char *token, char *name, t_data *data)
 	return (0);
 }
 
-int	validate_input(t_data *data, char *token, t_env *current, char *name)
-{
-	if (invalid_unset_loop(token, name, data))
-		return (0);
-	else if (invalid_export_loop(token, name, data))
-		return (0);
-	else if (invalid_identifier(data, token, name) || !current)
-		return (0);
-	return (1);
-}
-
 int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 {
 	if (to_remove)
