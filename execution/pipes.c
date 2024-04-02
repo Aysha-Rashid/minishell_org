@@ -89,7 +89,13 @@ int	redir(t_executor *executor)
 	i = 0;
 	while (executor->cmd[i])
 	{
-		if ((executor->cmd[i] == '>' || executor->cmd[i] == '<')
+		if (executor->cmd[i] == '>' && executor->cmd[i + 1] == '>')
+		{
+			if (!open_files(executor->cmd, redir, i, executor))
+				return (free(redir), 0);
+			i++;
+		}
+		else if ((executor->cmd[i] == '>' || executor->cmd[i] == '<')
 			&& executor->cmd[i] != ' ')
 		{
 			if (!open_files(executor->cmd, redir, i, executor))

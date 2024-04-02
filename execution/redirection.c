@@ -85,6 +85,8 @@ int	open_files(char *cmd, char *redir, int i, t_executor *executor)
 
 	start = 0;
 	file = NULL;
+	while (cmd[i] == '>' || cmd[i] == '<')
+		i++;
 	while (cmd[i] == ' ' || cmd[i] == '\t')
 		i++;
 	start = i;
@@ -108,7 +110,7 @@ char	*get_redir_and_files(char *cmd)
 	temp = ft_split(cmd, ' ');
 	while (temp[i])
 	{
-		if (ft_strchr(temp[i], '<'))
+		if (ft_strchr(temp[i], '<') || ft_strchr(temp[i], '>'))
 			redir = ft_strdup(temp[i]);
 		i++;
 	}
