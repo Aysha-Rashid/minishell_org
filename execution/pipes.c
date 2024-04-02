@@ -28,6 +28,26 @@ void	check_n_execute(char *str, t_data *data)
 		return ;
 }
 
+int	only_tabs_and_space(char *str)
+{
+	int		i;
+	size_t	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == '\"' || str[i] == '\'')
+			count++;
+		if (str[i] == ' ' || str[i] == '\t')
+			count++;
+		i++;
+	}
+	if (count == (ft_strlen(str)))
+		return (1);
+	return (0);
+}
+
 int	check_pipes_n_execute(t_data *data)
 {
 	char		builtin_index;
@@ -36,15 +56,16 @@ int	check_pipes_n_execute(t_data *data)
 	if (!quote(data->cmd))
 		return (ft_error(1, NULL, data->no_path));
 	temp = remove_quotes(data->cmd);
-	if (parse_com(temp))
+	if(!temp || only_tabs_and_space(temp))
 		return (1);
+	if (parse_com(temp))
+		return (free(temp), 1);
 	data->executor = parse_pipeline(temp, data);
 	builtin_index = check_builtin(temp);
 	if (builtin_index >= 0 && !check_redir_pipe(temp))
 		builtin_command(temp, data);
 	else
 	{
-		free(temp);
 		execution(data->executor, data);
 	}
 	free_executor(data->executor);
@@ -102,6 +123,8 @@ char	*remove_redir_or_files(char *cmd)
 
 	i = 0;
 	j = 0;
+	if ((ft_strchr(cmd, '<') || ft_strchr(cmd, '>')) && (cmd[0] == '\'' || cmd[0] == '\"'))
+		return(cmd);
 	dest = (char *)malloc(sizeof(char) * (ft_strlen(cmd) + 1));
 	if (!dest)
 		return (NULL);
@@ -117,7 +140,8 @@ char	*remove_redir_or_files(char *cmd)
 			while (cmd[i] && cmd[i] != ' ' && cmd[i] != '\t')
 				i++;
 		}
-		dest[j++] = cmd[i++];
+		else
+			dest[j++] = cmd[i++];
 	}
 	dest[j] = '\0';
 	return (dest);

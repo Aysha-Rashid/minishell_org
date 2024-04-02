@@ -144,7 +144,7 @@ int			parse_command(char **token);
 int			parse_com(char *cmd);
 char		*remove_all_qoutes(char *str);
 int			quote(char *l);
-int			check_pipe_and_redir_quote(char *str, int i, int j, char *result);
+int			check_pipe_and_redir_quote(char *str, int i);
 void		ft_sig2(int signum);
 //get_next_line
 char		*remaining(char *buffer);

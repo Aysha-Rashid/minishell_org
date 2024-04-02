@@ -66,6 +66,7 @@ void	parent_process(t_executor *executor, int *prev_pipe, int *cur_pipe)
 
 void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 {
+	char *temp;
 	heredoc(executor, cur, data);
 	// signal(SIGQUIT, ft_sig2);
 	if (ft_strchr(data->cmd, '<') && executor->in != STDIN_FILENO)
@@ -82,7 +83,9 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 		dup_check(cur[1], STDOUT_FILENO);
 		close(cur[0]);
 	}
-	executor->cmd = remove_redir_or_files(executor->cmd);
+	temp = remove_redir_or_files(executor->cmd);
+	executor->cmd = temp;
+	// free(temp);
 	execute_command(executor->cmd, data, cur);
 }
 

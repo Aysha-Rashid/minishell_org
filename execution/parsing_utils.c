@@ -12,45 +12,15 @@
 
 #include "../minishell.h"
 
-char	*remove_all_qoutes(char *str)
+int check_pipe_and_redir_quote(char *str, int i)
 {
-	int		i;
-	int		j;
-	char	quote;
-	char	*result;
-	int		len;
-
-	len = ft_strlen(str);
-	i = 0;
-	j = 0;
-	result = malloc(len + 1);
-	if (!result)
-		return (NULL);
-	while (i < len && str[i] != '$')
-	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			quote = str[i++];
-			while (i < len && str[i] != quote)
-				result[j++] = str[i++];
-			if (i < len)
-				i++;
-		}
-		result[j++] = str[i++];
-	}
-	result[j] = '\0';
-	return (result);
-}
-
-int	check_pipe_and_redir_quote(char *str, int i, int j, char *result)
-{
-	if (str[i] == '\'' || str[i] == '"')
-	{
-		if (str[i + 1] == '|')
-			result[j++] = str[i++];
-		result[j++] = str[i++];
-	}
-	return (0);
+    if (str[i] == '\'' || str[i] == '"') {
+        if (str[i + 1] && (str[i + 1] == '|' || str[i + 1] == '>' || str[i + 1] == '<'))
+            return 1;
+        if (str[i + 2] && (str[i + 2] == '<' || str[i + 2] == '>'))
+            return 1;
+    }
+    return 0;
 }
 
 int	spec_char(const char str)
@@ -60,39 +30,54 @@ int	spec_char(const char str)
 	return (0);
 }
 
-char	*remove_quotes(char *str)
+char *check_quotes_and_copy(char *str, int i, int j, char *result)
 {
-	int		i;
-	int		j;
-	char	quote;
-	char	*result;
-	int		len;
+	char quote;
+	int	len;
 
 	len = ft_strlen(str);
-	i = 0;
-	j = 0;
 	quote = '\0';
-	result = malloc(len + 1);
-	while (i < len)
+	while(i < len && str[i])
 	{
-		if ((str[i] == '\'' || str[i] == '"')
-			&& str[i + 1] && spec_char(str[i + 1]))
-		{
-			result[j++] = str[i++];
-			if ((str[i + 1] == '|' || str[i + 1] == '<' || str[i + 1] == '>'))
-				result[j++] = str[i++];
-		}
-		if (str[i] == '\'' || str[i] == '"')
+		if ((str[i] == '\'' || str[i] == '"') && str[i])
 		{
 			quote = str[i++];
-			while (i < len && str[i] != quote)
+			while (i < len && str[i] != quote && str[i])
+			{
+				if (spec_char(str[i]))
+					return (NULL);
 				result[j++] = str[i++];
+			}
 			if (i < len)
 				i++;
 		}
 		result[j++] = str[i++];
 	}
 	result[j] = '\0';
+	return (result);
+}
+
+char	*remove_quotes(char *str)
+{
+	int		i;
+	int		j;
+	char	*result;
+
+	i = 0;
+	j = 0;
+	result = malloc(ft_strlen(str) + 1);
+	if (check_pipe_and_redir_quote(str, i))
+	{
+		i++;
+		result[j] = str[i];
+		result[j + 1] = '\0';
+		return (result);
+	}
+	if (!check_quotes_and_copy(str, i, j, result))
+	{
+		// ft_putendl_fd(result, 2);
+		return (free(result), str);
+	}
 	return (result);
 }
 
