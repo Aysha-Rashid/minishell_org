@@ -123,8 +123,9 @@ char	*remove_redir_or_files(char *cmd)
 
 	i = 0;
 	j = 0;
-	if ((ft_strchr(cmd, '<') || ft_strchr(cmd, '>')) && (cmd[0] == '\'' || cmd[0] == '\"'))
-		return(cmd);
+	if ((ft_strchr(cmd, '<') || ft_strchr(cmd, '>'))
+		&& (cmd[0] == '\'' || cmd[0] == '\"'))
+		return (cmd);
 	dest = (char *)malloc(sizeof(char) * (ft_strlen(cmd) + 1));
 	if (!dest)
 		return (NULL);

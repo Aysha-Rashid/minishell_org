@@ -94,7 +94,13 @@ int	ft_echo(char *argv, t_data *data)
 	}
 	while (token[i])
 	{
-		check_and_write(token[i], data);
+		// check_and_write(token[i], data);
+			if (ft_strchr(token[i], '$'))
+			{
+				ft_expansion3(data, token[i], 2);
+				g_signal = 0;
+			}
+		ft_putstr_fd(token[i], 1);
 		if (token[i + 1] && token[i][0] != '\0')
 			write(1, " ", 1);
 		i++;

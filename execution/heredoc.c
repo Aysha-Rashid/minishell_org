@@ -12,10 +12,9 @@
 
 #include "../minishell.h"
 
-void	heredoc_loop(char *delimiter, t_executor *executor, int fd)
+void	heredoc_loop(char *delimiter, int fd)
 {
 	char	*line;
-	(void)executor;
 	line = NULL;
 	while (1)
 	{
@@ -27,8 +26,7 @@ void	heredoc_loop(char *delimiter, t_executor *executor, int fd)
 			free(line);
 			break ;
 		}
-		// if (executor->next)
-			ft_putstr_fd(line, fd);
+		ft_putstr_fd(line, fd);
 		free(line);
 	}
 }
@@ -64,6 +62,7 @@ int	heredoc(t_executor *executor, int *end, t_data *data)
 {
 	char	*temp;
 	int		i;
+	int		fd;
 	char	*delimiter;
 
 	i = 0;
@@ -73,13 +72,13 @@ int	heredoc(t_executor *executor, int *end, t_data *data)
 	delimiter = find_delimiter(delimiter, data, i, temp);
 	if (!delimiter)
 		return (0);
-	int fd = open(".heredoc_temp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd < 0) 
-		return (free(delimiter),0);
-	heredoc_loop(delimiter, executor, fd);
+	fd = open(".heredoc_temp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+		return (free(delimiter), 0);
+	heredoc_loop(delimiter, fd);
 	close(fd);
 	executor->in = open(".heredoc_temp", O_RDONLY);
 	if (executor->in < 0)
-		return (free(delimiter),0);
-	return (free(delimiter), 1);
+		return (free(delimiter), 0);
+	return (free(delimiter), fd);
 }

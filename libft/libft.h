@@ -65,6 +65,7 @@ void	ft_putendl_fd(char *s, int fd);
 void	ft_striteri(char	*s, void (*f)(unsigned	int, char*));
 int		ft_strcmp(const char	*s1, const char	*s2);
 char	*ft_strndup(const char *src, size_t n);
+char	*ft_strstr(const char *haystack, const char *needle);
 // void	ft_putstrn_fd(char	*s, int nb, int fd);
 
 #endif

@@ -12,15 +12,18 @@
 
 #include "../minishell.h"
 
-int check_pipe_and_redir_quote(char *str, int i)
+int	check_pipe_and_redir_quote(char *str, int i)
 {
-    if (str[i] == '\'' || str[i] == '"') {
-        if (str[i + 1] && (str[i + 1] == '|' || str[i + 1] == '>' || str[i + 1] == '<'))
-            return 1;
-        if (str[i + 2] && (str[i + 2] == '<' || str[i + 2] == '>'))
-            return 1;
-    }
-    return 0;
+	if (str[i] == '\'' || str[i] == '"')
+	{
+		if (str[i + 1] && (str[i + 1] == '|'
+				|| str[i + 1] == '>' || str[i + 1] == '<'))
+			return (1);
+		if (str[i + 2] && (str[i + 2] == '<'
+				|| str[i + 2] == '>'))
+			return (1);
+	}
+	return (0);
 }
 
 int	spec_char(const char str)
@@ -30,14 +33,14 @@ int	spec_char(const char str)
 	return (0);
 }
 
-char *check_quotes_and_copy(char *str, int i, int j, char *result)
+char	*check_quotes_and_copy(char *str, int i, int j, char *result)
 {
-	char quote;
-	int	len;
+	char	quote;
+	int		len;
 
 	len = ft_strlen(str);
 	quote = '\0';
-	while(i < len && str[i])
+	while (i < len && str[i])
 	{
 		if ((str[i] == '\'' || str[i] == '"') && str[i])
 		{
@@ -74,10 +77,7 @@ char	*remove_quotes(char *str)
 		return (result);
 	}
 	if (!check_quotes_and_copy(str, i, j, result))
-	{
-		// ft_putendl_fd(result, 2);
 		return (free(result), str);
-	}
 	return (result);
 }
 
