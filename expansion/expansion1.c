@@ -17,7 +17,7 @@ size_t	dollar_sign(char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i])
+	while (str[i] )
 	{
 		if (str[i] == '$')
 			return (i + 1);

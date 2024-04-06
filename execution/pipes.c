@@ -116,6 +116,6 @@ void	init_pipe_n_signal(int *prev_pipe)
 {
 	prev_pipe[0] = STDIN_FILENO;
 	prev_pipe[1] = STDOUT_FILENO;
-	signal(SIGQUIT, ft_sig2);
+	// signal(SIGQUIT, ft_sig2);
 	signal(SIGINT, ft_sig2);
 }

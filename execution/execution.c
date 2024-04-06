@@ -23,7 +23,7 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	free(str);
 	cmd_file(cmd, data->envp->path);
 	close_and_free_all(data, end);
-	exit(127);
+	exit(1);
 }
 
 void	closing_execution(int pid)
@@ -34,15 +34,29 @@ void	closing_execution(int pid)
 	pid = waitpid(-1, &status, 0);
 	while (pid > 0)
 	{
-		if (g_signal == 10)
+		if (!g_signal && !WIFEXITED(status))
 		{
-			g_signal = 1;
+			if (WIFSIGNALED(status) && g_signal != IN_HERE)
+			{
+                if (WTERMSIG(status) == SIGINT)
+                    g_signal = 130;
+				if (WTERMSIG(status) == SIGQUIT)
+				{
+					printf("Quit: 3\n");
+					g_signal = 131;
+				}
+            }
 		}
-		else if (WIFEXITED(status))
+		// if (g_signal == 10)
+		// {
+		// 	g_signal = 1;
+		// }
+		if (WIFEXITED(status))
 		{
 			status = WEXITSTATUS(status);
-			// if (status == 1 && g_signal != IN_HERE)
-			// 	status = 127;
+			ft_putnbr_fd(status, STDERR_FILENO);
+			if (status == 1 && g_signal != IN_HERE)
+				status = 127;
 			if (status == 3)
 				status = 1;
 			else if (g_signal == 2)
