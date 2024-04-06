@@ -25,7 +25,7 @@ int	builtin_command(char *str, t_data *data)
 	else if (str && (!ft_strncmp(str, "echo", 4)
 			|| (!ft_strncmp(str, "ECHO", 4))
 			|| (!ft_strncmp(str, "echo -n", 7))))
-		return (ft_echo(str, data), 0);
+		return (ft_echo(data->cmd, data), 0);
 	else if (str && (!(ft_strncmp(str, "cd", 2))))
 		return (ft_cd(str, data), 0);
 	else if (str && (!ft_strncmp(str, "unset", 5)))

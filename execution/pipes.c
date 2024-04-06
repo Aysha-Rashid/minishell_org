@@ -15,7 +15,10 @@
 void	check_n_execute(char *str, t_data *data)
 {
 	if (!str || str[0] == '\0')
+	{
+		ft_putendl_fd("spaces or tabs", 2);
 		prompt_loop(str, data);
+	}
 	if (str && (!(ft_strcmp(str, "exit"))))
 	{
 		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
@@ -32,19 +35,20 @@ void	check_n_execute(char *str, t_data *data)
 int	check_pipes_n_execute(t_data *data)
 {
 	char		builtin_index;
-	char		*temp;
+	// char		*temp;
 
 	if (!quote(data->cmd))
-		return (ft_error(1, NULL, data->no_path));
-	temp = remove_quotes(data->cmd);
-	if (!temp || only_tabs_and_space(temp))
+	// 	return (ft_error(1, NULL, data->no_path));
+	// temp = remove_quotes(data->cmd);
+	// ft_putendl_fd("temp", 2);
+	// if (!temp || only_tabs_and_space(temp))
+	// 	return (1);
+	if (parse_com(data->cmd))
 		return (1);
-	if (parse_com(temp))
-		return (free(temp), 1);
-	data->executor = parse_pipeline(temp, data);
-	builtin_index = check_builtin(temp);
-	if (builtin_index >= 0 && !check_redir_pipe(temp))
-		builtin_command(temp, data);
+	data->executor = parse_pipeline(data->cmd, data);
+	builtin_index = check_builtin(data->cmd);
+	if (builtin_index >= 0 && !check_redir_pipe(data->cmd))
+		builtin_command(data->cmd, data);
 	else
 		execution(data->executor, data);
 	free_executor(data->executor);

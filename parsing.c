@@ -96,7 +96,7 @@ char	*cmd_file(char *cmd, char **paths)
 	char	*cmd_file;
 	char	**str;
 
-	if (!cmd)
+	if (!cmd || cmd[0] == '\0')
 		return (NULL);
 	str = ft_split(cmd, ' ');
 	cmd_file = NULL;
@@ -114,7 +114,7 @@ char	*given_path(char *cmd)
 	int	i;
 
 	i = 0;
-	while (cmd[i++])
+	while (cmd[i])
 	{
 		if (cmd[i] == '/')
 		{
@@ -122,6 +122,7 @@ char	*given_path(char *cmd)
 				return (cmd);
 			return (NULL);
 		}
+		i++;
 	}
 	return (NULL);
 }

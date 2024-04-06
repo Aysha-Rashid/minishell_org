@@ -16,6 +16,8 @@ void	ft_sig2(int signum)
 {
 	if (signum == SIGQUIT)
 	{
+		// ft_putendl_fd("signal: ", 2);
+		// ft_putnbr_fd(g_signal, 2);
 		if (g_signal == IN_HERE)
 		{
 			g_signal = IN_HERE;
@@ -45,16 +47,21 @@ void	sigint_handler(int signum)
 {
 	if (signum == SIGQUIT)
 	{
-		rl_redisplay();
-		signal(SIGQUIT, SIG_IGN);
-		ft_putstr_fd("\b\b", 2);
-		g_signal = 0;
+		if (g_signal == IN_HERE)
+			signal(SIGQUIT, SIG_IGN);
+		else
+		{
+			rl_redisplay();
+			signal(SIGQUIT, SIG_IGN);
+			ft_putstr_fd("\b\b", 2);
+			g_signal = 0;
+		}
 	}
 	if (signum == SIGINT)
 	{
 		g_signal = 1;
 		ft_putstr_fd("\n", 2);
-		// rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}

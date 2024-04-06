@@ -23,7 +23,7 @@ void	execute_command(char *cmd, t_data *data, int *end)
 	free(str);
 	cmd_file(cmd, data->envp->path);
 	close_and_free_all(data, end);
-	exit(1);
+	exit(127);
 }
 
 void	closing_execution(int pid)
@@ -41,8 +41,8 @@ void	closing_execution(int pid)
 		else if (WIFEXITED(status))
 		{
 			status = WEXITSTATUS(status);
-			if (status == 1 && g_signal != IN_HERE)
-				status = 127;
+			// if (status == 1 && g_signal != IN_HERE)
+			// 	status = 127;
 			if (status == 3)
 				status = 1;
 			else if (g_signal == 2)
@@ -69,7 +69,7 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 	char	*temp;
 
 	if (ft_strstr(executor->cmd, "<<"))
-		heredoc(executor, cur, data);
+		heredoc(executor, data);
 	if (ft_strchr(data->cmd, '<') && executor->in != STDIN_FILENO)
 		dup_check(executor->in, STDIN_FILENO);
 	else if (prev[0] != STDIN_FILENO)

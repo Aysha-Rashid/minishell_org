@@ -27,30 +27,29 @@ t_executor	*init_executor(t_data *data, char *cmd)
 
 void	check_command(char *str, char *cmd, int *end, t_data *data)
 {
-	int	builtin_index;
-
-	builtin_index = check_builtin(str);
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
 	{
 		ft_expansion3(data, str, 0);
 		free(str);
-		exit_and_free(data, end, 1);
+		if (ft_strchr(cmd, '?'))
+			exit_and_free(data, end, 127);
+		exit_and_free(data, end, 126);
 	}
 	if (data->no_path)
 	{
 		free(str);
 		ft_error(2, cmd, data->no_path);
-		exit_and_free(data, end, 0);
+		exit_and_free(data, end, 127);
 	}
-	if (builtin_index >= 0)
+	if (check_builtin(str) >= 0)
 	{
 		if (builtin_command(str, data))
 		{
 			free(str);
-			exit_and_free(data, end, 0);
+			exit_and_free(data, end, 127);
 		}
 		free(str);
-		exit_and_free(data, end, 1);
+		exit_and_free(data, end, 0);
 	}
 }
 
@@ -58,7 +57,7 @@ int	check_builtin(char *str)
 {
 	int			i;
 	char		**temp;
-	static char	*builtins[] = {
+	char	*builtins[] = {
 		"echo",
 		"cd",
 		"pwd",
@@ -72,6 +71,8 @@ int	check_builtin(char *str)
 	};
 
 	i = 0;
+	if (!str || str[0] == '\0')
+		return (-1);
 	temp = ft_split(str, ' ');
 	while (i < 10)
 	{
@@ -107,7 +108,8 @@ int	check_redir_pipe(char *cmd)
 	int	i;
 
 	i = 0;
-	while (cmd[i])
+	// ft_putendl_fd(cmd, 2);
+	while (cmd[i] && cmd[i] != '\'' && cmd[i] != '\"')
 	{
 		if (cmd[i] == '<' || cmd[i] == '>' || cmd[i] == '|')
 			return (1);

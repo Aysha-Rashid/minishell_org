@@ -78,36 +78,69 @@ int	quote(char *l)
 
 int	ft_echo(char *argv, t_data *data)
 {
-	char	**token;
 	int		n_option;
 	int		i;
+	int		j;
+	char	*variable_name;
 
-	token = ft_split(argv, ' ');
+	j = 0;
+	variable_name = NULL;
+	(void)data;
 	n_option = 0;
-	i = 1;
-	if ((ft_strlen(token[0]) != 4))
-		return (ft_error(2, token[0], 0), free_array(token), 1);
-	while (token[i] && ft_strncmp(token[i], "-n", 7) == 0)
+	i = 0;
+	if ((!ft_strncmp(argv, "echo", 4) || !ft_strncmp(argv, "ECHO", 4)) && ft_strncmp(argv, "echo -n", 7))
+		i += 4;
+	else if (argv[i] && (ft_strncmp(argv, "echo -n", 7) == 0 || ft_strncmp(argv, "ECHO -n", 7) == 0))
 	{
 		n_option = 1;
-		i++;
+		i += 7;
 	}
-	while (token[i])
+	if (argv[i] == ' ' || argv[i] == '\t')
+		i++;
+	while (argv[i])
 	{
-		// check_and_write(token[i], data);
-		if (ft_strchr(token[i], '$'))
+		if (argv[i] == '\'' || argv[i] == '"')
 		{
-			ft_expansion3(data, token[i], 2);
+			char quote_char = argv[i++];
+			while (argv[i] && argv[i] != quote_char)
+			{
+				if (argv[i] == '$')
+				{
+					j = i + 1;
+					while (argv[j] && (isalnum(argv[j]) || argv[j] == '$'))
+						j++;
+					variable_name = strndup(argv + i, j - i);
+					ft_expansion3(data, variable_name, 2);
+					free(variable_name);
+					i = j;
+				}
+				else
+					ft_putchar_fd(argv[i++], 1);
+			}
+			if (argv[i] == quote_char)
+				i++;
+		}
+		else if (argv[i] == ' ' || argv[i] == '\t')
+		{
+			while (argv[i] && (argv[i] == ' ' || argv[i] == '\t'))
+				i++;
+			ft_putchar_fd(' ', 1);
+		}
+		else if (argv[i] == '$')
+		{
+			j = i + 1;
+			while (argv[j] && (isalnum(argv[j]) || argv[j] == '$' || argv[j] == '?'))
+				j++;
+			variable_name = strndup(argv + i, j - i);
+			ft_expansion3(data, variable_name, 2);
 			g_signal = 0;
+			free(variable_name);
+			i = j;
 		}
 		else
-			ft_putstr_fd(token[i], 1);
-		if (token[i + 1] && token[i][0] != '\0')
-			write(1, " ", 1);
-		i++;
+			ft_putchar_fd(argv[i++], 1);
 	}
 	if (n_option == 0)
 		write(1, "\n", 1);
-	free_array(token);
 	return (0);
 }

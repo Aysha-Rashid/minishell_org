@@ -157,7 +157,7 @@ char		*ft_get_strjoin(char *s1, char *s2);
 char		*ft_str_init(void);
 char		*ft_get_strchr(const char *s, char c);
 
-int			heredoc(t_executor *executor, int *end, t_data *data);
+int			heredoc(t_executor *executor, t_data *data);
 void		sig_handlers(int signum);
 int			parse_com(char *cmd);
 

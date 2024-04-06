@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static int	count_substrings(char const *s, char c)
+int	count_substrings(char const *s, char c)
 {
 	int	count;
 	int	len;
@@ -54,40 +54,56 @@ char	*ft_strncpy(char *dest, const char *src, unsigned int n)
 	return (dest);
 }
 
-static void	split_into_substrings(char	**str, char const	*s, char c)
+int	ft_copy_string_index(char **str, const char *s, int i, int start, int index)
 {
-	int	string_index;
-	int	start;
-	int	i;
-	int	len;
+	int	substr_len;
+
+	substr_len = i - start;
+	if (i > start)
+	{
+		str[index] = (char *)malloc(substr_len + 1);
+		if (str[index] != NULL)
+		{
+			ft_strncpy(str[index], &s[start], substr_len);
+			str[index][substr_len] = '\0';
+			return (index + 1);
+		}
+	}
+	return (index);
+}
+
+void	split_into_substrings(char **str, const char *s, char c)
+{
+	int		string_index;
+	int		start;
+	size_t	i;
+	int		in_quotes;
 
 	i = 0;
 	start = 0;
+	in_quotes = 0;
 	string_index = 0;
-	len = ft_strlen(s);
-	while (i < len)
+	while (i < ft_strlen(s))
 	{
-		while (i < len && s[i] == c)
-			i++;
-		start = i;
-		while (i < len && s[i] != c)
-			i++;
-		if (i > start)
+		if (s[i] == '\'' || s[i] == '\"')
+			in_quotes = !in_quotes;
+		if (!in_quotes && s[i] == c)
 		{
-			str[string_index] = malloc(i - start + 1);
-			ft_strncpy(str[string_index], &s[start], i - start);
-			str[string_index][i - start] = '\0';
-			string_index++;
+			string_index = ft_copy_string_index(str, s, i, start, string_index);
+			start = i + 1;
 		}
+		i++;
 	}
+	string_index = ft_copy_string_index(str, s, i, start, string_index);
+	str[string_index] = NULL;
 }
 
 char	**ft_split(char const *s, char c)
 {
 	char	**str;
 	int		count;
-	int		i;
 
+	str = NULL;
 	if (!s)
 		return (NULL);
 	count = count_substrings(s, c);
@@ -95,17 +111,26 @@ char	**ft_split(char const *s, char c)
 	if (!str)
 		return (NULL);
 	str[count] = NULL;
-	i = count;
 	split_into_substrings(str, s, c);
-	while (i > 0)
-	{
-		if (str[i - 1] == NULL)
-		{
-			free(str[i - 1]);
-			free(str);
-			return (NULL);
-		}
-		i--;
-	}
 	return (str);
 }
+
+// #include <stdio.h>
+// int main()
+// {
+// 	char *str = " hello       'there  is' you and me";
+// 	char **result = ft_split(str, ' ');
+// 		int i = 0;
+// 	if (result)
+// 	{
+// 		while (result[i] != NULL)
+// 		{
+// 			printf("%s\n", result[i]);
+// 			i++;
+// 		}
+// 	}
+// 	i = 0;
+// 	while (result[i] != NULL)
+// 		free(result[i++]);
+// 	free(result);
+// }
