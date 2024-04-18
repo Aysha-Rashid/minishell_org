@@ -95,10 +95,20 @@ char	*cmd_file(char *cmd, char **paths)
 {
 	char	*cmd_file;
 	char	**str;
+	char	*trimmed;
 
 	if (!cmd || cmd[0] == '\0')
 		return (NULL);
 	str = ft_split(cmd, ' ');
+	modified_based_quote(str);
+	if (*cmd != '\'' && *cmd != '\"')
+	{
+		trimmed = ft_strtrim(str[0], " ");
+		if (!trimmed)
+			return (free_array(str), NULL);
+		free(str[0]);
+		str[0] = trimmed;
+	}
 	cmd_file = NULL;
 	if (given_path(str[0]))
 	{

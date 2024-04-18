@@ -32,7 +32,7 @@ int	builtin_command(char *str, t_data *data)
 		return (ft_unset(str, data), 0);
 	else if (!*str)
 		return (0);
-	return (0);
+	return (1);
 }
 
 void	prompt_loop(char *str, t_data *data)
@@ -45,6 +45,8 @@ void	prompt_loop(char *str, t_data *data)
 		str = readline("\033[96mminishell$ \033[0m");
 		check_signal(str, data);
 		trimmed_cmd = ft_strtrim(str, " ");
+		// if (!trimmed_cmd)
+		// 	prompt_loop(trimmed_cmd, data);
 		data->cmd = ft_strdup(trimmed_cmd);
 		free(trimmed_cmd);
 		free(str);

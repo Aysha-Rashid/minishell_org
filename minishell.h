@@ -38,7 +38,7 @@ typedef struct s_executor
 {
 	int					in;
 	int					out;
-	char				*heredoc;
+	int					heredoc;
 	char				*cmd;
 	struct s_executor	*next;
 	struct s_executor	*prev;
@@ -98,15 +98,15 @@ int			only_tabs_and_space(char *str);
 void		failed_execve(char *cmd_file, char **str);
 int			ft_error(int i, char *str, int no_path);
 void		free_executor(t_executor *executor);
-void		close_and_free_all(t_data *data, int *end);
+void		close_and_free_all(t_data *data);
 int			name_error2(char *name, char *str, char *message, int flag);
-void		exit_and_free(t_data *data, int *end, int status);
+void		exit_and_free(t_data *data, int status);
 int			free_array(char **str);
 int			free_env_list(t_env *head);
 // void		free_lexer_list(t_lexer *list);
 int			name_error(char *name, char *str, char *message, int flag);
 void		ft_free_all(t_data *data);
-void		check_command(char *str, char *cmd, int *end, t_data *data);
+void		check_command(char *str, char *cmd, t_data *data);
 int			validate_input(t_data *data, char *token,
 				t_env *current, char *name);
 void		name_error3(char *exit_status, char *message, int flag);
@@ -124,6 +124,7 @@ t_executor	*init_executor(t_data *data, char *cmd);
 t_executor	*parse_pipeline(char *cmd, t_data *data);
 
 //expansion
+
 int			ft_expansion(t_data *data);
 int			ft_expansion3(t_data *data, char *str, int flag);
 size_t		dollar_sign(char *str);
@@ -160,5 +161,6 @@ char		*ft_get_strchr(const char *s, char c);
 int			heredoc(t_executor *executor, t_data *data);
 void		sig_handlers(int signum);
 int			parse_com(char *cmd);
+void		modified_based_quote(char **str);
 
 extern int	g_signal;

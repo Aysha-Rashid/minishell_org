@@ -30,15 +30,19 @@ void	check_and_write(char *str, t_data *data)
 	int		i;
 	int		len;
 	char	quote;
+	(void)data;
 
 	i = 0;
 	len = ft_strlen(str);
-	if (str[i] == '$')
+	if (str[i + 1] == '$' || str[i] == '$')
 	{
+			// if (search_env_variable2)
+		ft_putendl_fd("come here", 2);
 		ft_expansion3(data, str, 2);
 		g_signal = 0;
-	}
-	while (i < len && str[i] != '$')
+		}
+	// ft_putchar_fd(str[i], 2);
+	while (i < len && (str[i] != '$' || str[i + 1] != '$'))
 	{
 		if (str[i] == '\'' || str[i] == '"')
 		{
@@ -80,66 +84,56 @@ int	ft_echo(char *argv, t_data *data)
 {
 	int		n_option;
 	int		i;
-	int		j;
-	char	*variable_name;
+	// char	quote;
+	char	**str;
 
-	j = 0;
-	variable_name = NULL;
-	(void)data;
 	n_option = 0;
-	i = 0;
-	if ((!ft_strncmp(argv, "echo", 4) || !ft_strncmp(argv, "ECHO", 4)) && ft_strncmp(argv, "echo -n", 7))
-		i += 4;
-	else if (argv[i] && (ft_strncmp(argv, "echo -n", 7) == 0 || ft_strncmp(argv, "ECHO -n", 7) == 0))
+	i = 1;
+	str = ft_split(argv, ' ');
+	// if (!ft_strcmp(str[0], "echo") || !ft_strcmp(str[0], "ECHO"))
+	// 	i++;
+	if (!ft_strcmp(str[i], "-n"))
 	{
 		n_option = 1;
-		i += 7;
-	}
-	if (argv[i] == ' ' || argv[i] == '\t')
 		i++;
-	while (argv[i])
-	{
-		if (argv[i] == '\'' || argv[i] == '"')
-		{
-			char quote_char = argv[i++];
-			while (argv[i] && argv[i] != quote_char)
-			{
-				if (argv[i] == '$')
-				{
-					j = i + 1;
-					while (argv[j] && (isalnum(argv[j]) || argv[j] == '$'))
-						j++;
-					variable_name = strndup(argv + i, j - i);
-					ft_expansion3(data, variable_name, 2);
-					free(variable_name);
-					i = j;
-				}
-				else
-					ft_putchar_fd(argv[i++], 1);
-			}
-			if (argv[i] == quote_char)
-				i++;
-		}
-		else if (argv[i] == ' ' || argv[i] == '\t')
-		{
-			while (argv[i] && (argv[i] == ' ' || argv[i] == '\t'))
-				i++;
-			ft_putchar_fd(' ', 1);
-		}
-		else if (argv[i] == '$')
-		{
-			j = i + 1;
-			while (argv[j] && (isalnum(argv[j]) || argv[j] == '$' || argv[j] == '?'))
-				j++;
-			variable_name = strndup(argv + i, j - i);
-			ft_expansion3(data, variable_name, 2);
-			g_signal = 0;
-			free(variable_name);
-			i = j;
-		}
-		else
-			ft_putchar_fd(argv[i++], 1);
 	}
+
+	while(str[i])
+	{
+		// if (ft_strchr(str[i], '$'))
+		// {
+		// 	ft_expansion3(data, str[i], 2);
+		// 	g_signal = 0;
+		// 	// i++;
+		// }
+		check_and_write(str[i], data);
+		ft_putchar_fd(' ', 1);
+		i++;
+	}
+	// while ((argv[i] == ' ' || argv[i] == '\t')
+	// 	&& (!ft_strchr(data->cmd, '\"') || !ft_strchr(data->cmd, '\'')))
+	// 	i++;
+	// while (argv[i])
+	// {
+	// 	while (argv[i] == ' ' || argv[i] == '\t')
+	// 	{
+	// 		quote = 1;
+	// 		i++;
+	// 	}
+	// 	if (quote)
+	// 	{
+	// 		ft_putchar_fd(' ', 1);
+	// 		quote = 0;
+	// 	}
+	// 	if (argv[i] != ' ' && argv[i] != '\t')
+	// 	{
+	// 		if (argv[i] == '$')
+	// 			ft_expansion3(data, argv, 2);
+	// 		else
+	// 			ft_putchar_fd(argv[i], 1);
+	// 	}
+	// 	i++;
+	// }
 	if (n_option == 0)
 		write(1, "\n", 1);
 	return (0);

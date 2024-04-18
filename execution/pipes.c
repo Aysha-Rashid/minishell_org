@@ -14,9 +14,10 @@
 
 void	check_n_execute(char *str, t_data *data)
 {
-	if (!str || str[0] == '\0')
+	if (str[0] == '\0' || only_tabs_and_space(str))
 	{
-		ft_putendl_fd("spaces or tabs", 2);
+
+		// ft_putendl_fd(data->cmd, 2);
 		prompt_loop(str, data);
 	}
 	if (str && (!(ft_strcmp(str, "exit"))))
@@ -34,25 +35,30 @@ void	check_n_execute(char *str, t_data *data)
 
 int	check_pipes_n_execute(t_data *data)
 {
-	char		builtin_index;
-	// char		*temp;
+	char	builtin_index;
+	char	*str;
 
 	if (!quote(data->cmd))
-	// 	return (ft_error(1, NULL, data->no_path));
-	// temp = remove_quotes(data->cmd);
-	// ft_putendl_fd("temp", 2);
-	// if (!temp || only_tabs_and_space(temp))
-	// 	return (1);
+	{
+		return (ft_error(1, NULL, data->no_path));
+	}
 	if (parse_com(data->cmd))
 		return (1);
-	data->executor = parse_pipeline(data->cmd, data);
-	builtin_index = check_builtin(data->cmd);
-	if (builtin_index >= 0 && !check_redir_pipe(data->cmd))
-		builtin_command(data->cmd, data);
+	str = remove_quotes(data->cmd);
+	builtin_index = check_builtin(str);
+	if (builtin_index >= 0 && !check_redir_pipe(str))
+	{
+		builtin_command(str, data);
+		return (free(str), 0);
+	}
 	else
+	{
+		// ft_putendl_fd(data->cmd, 2);
+		data->executor = parse_pipeline(data->cmd, data);
+		free(str);
 		execution(data->executor, data);
-	free_executor(data->executor);
-	return (0);
+	}
+	return (free_executor(data->executor), 0);
 }
 
 t_executor	*parse_pipeline(char *cmd, t_data *data)
@@ -66,14 +72,14 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	i = 0;
 	head = NULL;
 	tail = NULL;
-	if (ft_strchr(cmd, '\'') || ft_strchr(cmd, '\"'))
-		return (init_executor(data, cmd));
 	token = ft_split(cmd, '|');
+	// ft_putendl_fd(token[0], 2);
 	while (token[i])
 	{
-		executor = init_executor(data, token[i]);
+		executor = init_executor(data, token[i++]);
+		if (!executor)
+			return (free_executor(head), free_array(token), NULL);
 		executor->prev = tail;
-		i++;
 		if (head == NULL)
 			head = executor;
 		else
@@ -116,6 +122,5 @@ void	init_pipe_n_signal(int *prev_pipe)
 {
 	prev_pipe[0] = STDIN_FILENO;
 	prev_pipe[1] = STDOUT_FILENO;
-	// signal(SIGQUIT, ft_sig2);
 	signal(SIGINT, ft_sig2);
 }

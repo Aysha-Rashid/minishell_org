@@ -19,15 +19,13 @@ void	free_executor(t_executor *executor)
 	if (executor->cmd)
 		free(executor->cmd);
 	free_executor(executor->next);
-	// free(executor->cmd);
 	free(executor);
 }
 
-void	close_and_free_all(t_data *data, int *end)
+void	close_and_free_all(t_data *data)
 {
-	(void)end;
-	free_array(data->envp->path);
 	free_executor(data->executor);
+	free_array(data->envp->path);
 	ft_free_all(data);
 }
 
@@ -54,8 +52,8 @@ int	free_array(char **str)
 	return (0);
 }
 
-void	exit_and_free(t_data *data, int *end, int status)
+void	exit_and_free(t_data *data, int status)
 {
-	close_and_free_all(data, end);
+	close_and_free_all(data);
 	exit(status);
 }

@@ -61,5 +61,6 @@ void	change_pwd(t_data *tools)
 		return ;
 	free(tools->old_pwd);
 	tools->old_pwd = tmp;
+	free(tools->pwd);
 	tools->pwd = getcwd(NULL, 0);
 }

@@ -14,7 +14,7 @@
 
 void	failed_execve(char *cmd_file, char **str)
 {
-	free(cmd_file);
+	(void)cmd_file;
 	free_array(str);
 	ft_error(2, str[0], 1);
 	exit(1);
@@ -34,6 +34,30 @@ void	execute_binary_files(char **paths, char **str, char *cmd_file)
 			failed_execve(cmd_file, str);
 		}
 		free(cmd_file);
+		i++;
+	}
+}
+
+void	modified_based_quote(char **str)
+{
+	int		i;
+	char	*modified_str;
+
+	i = 0;
+	modified_str = NULL;
+	while (str[i])
+	{
+		if (ft_strchr(str[i], '\'') || ft_strchr(str[i], '\"'))
+		{
+			modified_str = remove_quotes(str[i]);
+			if (!modified_str)
+			{
+				free_array(str);
+				return ;
+			}
+			free(str[i]);
+			str[i] = modified_str;
+		}
 		i++;
 	}
 }

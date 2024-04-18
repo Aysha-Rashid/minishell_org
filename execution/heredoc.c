@@ -17,13 +17,10 @@ void	heredoc_loop(char *delimiter, int fd)
 	char	*line;
 
 	line = NULL;
-	g_signal = IN_HERE;
-	// ft_putendl_fd("heredoc", STDERR_FILENO);
-	// ft_putnbr_fd(g_signal, STDERR_FILENO);
 	signal(SIGQUIT, SIG_IGN);
-	// signal(SIGQUIT, sigint_handler);
 	while (1)
 	{
+		g_signal = IN_HERE;
 		ft_putstr_fd("> ", STDOUT_FILENO);
 		line = get_next_line(STDIN_FILENO);
 		if (!ft_strcmp(line, delimiter))
@@ -84,9 +81,7 @@ int	heredoc(t_executor *executor, t_data *data)
 	executor->in = open(".heredoc_temp", O_RDONLY);
 	if (executor->in < 0)
 		return (free(delimiter), 0);
-	if (unlink(".heredoc_temp") == -1) {
-        perror("unlink");
-        return 1;
-    }
-	return (free(delimiter), fd);
+	if (unlink(".heredoc_temp") == -1)
+		return (perror("unlink"), 1);
+	return (free(delimiter), 1);
 }

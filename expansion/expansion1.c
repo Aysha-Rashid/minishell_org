@@ -17,7 +17,7 @@ size_t	dollar_sign(char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i] )
+	while (str[i])
 	{
 		if (str[i] == '$')
 			return (i + 1);
@@ -80,7 +80,7 @@ int	ft_expansion3(t_data *data, char *str, int flag)
 					free(exit_status), 1);
 			else
 			{
-				exp = search_env_variable2(data->envp, &str[j]);
+				exp = search_env_variable2(data->envp, str + j);
 				if (!exp)
 					return (free(exit_status), 0);
 				return (ft_specified_error(exp, flag), free(exit_status), 1);

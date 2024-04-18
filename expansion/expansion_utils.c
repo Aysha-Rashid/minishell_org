@@ -14,13 +14,27 @@
 
 char	*search_env_variable2(t_env *envp, char *key)
 {
+	char	*temp;
+	int		len;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	len = ft_strlen(key);
+	temp = malloc(sizeof(char) * (len + 1));
+	while (i < len - 1)
+		temp[j++] = key[i++];
+	if (key[i] != '\"')
+		temp[j++] = key[i++];
+	temp[j] = '\0';
 	while (envp)
 	{
-		if (ft_strcmp(envp->key, key) == 0)
-			return (envp->value);
+		if (ft_strcmp(envp->key, temp) == 0)
+			return (free(temp), envp->value);
 		envp = envp->next;
 	}
-	return (NULL);
+	return (free(temp), NULL);
 }
 
 void	print_after_equal2(char *temp)

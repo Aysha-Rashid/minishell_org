@@ -12,18 +12,27 @@
 
 #include "../minishell.h"
 
-int	g_sig_interrupt = 0;
-
-void	execute_command(char *cmd, t_data *data, int *end)
+void	execute_command(char *cmd, t_data *data)
 {
 	char	*str;
 
+	if (only_tabs_and_space(cmd))
+	{
+		close_and_free_all(data);
+		exit (0);
+	}
 	str = ft_strtrim(cmd, " ");
-	check_command(str, cmd, end, data);
+	check_command(str, cmd, data);
+	if (data->no_path)
+	{
+		free(str);
+		ft_error(2, cmd, data->no_path);
+		exit_and_free(data, 127);
+	}
 	free(str);
 	cmd_file(cmd, data->envp->path);
-	close_and_free_all(data, end);
-	exit(1);
+	close_and_free_all(data);
+	exit(127);
 }
 
 void	closing_execution(int pid)
@@ -34,33 +43,20 @@ void	closing_execution(int pid)
 	pid = waitpid(-1, &status, 0);
 	while (pid > 0)
 	{
-		if (!g_signal && !WIFEXITED(status))
+		if (!g_signal && !WIFEXITED(status) && WIFSIGNALED(status)
+			&& g_signal != IN_HERE)
 		{
-			if (WIFSIGNALED(status) && g_signal != IN_HERE)
+			if (WTERMSIG(status) == SIGINT)
+				g_signal = 130;
+			if (WTERMSIG(status) == SIGQUIT)
 			{
-                if (WTERMSIG(status) == SIGINT)
-                    g_signal = 130;
-				if (WTERMSIG(status) == SIGQUIT)
-				{
-					printf("Quit: 3\n");
-					g_signal = 131;
-				}
-            }
+				printf("Quit: 3\n");
+				g_signal = 131;
+			}
 		}
-		// if (g_signal == 10)
-		// {
-		// 	g_signal = 1;
-		// }
 		if (WIFEXITED(status))
 		{
 			status = WEXITSTATUS(status);
-			ft_putnbr_fd(status, STDERR_FILENO);
-			if (status == 1 && g_signal != IN_HERE)
-				status = 127;
-			if (status == 3)
-				status = 1;
-			else if (g_signal == 2)
-				status = 1;
 			g_signal = status;
 		}
 		pid = waitpid(-1, &status, 0);
@@ -83,7 +79,7 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 	char	*temp;
 
 	if (ft_strstr(executor->cmd, "<<"))
-		heredoc(executor, data);
+		executor->heredoc = heredoc(executor, data);
 	if (ft_strchr(data->cmd, '<') && executor->in != STDIN_FILENO)
 		dup_check(executor->in, STDIN_FILENO);
 	else if (prev[0] != STDIN_FILENO)
@@ -99,8 +95,9 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 		close(cur[0]);
 	}
 	temp = remove_redir_or_files(executor->cmd);
+	free(executor->cmd);
 	executor->cmd = temp;
-	execute_command(executor->cmd, data, cur);
+	execute_command(executor->cmd, data);
 }
 
 int	execution(t_executor *executor, t_data *data)

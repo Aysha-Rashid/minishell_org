@@ -46,11 +46,7 @@ char	*check_quotes_and_copy(char *str, int i, int j, char *result)
 		{
 			quote = str[i++];
 			while (i < len && str[i] != quote && str[i])
-			{
-				if (spec_char(str[i]))
-					return (NULL);
 				result[j++] = str[i++];
-			}
 			if (i < len)
 				i++;
 		}

@@ -14,28 +14,12 @@
 
 void	ft_sig2(int signum)
 {
-	if (signum == SIGQUIT)
-	{
-		// ft_putendl_fd("signal: ", 2);
-		// ft_putnbr_fd(g_signal, 2);
-		if (g_signal == IN_HERE)
-		{
-			g_signal = IN_HERE;
-			signal(SIGQUIT, SIG_IGN);
-			return ;
-		}
-		else
-		{
-			g_signal = 131;
-			ft_putendl_fd("Quit: 3", 2);
-		}
-	}
 	if (signum == SIGINT)
 	{
 		if (g_signal == IN_HERE)
 		{
 			g_signal = IN_HERE;
-			exit(3);
+			exit(1);
 		}
 		else
 			g_signal = 130;
