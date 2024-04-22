@@ -14,20 +14,25 @@
 
 static int count_substrings(const char *s, char c) {
     int count = 0;
-    char in_quotes = 0;
+    int i = 0;
+    char quote = 0;
 
-    for (int i = 0; s[i]; i++) {
-        if (s[i] == '\'' || s[i] == '\"') {
-            if (!in_quotes)
-                in_quotes = s[i];
-            else if (in_quotes == s[i])
-                in_quotes = 0;
-        } else if (!in_quotes && s[i] == c && s[i + 1] != c && s[i + 1] != '\0') {
+    while (s[i]) {
+        while (s[i] == c && quote == 0) i++;
+        if (s[i] && (s[i] != c || quote != 0)) {
             count++;
+            while (s[i] && (s[i] != c || quote != 0)) {
+                if ((s[i] == '\'' || s[i] == '\"') && (i == 0 || s[i - 1] != '\\')) {
+                    if (quote == s[i])
+                        quote = 0;
+                    else if (quote == 0)
+                        quote = s[i];
+                }
+                i++;
+            }
         }
     }
-
-    return count + 1; // Always count at least one substring
+    return count;
 }
 
 char	*ft_strncpy(char *dest, const char *src, unsigned int n)
@@ -35,50 +40,52 @@ char	*ft_strncpy(char *dest, const char *src, unsigned int n)
 	unsigned int	i;
 
 	i = 0;
-	while (i < n && src[i])
+	while (src[i] != '\0' && i < n)
 	{
 		dest[i] = src[i];
 		i++;
 	}
-	dest[i] = '\0';
+	while (i < n)
+	{
+		dest [i] = '\0';
+		i++;
+	}
 	return (dest);
 }
 
-char **split_into_substrings(char **str, const char *s, char c) {
-    size_t start = 0, index = 0;
-    char in_quotes = 0;
+static void split_into_substrings(char **str, const char *s, char c)
+{
+    int i = 0, start = 0, string_index = 0;
+    char quote = 0;
 
-    for (size_t i = 0; s[i]; i++) {
-        if (s[i] == '\'' || s[i] == '\"') {
-            if (!in_quotes)
-                in_quotes = s[i]; // Begin quote
-            else if (in_quotes == s[i])
-                in_quotes = 0; // End quote
-        }
-        
-        // Check for delimiter or end of string
-        if (!in_quotes && (s[i] == c || s[i + 1] == '\0')) {
-            if (i >= start) {
-                str[index++] = ft_strndup(s + start, s[i + 1] == '\0' ? i - start + 1 : i - start);
+    while (s[i])
+    {
+        while (s[i] == c && quote == 0) i++;
+        start = i;
+        while (s[i] && (s[i] != c || quote != 0)) {
+            if ((s[i] == '\'' || s[i] == '\"') && (i == 0 || s[i - 1] != '\\')) {
+                if (quote == s[i])
+                    quote = 0;
+                else if (quote == 0)
+                    quote = s[i];
             }
-            start = i + 1;
+            i++;
+        }
+        if (i > start) {
+            str[string_index] = malloc(i - start + 1);
+            ft_strncpy(str[string_index], &s[start], i - start);
+            str[string_index][i - start] = '\0';
+            string_index++;
         }
     }
-
-    // Handle case where the last part of the string does not end in a delimiter
-    if (start < ft_strlen(s)) {
-        str[index++] = ft_strndup(s + start, ft_strlen(s) - start);
-    }
-
-    str[index] = NULL;
-    return str;
+    str[string_index] = NULL;
 }
 
 
 char	**ft_split(char const *s, char c)
 {
-	int		count;
 	char	**str;
+	int		count;
 
 	if (!s)
 		return (NULL);
@@ -86,19 +93,31 @@ char	**ft_split(char const *s, char c)
 	str = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!str)
 		return (NULL);
-	str = split_into_substrings(str, s, c);
+	str[count] = NULL;
+	split_into_substrings(str, s, c);
 	return (str);
 }
 
 // #include <stdio.h>
 // int main()
 // {
-// 	char str[] = "hi";
-// 	char **split = ft_split(str, ' ');
-// 	int i = 0;
-// 	while (split[i] != NULL)
-// 	{
-// 		printf("%s\n", split[i]);
+//     char *str;
+//     str = "hello  there bruh";
+//     char **split;
+//     split = ft_split(str, ' ');
+//     int i =0;
+//     while(split[i])
+//     {
+//         printf("%s\n", split[i]);
 //         i++;
-// 	}
+//     }
+//     i = 0;
+//     while (split[i])
+//         free(split[i++]);
+//     free(split);
 // }
+
+// // // //     while(split[i])
+//         free(split[i++]);
+//     free(split);
+// // }

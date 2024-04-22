@@ -29,14 +29,15 @@ void	execute_command(char *cmd, t_data *data)
 		ft_error(2, cmd, data->no_path);
 		exit_and_free(data, 127);
 	}
-	free(str);
 	cmd_file(cmd, data->envp->path);
+	free(str);
 	close_and_free_all(data);
 	exit(127);
 }
 
-void	closing_execution(int pid)
+void	closing_execution(int pid, t_data *data)
 {
+	(void)data;
 	int	status;
 
 	status = 0;
@@ -81,7 +82,9 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 	if (ft_strstr(executor->cmd, "<<"))
 		executor->heredoc = heredoc(executor, data);
 	if (ft_strchr(data->cmd, '<') && executor->in != STDIN_FILENO)
+	{
 		dup_check(executor->in, STDIN_FILENO);
+	}
 	else if (prev[0] != STDIN_FILENO)
 	{
 		dup_check(prev[0], STDIN_FILENO);
@@ -106,6 +109,7 @@ int	execution(t_executor *executor, t_data *data)
 	int	prev_pipe[2];
 	int	pid;
 
+
 	init_pipe_n_signal(prev_pipe);
 	while (executor)
 	{
@@ -122,6 +126,6 @@ int	execution(t_executor *executor, t_data *data)
 			parent_process(executor, prev_pipe, cur_pipe);
 		executor = executor->next;
 	}
-	closing_execution(pid);
+	closing_execution(pid, data);
 	return (0);
 }

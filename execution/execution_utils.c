@@ -31,6 +31,8 @@ t_executor	*init_executor(t_data *data, char *cmd)
 
 void	check_command(char *str, char *cmd, t_data *data)
 {
+	if (str[0] == '\0' || cmd[0] == '\0')
+		return ;
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
 	{
 		if (ft_expansion3(data, str, 0))
@@ -46,7 +48,7 @@ void	check_command(char *str, char *cmd, t_data *data)
 	}
 	if (check_builtin(str) >= 0)
 	{
-		if (builtin_command(str, data))
+		if (builtin_command(str, data) && !check_redir_pipe(str))
 		{
 			free(str);
 			exit_and_free(data, 0);
@@ -72,11 +74,11 @@ int	check_builtin(char *str)
 	builtins[7] = "ENV";
 	builtins[8] = "PWD";
 	builtins[9] = "ECHO";
-	builtins[10] = NULL;
 	i = -1;
 	temp = ft_split(str, ' ');
-	if (temp == NULL || temp[0] == NULL)
-		return (free_array(temp), -1);
+	// ft_putendl_fd(temp[0], 2);
+	if (temp == NULL || temp[0] == NULL || temp[0][0] == '\0')
+		return (-1);
 	while (++i < 10)
 	{
 		if (ft_strcmp(builtins[i], temp[0]) == 0)

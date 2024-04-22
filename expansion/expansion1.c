@@ -68,9 +68,19 @@ int	ft_expansion3(t_data *data, char *str, int flag)
 	char	*exp;
 	char	*exit_status;
 	int		j;
+	char	*store;
+	int		i;
 
+	i = 0;
 	exit_status = ft_itoa(g_signal);
 	j = dollar_sign(str);
+	store = (char *)malloc((j + 1) * sizeof(char));
+	while (str[i] && i < j)
+	{
+		store[i] = str[i];
+		i++;
+	}
+	store[i] = '\0';
 	while (str[j])
 	{
 		if (j != 0 && str[j] != '\0')
@@ -80,13 +90,16 @@ int	ft_expansion3(t_data *data, char *str, int flag)
 					free(exit_status), 1);
 			else
 			{
+				char *temp;
 				exp = search_env_variable2(data->envp, str + j);
+				temp = ft_strjoin(store, exp);
 				if (!exp)
-					return (free(exit_status), 0);
-				return (ft_specified_error(exp, flag), free(exit_status), 1);
+					return (free(exit_status), free(store),free(temp), 0);
+				free(exp);
+				return (ft_specified_error(temp, flag), free(exit_status), free(store), free(temp), 1);
 			}
 		}
 		j++;
 	}
-	return (free(exit_status), 0);
+	return (free(exit_status), free(store), 0);
 }

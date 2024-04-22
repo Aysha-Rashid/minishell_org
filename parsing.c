@@ -99,16 +99,14 @@ char	*cmd_file(char *cmd, char **paths)
 
 	if (!cmd || cmd[0] == '\0')
 		return (NULL);
-	str = ft_split(cmd, ' ');
+	trimmed = ft_strtrim(cmd, " ");
+	if (!trimmed || trimmed[0] == '\0')
+		return ( NULL);
+	str = ft_split(trimmed, ' ');
+	free(trimmed);
 	modified_based_quote(str);
-	if (*cmd != '\'' && *cmd != '\"')
-	{
-		trimmed = ft_strtrim(str[0], " ");
-		if (!trimmed)
-			return (free_array(str), NULL);
-		free(str[0]);
-		str[0] = trimmed;
-	}
+	if (str[0] == NULL || str[0][0] == '\0')
+		return (NULL);
 	cmd_file = NULL;
 	if (given_path(str[0]))
 	{

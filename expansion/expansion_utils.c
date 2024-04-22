@@ -23,15 +23,33 @@ char	*search_env_variable2(t_env *envp, char *key)
 	j = 0;
 	len = ft_strlen(key);
 	temp = malloc(sizeof(char) * (len + 1));
-	while (i < len - 1)
-		temp[j++] = key[i++];
-	if (key[i] != '\"')
-		temp[j++] = key[i++];
+	while(key[i])
+	{
+		while (i < len - 1)
+			temp[j++] = key[i++];
+		if (key[i] != '\"')
+		{
+			if (key[i] == '\'')
+				return (free(temp), NULL);
+			temp[j++] = key[i];
+		}
+		i++;
+	}
 	temp[j] = '\0';
 	while (envp)
 	{
-		if (ft_strcmp(envp->key, temp) == 0)
-			return (free(temp), envp->value);
+		if (ft_strncmp(envp->key, temp, ft_strlen(envp->key)) == 0)
+		{
+			char *str;
+			i = 0;
+			while(temp[i] && temp[i] == envp->key[i])
+				i++;
+			if (!(temp[i] >= 'A' && temp[i] <= 'Z') && !(temp[i] >= 'a' && temp[i] <= 'z'))
+			{
+				str = ft_strjoin(envp->value, temp + i);
+            	return (free(temp), str);
+			}
+        }
 		envp = envp->next;
 	}
 	return (free(temp), NULL);
@@ -40,9 +58,27 @@ char	*search_env_variable2(t_env *envp, char *key)
 void	print_after_equal2(char *temp)
 {
 	char	*equal_pos;
+	char	*str;
+	int		i;
+	int		j;
 
+	i = 0;
+	j = 0;
+	while(temp[i] != '$')
+		i++;
+	str = malloc(i + 1);
+	i = 0;
+	if (temp[i] == '\"')
+		i++;
+	while(temp[i] && temp[i] != '$')
+		str[j++] = temp[i++];
+	str[j] = '\0';
 	equal_pos = ft_strchr(temp, '=');
-	ft_putstr_fd(equal_pos + 1, 2);
+	char *new;
+	new = ft_strjoin(str, equal_pos + 1);
+	ft_putstr_fd(str, 2);
+	free(new);
+	free(str);
 }
 
 int	name_error2(char *name, char *str, char *message, int flag)

@@ -16,8 +16,7 @@ void	check_n_execute(char *str, t_data *data)
 {
 	if (str[0] == '\0' || only_tabs_and_space(str))
 	{
-
-		// ft_putendl_fd(data->cmd, 2);
+		free(data->cmd);
 		prompt_loop(str, data);
 	}
 	if (str && (!(ft_strcmp(str, "exit"))))
@@ -53,7 +52,6 @@ int	check_pipes_n_execute(t_data *data)
 	}
 	else
 	{
-		// ft_putendl_fd(data->cmd, 2);
 		data->executor = parse_pipeline(data->cmd, data);
 		free(str);
 		execution(data->executor, data);
@@ -73,10 +71,12 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	head = NULL;
 	tail = NULL;
 	token = ft_split(cmd, '|');
-	// ft_putendl_fd(token[0], 2);
+		// ft_putendl_fd(token[0], 2);
+		// ft_putendl_fd(token[1], 2);
+		// ft_putendl_fd(token[2], 2);
 	while (token[i])
 	{
-		executor = init_executor(data, token[i++]);
+		executor = init_executor(data, token[i]);
 		if (!executor)
 			return (free_executor(head), free_array(token), NULL);
 		executor->prev = tail;
@@ -85,6 +85,7 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 		else
 			tail->next = executor;
 		tail = executor;
+		i++;
 	}
 	free_array(token);
 	return (head);

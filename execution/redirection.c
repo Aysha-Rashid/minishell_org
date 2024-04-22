@@ -16,16 +16,22 @@ int	ft_open(t_executor *executor, char *redir, char *file)
 {
 	if (!ft_strncmp(redir, "<", 1) && ft_strncmp(redir, "<<", 2))
 	{
-		executor->in = open(file, O_RDONLY);
-		if (executor->in == -1)
-			return (printf("%s\n", strerror(errno)), 1);
+		if (redir[1] != '<')
+		{
+			executor->in = open(file, O_RDONLY);
+			if (executor->in == -1)
+				return (printf("%s\n", strerror(errno)), 1);
+		}
 	}
 	if (!ft_strncmp(redir, ">", 1) && ft_strncmp(redir, ">>", 2))
 	{
-		executor->out = open(file, O_CREAT | O_WRONLY
-				| O_TRUNC, 0644);
-		if (executor->out == -1)
-			return (printf("%s\n", strerror(errno)), 1);
+		if (redir[1] != '<')
+		{
+			executor->out = open(file, O_CREAT | O_WRONLY
+					| O_TRUNC, 0644);
+			if (executor->out == -1)
+				return (printf("%s\n", strerror(errno)), 1);
+		}
 	}
 	if (!ft_strncmp(redir, ">>", 2))
 	{
@@ -34,8 +40,6 @@ int	ft_open(t_executor *executor, char *redir, char *file)
 		if (executor->out == -1)
 			return (printf("%s\n", strerror(errno)), 1);
 	}
-	else
-		return (0);
 	return (0);
 }
 
@@ -108,7 +112,7 @@ char	*get_redir_and_files(char *cmd)
 	i = 0;
 	redir = NULL;
 	temp = ft_split(cmd, ' ');
-	while (temp[i])
+	while (temp[i] != NULL)
 	{
 		if (ft_strchr(temp[i], '<') || ft_strchr(temp[i], '>'))
 			redir = ft_strdup(temp[i]);
