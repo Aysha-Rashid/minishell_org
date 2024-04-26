@@ -63,43 +63,44 @@ int	ft_specified_error(char *str, int flag)
 	return (0);
 }
 
+int init_expan(char *store, char *str, int j)
+{
+	// j = dollar_sign(str);
+	// store = (char *)malloc((j + 1) * sizeof(char));
+	if (store == NULL)
+		return (0);
+	store = ft_strncpy(store, str, j);
+	store[j] = '\0';
+}
+
 int	ft_expansion3(t_data *data, char *str, int flag)
 {
 	char	*exp;
 	char	*exit_status;
 	int		j;
+	char	*temp;
 	char	*store;
-	int		i;
 
-	i = 0;
+	temp = NULL;
 	exit_status = ft_itoa(g_signal);
 	j = dollar_sign(str);
 	store = (char *)malloc((j + 1) * sizeof(char));
-	while (str[i] && i < j)
+	if (!init_expan(store, str, j))
+		return (free(exit_status), 0);
+	if (j != 0 && str[j] != '\0')
 	{
-		store[i] = str[i];
-		i++;
-	}
-	store[i] = '\0';
-	while (str[j])
-	{
-		if (j != 0 && str[j] != '\0')
+		if (str[j] == '?')
+			return (name_error3(exit_status, "command not found", flag),
+				free(exit_status), free(store), 1);
+		else
 		{
-			if (str[j] == '?')
-				return (name_error3(exit_status, "command not found", flag),
-					free(exit_status), 1);
-			else
-			{
-				char *temp;
-				exp = search_env_variable2(data->envp, str + j);
-				temp = ft_strjoin(store, exp);
-				if (!exp)
-					return (free(exit_status), free(store),free(temp), 0);
-				free(exp);
-				return (ft_specified_error(temp, flag), free(exit_status), free(store), free(temp), 1);
-			}
+			exp = search_env_variable2(data->envp, str + j);
+			if (!exp)
+				return (free(store), free(exit_status), 0);
+			temp = ft_strjoin(store, exp);
+			return (ft_specified_error(temp, flag), free(exp),
+				free(store), free(temp), free(exit_status), 1);
 		}
-		j++;
 	}
-	return (free(exit_status), free(store), 0);
+	return (free(store), free(exit_status), 0);
 }

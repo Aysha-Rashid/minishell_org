@@ -12,18 +12,17 @@
 
 #include "../minishell.h"
 
-char	*search_env_variable2(t_env *envp, char *key)
+char	*handle_quote(char *temp, char *key)
 {
-	char	*temp;
-	int		len;
-	int		i;
-	int		j;
+	int	len;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
 	len = ft_strlen(key);
 	temp = malloc(sizeof(char) * (len + 1));
-	while(key[i])
+	while (key[i])
 	{
 		while (i < len - 1)
 			temp[j++] = key[i++];
@@ -36,20 +35,33 @@ char	*search_env_variable2(t_env *envp, char *key)
 		i++;
 	}
 	temp[j] = '\0';
+	return (temp);
+}
+
+char	*search_env_variable2(t_env *envp, char *key)
+{
+	char	*temp;
+	char	*str;
+	int		i;
+
+	i = 0;
+	temp = NULL;
+	temp = handle_quote(temp, key);
+	if (!temp)
+		return (NULL);
 	while (envp)
 	{
 		if (ft_strncmp(envp->key, temp, ft_strlen(envp->key)) == 0)
 		{
-			char *str;
-			i = 0;
-			while(temp[i] && temp[i] == envp->key[i])
+			while (temp[i] && temp[i] == envp->key[i])
 				i++;
-			if (!(temp[i] >= 'A' && temp[i] <= 'Z') && !(temp[i] >= 'a' && temp[i] <= 'z'))
+			if (!(temp[i] >= 'A' && temp[i] <= 'Z')
+				&& !(temp[i] >= 'a' && temp[i] <= 'z'))
 			{
 				str = ft_strjoin(envp->value, temp + i);
-            	return (free(temp), str);
+				return (free(temp), str);
 			}
-        }
+		}
 		envp = envp->next;
 	}
 	return (free(temp), NULL);
@@ -59,24 +71,24 @@ void	print_after_equal2(char *temp)
 {
 	char	*equal_pos;
 	char	*str;
+	char	*new;
 	int		i;
 	int		j;
 
 	i = 0;
 	j = 0;
-	while(temp[i] != '$')
+	while (temp[i] != '$')
 		i++;
 	str = malloc(i + 1);
 	i = 0;
 	if (temp[i] == '\"')
 		i++;
-	while(temp[i] && temp[i] != '$')
+	while (temp[i] && temp[i] != '$')
 		str[j++] = temp[i++];
 	str[j] = '\0';
 	equal_pos = ft_strchr(temp, '=');
-	char *new;
 	new = ft_strjoin(str, equal_pos + 1);
-	ft_putstr_fd(str, 2);
+	ft_putstr_fd(new, 2);
 	free(new);
 	free(str);
 }
