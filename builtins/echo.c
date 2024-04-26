@@ -33,9 +33,10 @@ void	check_and_write(char *str, t_data *data)
 
 	i = 0;
 	len = ft_strlen(str);
+	quote = '\0';
 	while (i < len)
 	{
-		if (str[i] == '$')
+		if (str[i] == '$' && quote == '\0')
 		{
 			ft_expansion3(data, str, 2);
 			g_signal = 0;
@@ -43,8 +44,7 @@ void	check_and_write(char *str, t_data *data)
 		}
 		else if (str[i] == '\'' || str[i] == '"')
 		{
-			quote = str[i];
-			i++;
+			quote = str[i++];
 			while (i < len && str[i] != quote)
 			{
 				if (quote == '\"' && str[i] == '$')
@@ -53,7 +53,7 @@ void	check_and_write(char *str, t_data *data)
 					g_signal = 0;
 					return ;
 				}
-				else if (str[i] != '\'')
+				else if (!ft_strchr(str, '$'))
 					ft_putchar_fd(str[i], 1);
 				if (i < len)
 					i++;
@@ -96,6 +96,8 @@ int	ft_echo(char *argv, t_data *data)
 	n_option = 0;
 	i = 1;
 	str = ft_split(argv, ' ');
+	if (ft_strcmp(str[0], "echo"))
+		return (free_array(str), 1);
 	if (ft_strncmp(str[1], "-n", 2) == 0)
 	{
 		n_option = 1;

@@ -56,7 +56,7 @@ char	*search_env_variable2(t_env *envp, char *key)
 			while (temp[i] && temp[i] == envp->key[i])
 				i++;
 			if (!(temp[i] >= 'A' && temp[i] <= 'Z')
-				&& !(temp[i] >= 'a' && temp[i] <= 'z'))
+				&& !(temp[i] >= 'a' && temp[i] <= 'z') && !(temp[i] >= '0' && temp[i] <= '9'))
 			{
 				str = ft_strjoin(envp->value, temp + i);
 				return (free(temp), str);

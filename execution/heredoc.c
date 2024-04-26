@@ -30,7 +30,6 @@ void	heredoc_loop(char *delimiter, int fd)
         ft_putstr_fd(line, fd);
         free(line);
     }
-    // free(line); // Free line outside the loop
 }
 
 char	*find_delimiter(char *delimiter, t_data *data, int i, char *temp)

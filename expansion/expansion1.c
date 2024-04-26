@@ -71,6 +71,7 @@ int init_expan(char *store, char *str, int j)
 		return (0);
 	store = ft_strncpy(store, str, j);
 	store[j] = '\0';
+	return (1);
 }
 
 int	ft_expansion3(t_data *data, char *str, int flag)
@@ -96,7 +97,7 @@ int	ft_expansion3(t_data *data, char *str, int flag)
 		{
 			exp = search_env_variable2(data->envp, str + j);
 			if (!exp)
-				return (free(store), free(exit_status), 0);
+				return (free(store), free(exit_status), 1);
 			temp = ft_strjoin(store, exp);
 			return (ft_specified_error(temp, flag), free(exp),
 				free(store), free(temp), free(exit_status), 1);

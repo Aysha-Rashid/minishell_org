@@ -40,6 +40,8 @@ void	check_command(char *str, char *cmd, t_data *data)
 			free(str);
 			exit_and_free(data, 126);
 		}
+		else
+			exit_and_free(data, 0);		
 		if (ft_strchr(cmd, '?'))
 		{
 			free(str);
