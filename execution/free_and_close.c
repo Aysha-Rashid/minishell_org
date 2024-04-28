@@ -52,8 +52,9 @@ int	free_array(char **str)
 	return (0);
 }
 
-void	exit_and_free(t_data *data, int status)
+void	exit_and_free(t_data *data, int status, char *str)
 {
+	free(str);
 	close_and_free_all(data);
 	exit(status);
 }

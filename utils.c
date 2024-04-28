@@ -61,3 +61,34 @@ void	modified_based_quote(char **str)
 		i++;
 	}
 }
+
+int	open_and_check(int struct_file, char *file_name, int flag)
+{
+	if (flag == 1)
+	{
+		struct_file = open(file_name, O_RDONLY);
+		if (struct_file == -1)
+			return (printf("%s\n", strerror(errno)), 1);
+	}
+	if (flag == 2)
+	{
+		struct_file = open(file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if (struct_file == -1)
+			return (printf("%s\n", strerror(errno)), 1);
+	}
+	if (flag == 3)
+	{
+		struct_file = open(file_name, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		if (struct_file == -1)
+			return (printf("%s\n", strerror(errno)), 1);
+	}
+	return (struct_file);
+}
+
+void	close_exec_files(int fdin, int fdout)
+{
+	if (fdin > 2)
+		close(fdin);
+	if (fdout > 2)
+		close(fdout);
+}

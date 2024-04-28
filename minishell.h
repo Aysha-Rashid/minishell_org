@@ -91,7 +91,7 @@ void		check_signal(char *input, t_data *data);
 
 //echo
 int			ft_echo(char *argv, t_data *data);
-void		check_and_write(char *str, t_data *data);
+int			check_and_write(char *str, t_data *data);
 
 //parse
 int			only_tabs_and_space(char *str);
@@ -100,12 +100,12 @@ int			ft_error(int i, char *str, int no_path);
 void		free_executor(t_executor *executor);
 void		close_and_free_all(t_data *data);
 int			name_error2(char *name, char *str, char *message, int flag);
-void		exit_and_free(t_data *data, int status);
+void		exit_and_free(t_data *data, int status, char *str);
 int			free_array(char **str);
 int			free_env_list(t_env *head);
-// void		free_lexer_list(t_lexer *list);
 int			name_error(char *name, char *str, char *message, int flag);
 void		ft_free_all(t_data *data);
+int			ft_specified_error(char *str, int flag);
 void		check_command(char *str, char *cmd, t_data *data);
 int			validate_input(t_data *data, char *token,
 				t_env *current, char *name);
@@ -135,6 +135,8 @@ void		print_after_equal2(char *temp);
 int			check_redir_pipe(char *cmd);
 int			redir(t_executor *executor);
 char		*remove_redir_or_files(char *cmd);
+// int			open_and_check(int struct_file, char *file_name, char *redir);
+int			open_and_check(int struct_file, char *file_name, int flag);
 int			ft_open(t_executor *executor, char *redir, char *file);
 void		dup_check(int file, int dupped);
 char		*remove_quotes(char *str);
@@ -163,4 +165,5 @@ void		sig_handlers(int signum);
 int			parse_com(char *cmd);
 void		modified_based_quote(char **str);
 
+void		close_exec_files(int fdin, int fdout);
 extern int	g_signal;

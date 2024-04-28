@@ -71,9 +71,6 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	head = NULL;
 	tail = NULL;
 	token = ft_split(cmd, '|');
-		// ft_putendl_fd(token[0], 2);
-		// ft_putendl_fd(token[1], 2);
-		// ft_putendl_fd(token[2], 2);
 	while (token[i])
 	{
 		executor = init_executor(data, token[i]);
@@ -96,25 +93,21 @@ int	redir(t_executor *executor)
 	char	*redir;
 	int		i;
 
-	redir = get_redir_and_files(executor->cmd);
 	i = 0;
+	redir = NULL;
 	while (executor->cmd[i])
 	{
-		if (executor->cmd[i] == '>' && executor->cmd[i + 1] == '>')
+		if (executor->cmd[i] == '>' || executor->cmd[i] == '<')
 		{
+			if (redir)
+				free(redir);
+			redir = get_redir_and_files(executor->cmd + i);
+			if (executor->cmd[i] == '>' && executor->cmd[i + 1] == '>')
+				i++;
 			if (!open_files(executor->cmd, redir, i, executor))
 				return (free(redir), 0);
-			i++;
 		}
-		else if ((executor->cmd[i] == '>' || executor->cmd[i] == '<')
-			&& executor->cmd[i] != ' ')
-		{
-			if (!open_files(executor->cmd, redir, i, executor))
-				return (free(redir), 0);
-			i++;
-		}
-		else
-			i++;
+		i++;
 	}
 	return (free(redir), 1);
 }

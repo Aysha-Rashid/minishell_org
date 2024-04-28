@@ -55,8 +55,7 @@ char	*search_env_variable2(t_env *envp, char *key)
 		{
 			while (temp[i] && temp[i] == envp->key[i])
 				i++;
-			if (!(temp[i] >= 'A' && temp[i] <= 'Z')
-				&& !(temp[i] >= 'a' && temp[i] <= 'z') && !(temp[i] >= '0' && temp[i] <= '9'))
+			if (!ft_isalpha(temp[i]) && !(temp[i] >= '0' && temp[i] <= '9'))
 			{
 				str = ft_strjoin(envp->value, temp + i);
 				return (free(temp), str);
@@ -105,5 +104,22 @@ int	name_error2(char *name, char *str, char *message, int flag)
 	}
 	else
 		print_after_equal2(name);
+	return (0);
+}
+
+int	ft_specified_error(char *str, int flag)
+{
+	if (!flag)
+	{
+		if (!ft_strncmp(str, "PATH", 4))
+			name_error2(str, NULL, "No such file or directory", 0);
+		else if (!ft_strncmp(str, "PWD", 3)
+			|| !ft_strncmp(str, "OLDPWD", 6) || !ft_strncmp(str, "HOME", 4))
+			name_error2(str, NULL, "is a directory", 0);
+		else
+			name_error2(str, NULL, "command not found", 0);
+	}
+	else
+		name_error2(str, NULL, "command not found", flag);
 	return (0);
 }

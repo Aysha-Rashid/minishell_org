@@ -46,27 +46,8 @@ int	ft_expansion(t_data *data)
 	return (0);
 }
 
-int	ft_specified_error(char *str, int flag)
+int	init_expan(char *store, char *str, int j)
 {
-	if (!flag)
-	{
-		if (!ft_strncmp(str, "PATH", 4))
-			name_error2(str, NULL, "No such file or directory", 0);
-		else if (!ft_strncmp(str, "PWD", 3)
-			|| !ft_strncmp(str, "OLDPWD", 6) || !ft_strncmp(str, "HOME", 4))
-			name_error2(str, NULL, "is a directory", 0);
-		else
-			name_error2(str, NULL, "command not found", 0);
-	}
-	else
-		name_error2(str, NULL, "command not found", flag);
-	return (0);
-}
-
-int init_expan(char *store, char *str, int j)
-{
-	// j = dollar_sign(str);
-	// store = (char *)malloc((j + 1) * sizeof(char));
 	if (store == NULL)
 		return (0);
 	store = ft_strncpy(store, str, j);
@@ -74,34 +55,40 @@ int init_expan(char *store, char *str, int j)
 	return (1);
 }
 
+int	do_expansion(t_data *data, char *str, int j, int flag)
+{
+	char	*temp;
+	char	*old;
+	char	*exp;
+
+	old = (char *)malloc((j + 1) * sizeof(char));
+	if (!init_expan(old, str, j))
+		return (0);
+	exp = search_env_variable2(data->envp, str + j);
+	if (!exp)
+		return (free(old), 1);
+	temp = ft_strjoin(old, exp);
+	return (ft_specified_error(temp, flag), free(exp),
+		free(old), free(temp), 1);
+}
+
 int	ft_expansion3(t_data *data, char *str, int flag)
 {
-	char	*exp;
-	char	*exit_status;
+	char	*status;
 	int		j;
-	char	*temp;
-	char	*store;
 
-	temp = NULL;
-	exit_status = ft_itoa(g_signal);
+	status = ft_itoa(g_signal);
 	j = dollar_sign(str);
-	store = (char *)malloc((j + 1) * sizeof(char));
-	if (!init_expan(store, str, j))
-		return (free(exit_status), 0);
 	if (j != 0 && str[j] != '\0')
 	{
 		if (str[j] == '?')
-			return (name_error3(exit_status, "command not found", flag),
-				free(exit_status), free(store), 1);
+			return (name_error3(status, "command not found", flag),
+				free(status), 1);
 		else
 		{
-			exp = search_env_variable2(data->envp, str + j);
-			if (!exp)
-				return (free(store), free(exit_status), 1);
-			temp = ft_strjoin(store, exp);
-			return (ft_specified_error(temp, flag), free(exp),
-				free(store), free(temp), free(exit_status), 1);
+			if (do_expansion(data, str, j, flag))
+				return (free(status), 1);
 		}
 	}
-	return (free(store), free(exit_status), 0);
+	return (free(status), 0);
 }

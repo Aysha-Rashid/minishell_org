@@ -22,8 +22,8 @@ t_executor	*init_executor(t_data *data, char *cmd)
 	if (executor == NULL)
 		return (NULL);
 	executor->cmd = ft_strdup(cmd);
-	executor->in = STDIN_FILENO;
-	executor->out = STDOUT_FILENO;
+	executor->in = -1;
+	executor->out = -1;
 	executor->next = NULL;
 	executor->prev = NULL;
 	return (executor);
@@ -35,28 +35,18 @@ void	check_command(char *str, char *cmd, t_data *data)
 		return ;
 	if (ft_strchr(cmd, '$') || ft_strchr(cmd, '?'))
 	{
-		if (ft_expansion3(data, str, 0))
-		{
-			free(str);
-			exit_and_free(data, 126);
-		}
+		if (ft_expansion3(data, str, 0) && !ft_strchr(cmd, '?'))
+			exit_and_free(data, 126, str);
+		else if (ft_strchr(cmd, '?'))
+			exit_and_free(data, 127, str);
 		else
-			exit_and_free(data, 0);		
-		if (ft_strchr(cmd, '?'))
-		{
-			free(str);
-			exit_and_free(data, 127);
-		}
+			exit_and_free(data, 0, str);
 	}
 	if (check_builtin(str) >= 0)
 	{
 		if (builtin_command(str, data) && !check_redir_pipe(str))
-		{
-			free(str);
-			exit_and_free(data, 0);
-		}
-		free(str);
-		exit_and_free(data, 127);
+			exit_and_free(data, 0, str);
+		exit_and_free(data, 127, str);
 	}
 }
 
@@ -78,7 +68,6 @@ int	check_builtin(char *str)
 	builtins[9] = "ECHO";
 	i = -1;
 	temp = ft_split(str, ' ');
-	// ft_putendl_fd(temp[0], 2);
 	if (temp == NULL || temp[0] == NULL || temp[0][0] == '\0')
 		return (-1);
 	while (++i < 10)
@@ -93,24 +82,15 @@ int	only_tabs_and_space(char *str)
 {
 	int		i;
 	size_t	count;
-	// char	quote;
 
 	i = 0;
 	count = 0;
-	// quote = 0;
 	while (str[i])
 	{
-		// if (str[i] == '\"' || str[i] == '\'')
-		// 	count++;
 		if (str[i] == ' ' || str[i] == '\t')
-		{
-
 			count++;
-		}
 		if (count == (ft_strlen(str)))
-		{
 			return (1);
-		}
 		i++;
 	}
 	return (0);

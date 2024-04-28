@@ -101,7 +101,7 @@ char	*cmd_file(char *cmd, char **paths)
 		return (NULL);
 	trimmed = ft_strtrim(cmd, " ");
 	if (!trimmed || trimmed[0] == '\0')
-		return ( NULL);
+		return (NULL);
 	str = ft_split(trimmed, ' ');
 	free(trimmed);
 	modified_based_quote(str);

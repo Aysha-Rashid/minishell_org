@@ -25,9 +25,8 @@ void	execute_command(char *cmd, t_data *data)
 	check_command(str, cmd, data);
 	if (data->no_path)
 	{
-		free(str);
 		ft_error(2, cmd, data->no_path);
-		exit_and_free(data, 127);
+		exit_and_free(data, 127, str);
 	}
 	cmd_file(cmd, data->envp->path);
 	free(str);
@@ -37,11 +36,10 @@ void	execute_command(char *cmd, t_data *data)
 
 void	closing_execution(int pid, t_data *data)
 {
-	(void)data;
 	int	status;
 
+	(void)data;
 	status = 0;
-	pid = waitpid(-1, &status, 0);
 	while (pid > 0)
 	{
 		if (!g_signal && !WIFEXITED(status) && WIFSIGNALED(status)
@@ -81,16 +79,14 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 
 	if (ft_strstr(executor->cmd, "<<"))
 		executor->heredoc = heredoc(executor, data);
-	if (ft_strchr(data->cmd, '<') && executor->in != STDIN_FILENO)
-	{
+	if (ft_strchr(executor->cmd, '<'))
 		dup_check(executor->in, STDIN_FILENO);
-	}
 	else if (prev[0] != STDIN_FILENO)
 	{
 		dup_check(prev[0], STDIN_FILENO);
 		close(prev[1]);
 	}
-	if (ft_strchr(data->cmd, '>') && executor->out != STDOUT_FILENO)
+	if (ft_strchr(executor->cmd, '>'))
 		dup_check(executor->out, STDOUT_FILENO);
 	else if (executor->next && cur != NULL && cur[1] != STDOUT_FILENO)
 	{
@@ -109,7 +105,6 @@ int	execution(t_executor *executor, t_data *data)
 	int	prev_pipe[2];
 	int	pid;
 
-
 	init_pipe_n_signal(prev_pipe);
 	while (executor)
 	{
@@ -124,6 +119,7 @@ int	execution(t_executor *executor, t_data *data)
 			child_process(data, executor, prev_pipe, cur_pipe);
 		else
 			parent_process(executor, prev_pipe, cur_pipe);
+		close_exec_files(executor->in, executor->out);
 		executor = executor->next;
 	}
 	closing_execution(pid, data);

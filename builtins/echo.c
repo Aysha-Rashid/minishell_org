@@ -25,44 +25,42 @@ void	name_error3(char *exit_status, char *message, int flag)
 		ft_putstr_fd(exit_status, 1);
 }
 
-void	check_and_write(char *str, t_data *data)
+int	expansion_or_no(char quote, char index, char *str, t_data *data)
 {
-	int		i;
-	int		len;
+	if (quote == '\"' && index == '$')
+		return (ft_expansion3(data, str, 2), 1);
+	else if (!ft_strchr(str, '$'))
+		ft_putchar_fd(index, 1);
+	return (0);
+}
+
+int	check_and_write(char *str, t_data *data)
+{
+	size_t	i;
 	char	quote;
 
 	i = 0;
-	len = ft_strlen(str);
 	quote = '\0';
-	while (i < len)
+	g_signal = 0;
+	while (i < ft_strlen(str))
 	{
 		if (str[i] == '$' && quote == '\0')
-		{
-			ft_expansion3(data, str, 2);
-			g_signal = 0;
-			return ;
-		}
+			return (ft_expansion3(data, str, 2), 1);
 		else if (str[i] == '\'' || str[i] == '"')
 		{
 			quote = str[i++];
-			while (i < len && str[i] != quote)
+			while (i < ft_strlen(str) && str[i] != quote)
 			{
-				if (quote == '\"' && str[i] == '$')
-				{
-					ft_expansion3(data, str, 2);
-					g_signal = 0;
-					return ;
-				}
-				else if (!ft_strchr(str, '$'))
-					ft_putchar_fd(str[i], 1);
-				if (i < len)
-					i++;
+				if (expansion_or_no(quote, str[i], str, data))
+					return (1);
+				i++;
 			}
 		}
 		else
 			ft_putchar_fd(str[i], 1);
 		i++;
 	}
+	return (0);
 }
 
 int	quote(char *l)
