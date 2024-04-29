@@ -53,7 +53,9 @@ void	remov_redir_and_files(char *cmd, char *dest, int i)
 				i++;
 		}
 		else
+		{
 			dest[j++] = cmd[i++];
+		}
 	}
 	dest[j] = '\0';
 }
@@ -62,11 +64,28 @@ char	*remove_redir_or_files(char *cmd)
 {
 	char	*dest;
 	int		i;
-
+	// char	quote;
 	i = 0;
-	if ((ft_strchr(cmd, '<') || ft_strchr(cmd, '>'))
-		&& (cmd[0] == '\'' || cmd[0] == '\"'))
-		return (cmd);
+	// if ((cmd[0] == '\'' || cmd[0] == '\"') && (ft_strchr(cmd, '<') || ft_strchr(cmd, '>')))
+	// 	return (cmd);
+	// quote = '\0';
+	// while (cmd[i])
+	// {
+	// 	if (cmd[i] == '\'' || cmd[i] == '"')
+	// 	{
+	// 		if (quote == '\0')
+	// 			quote = cmd[i];
+	// 		else if (quote == cmd[i])
+	// 			quote = '\0';
+	// 	}
+	// 	else if ((quote == '\'' || quote == '\"') && (cmd[i] == '<' || cmd[i] == '>'))
+	// 	{
+	// 		ft_putendl_fd("here", 2);
+	// 		return cmd;
+	// 	}
+	// 	i++;
+	// }
+	// i = 0;
 	dest = (char *)malloc(sizeof(char) * (ft_strlen(cmd) + 1));
 	if (!dest)
 		return (NULL);

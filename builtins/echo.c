@@ -28,7 +28,10 @@ void	name_error3(char *exit_status, char *message, int flag)
 int	expansion_or_no(char quote, char index, char *str, t_data *data)
 {
 	if (quote == '\"' && index == '$')
+	{
+		g_signal = 0;
 		return (ft_expansion3(data, str, 2), 1);
+	}
 	else if (!ft_strchr(str, '$'))
 		ft_putchar_fd(index, 1);
 	return (0);
@@ -41,7 +44,6 @@ int	check_and_write(char *str, t_data *data)
 
 	i = 0;
 	quote = '\0';
-	g_signal = 0;
 	while (i < ft_strlen(str))
 	{
 		if (str[i] == '$' && quote == '\0')

@@ -86,8 +86,14 @@ static void	split_into_substrings(char **str, const char *s, char c)
 		}
 		if (i > start)
 		{
-			str[string_index] = ft_strndup(&s[start], i - start);
-			string_index++;
+			// str[string_index] = malloc(i - start + 1);
+			// ft_strncpy(str[string_index], &s[start], i - start);
+			// str[string_index][i - start] = '\0';
+			// string_index++;
+			// if (i > start) {
+            str[string_index] = ft_strndup(&s[start], i - start);
+            string_index++;
+        // }
 		}
 	}
 	str[string_index] = NULL;

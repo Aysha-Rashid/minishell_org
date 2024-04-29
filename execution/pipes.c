@@ -75,7 +75,7 @@ t_executor	*parse_pipeline(char *cmd, t_data *data)
 	{
 		executor = init_executor(data, token[i]);
 		if (!executor)
-			return (free_executor(head), free_array(token), NULL);
+			return (free_executor(executor), free_array(token), NULL);
 		executor->prev = tail;
 		if (head == NULL)
 			head = executor;
