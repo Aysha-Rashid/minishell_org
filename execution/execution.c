@@ -28,7 +28,7 @@ void	execute_command(char *cmd, t_data *data)
 		ft_error(2, cmd, data->no_path);
 		exit_and_free(data, 127, str);
 	}
-	cmd_file(cmd, data->envp->path);
+	cmd_file(cmd, data->envp->path, data);
 	free(str);
 	close_and_free_all(data);
 	exit(127);
@@ -77,6 +77,7 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 {
 	char	*temp;
 
+	exec_quote_redir(executor, data);
 	if (ft_strstr(executor->cmd, "<<"))
 		executor->heredoc = heredoc(executor, data);
 	if (ft_strchr(executor->cmd, '<'))

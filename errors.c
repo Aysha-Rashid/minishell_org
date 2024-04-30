@@ -42,4 +42,40 @@ void	not_valid_message(char *token, char *name, t_data *data)
 	else
 		ft_putstr_fd(token, 2);
 	ft_putendl_fd("': not a valid identifier", 2);
+	g_signal = 1;
+}
+
+int	quote_redirection_parse(char *cmd, int i)
+{
+	char	quote;
+
+	quote = '\0';
+	while (cmd[i])
+	{
+		if (cmd[i] == '\'' || cmd[i] == '\"')
+			quote = check_quote(cmd[i], quote);
+		if ((cmd[i] == '<' || cmd[i] == '>')
+			&& (quote == '\'' || quote == '\"'))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void	exec_quote_redir(t_executor	*executor, t_data	*data)
+{
+	char	quote;
+	int		i;
+
+	i = 0;
+	quote = '\0';
+	while (executor->cmd[i])
+	{
+		if (executor->cmd[i] == '\'' || executor->cmd[i] == '\"')
+			quote = check_quote(executor->cmd[i], quote);
+		if ((executor->cmd[i] == '<' || executor->cmd[i] == '>')
+			&& (quote == '\'' || quote == '\"'))
+			execute_command(executor->cmd, data);
+		i++;
+	}
 }

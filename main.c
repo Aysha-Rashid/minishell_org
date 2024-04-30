@@ -14,18 +14,18 @@
 
 int	builtin_command(char *str, t_data *data)
 {
-	if (str && (!ft_strncmp(str, "env", 3)
-			|| !ft_strncmp(str, "ENV", 3)))
+	if (str && (!ft_strncmp(str, "echo", 4)
+			|| (!ft_strncmp(str, "ECHO", 4))
+			|| (!ft_strncmp(str, "echo -n", 7))))
+		return (ft_echo(data->cmd, data), 0);
+	if (str && (!ft_strcmp(str, "env")
+			|| !ft_strcmp(str, "ENV")))
 		return (ft_env(data, str), 0);
 	else if (!ft_strncmp(str, "export", 6))
 		return (ft_export(str, data), 0);
 	else if (str && (!ft_strncmp(str, "pwd", 3)
 			|| !ft_strncmp(str, "PWD", 3)))
 		return (ft_pwd(data), 0);
-	else if (str && (!ft_strncmp(str, "echo", 4)
-			|| (!ft_strncmp(str, "ECHO", 4))
-			|| (!ft_strncmp(str, "echo -n", 7))))
-		return (ft_echo(data->cmd, data), 0);
 	else if (str && (!(ft_strncmp(str, "cd", 2))))
 		return (ft_cd(str, data), 0);
 	else if (str && (!ft_strncmp(str, "unset", 5)))

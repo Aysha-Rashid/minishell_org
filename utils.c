@@ -68,19 +68,19 @@ int	open_and_check(int struct_file, char *file_name, int flag)
 	{
 		struct_file = open(file_name, O_RDONLY);
 		if (struct_file == -1)
-			return (printf("%s\n", strerror(errno)), 1);
+			return (printf("%s\n", strerror(errno)), -1);
 	}
 	if (flag == 2)
 	{
 		struct_file = open(file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (struct_file == -1)
-			return (printf("%s\n", strerror(errno)), 1);
+			return (printf("%s\n", strerror(errno)), -1);
 	}
 	if (flag == 3)
 	{
 		struct_file = open(file_name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (struct_file == -1)
-			return (printf("%s\n", strerror(errno)), 1);
+			return (printf("%s\n", strerror(errno)), -1);
 	}
 	return (struct_file);
 }

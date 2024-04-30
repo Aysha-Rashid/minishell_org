@@ -111,10 +111,10 @@ int	ft_specified_error(char *str, int flag)
 {
 	if (!flag)
 	{
-		if (!ft_strncmp(str, "PATH", 4))
+		if (!ft_strncmp(str, "$PATH", 6))
 			name_error2(str, NULL, "No such file or directory", 0);
-		else if (!ft_strncmp(str, "PWD", 3)
-			|| !ft_strncmp(str, "OLDPWD", 6) || !ft_strncmp(str, "HOME", 4))
+		else if (!ft_strncmp(str, "$PWD", 4)
+			|| !ft_strncmp(str, "$OLDPWD", 7) || !ft_strncmp(str, "$HOME", 5))
 			name_error2(str, NULL, "is a directory", 0);
 		else
 			name_error2(str, NULL, "command not found", 0);

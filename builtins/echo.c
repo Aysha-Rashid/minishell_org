@@ -21,17 +21,16 @@ void	name_error3(char *exit_status, char *message, int flag)
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putendl_fd(message, STDERR_FILENO);
 	}
-	else if (flag == 2)
+	else if (flag == 2 || flag == 1)
 		ft_putstr_fd(exit_status, 1);
+	if (g_signal == 1)
+		g_signal = 0;
 }
 
 int	expansion_or_no(char quote, char index, char *str, t_data *data)
 {
 	if (quote == '\"' && index == '$')
-	{
-		g_signal = 0;
 		return (ft_expansion3(data, str, 2), 1);
-	}
 	else if (!ft_strchr(str, '$'))
 		ft_putchar_fd(index, 1);
 	return (0);
@@ -80,7 +79,10 @@ int	quote(char *l)
 			while (l[i] != is_quote && l[i])
 				i++;
 			if (l[i] == '\0')
+			{
+				g_signal = 127;
 				return (0);
+			}
 		}
 		i++;
 	}

@@ -81,12 +81,12 @@ int	ft_cd(char *str, t_data *data)
 		changed = find_current_path(data, "OLDPWD=");
 	else
 	{
-		ft_expansion3(data, temp[1], 2);
 		changed = chdir(temp[1]);
 		if (changed != 0)
 		{
 			name_error("cd", temp[1],
 				": No such file or directory ", 0);
+			g_signal = 1;
 			return (free_array(temp), 0);
 		}
 	}

@@ -14,16 +14,10 @@
 
 int	invalid_identifier(t_data *data, char *str, char *name)
 {
-	int	error;
-
-	error = 0;
 	if (!(ft_isalpha(str[0])) && str[0] != '_'
 		&& str[0] != '\"' && str[0] != '\'')
-	{
 		not_valid_message(str, name, data);
-		error = 1;
-	}
-	return (error);
+	return (g_signal);
 }
 
 int	invalid_unset_loop(char *token, char *name, t_data *data)

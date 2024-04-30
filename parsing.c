@@ -91,7 +91,7 @@ char	*env_str(t_env *env)
 	return (str);
 }
 
-char	*cmd_file(char *cmd, char **paths)
+char	*cmd_file(char *cmd, char **paths, t_data *data)
 {
 	char	*cmd_file;
 	char	**str;
@@ -114,7 +114,7 @@ char	*cmd_file(char *cmd, char **paths)
 		failed_execve(cmd_file, str);
 	}
 	execute_binary_files(paths, str, cmd_file);
-	return (ft_error(2, str[0], 0), free_array(str), NULL);
+	return (ft_error(2, str[0], data->no_path), free_array(str), NULL);
 }
 
 char	*given_path(char *cmd)

@@ -60,7 +60,7 @@ int			ft_env(t_data *data, char *str);
 int			parse_env(t_data *data, char **env);
 t_env		*allocate_env(char **env);
 char		*find_paths_and_split(char **env);
-char		*cmd_file(char *cmd, char **paths);
+char		*cmd_file(char *cmd, char **paths, t_data *data);
 char		*given_path(char *cmd);
 
 int			find_pwd(t_data *data);
@@ -119,6 +119,7 @@ int			execution(t_executor *executor, t_data *data);
 int			builtin_command(char *str, t_data *data);
 void		prompt_loop(char *str, t_data *data);
 int			check_builtin(char *str);
+void		execute_command(char *cmd, t_data *data);
 void		execute_binary_files(char **paths, char **str, char *cmd_file);
 t_executor	*init_executor(t_data *data, char *cmd);
 t_executor	*parse_pipeline(char *cmd, t_data *data);
@@ -134,7 +135,10 @@ void		print_after_equal2(char *temp);
 //redirection
 int			check_redir_pipe(char *cmd);
 int			redir(t_executor *executor);
+char		check_quote(char s, char quote);
 char		*remove_redir_or_files(char *cmd);
+int			quote_redirection_parse(char *cmd, int i);
+void		exec_quote_redir(t_executor	*executor, t_data	*data);
 // int			open_and_check(int struct_file, char *file_name, char *redir);
 int			open_and_check(int struct_file, char *file_name, int flag);
 int			ft_open(t_executor *executor, char *redir, char *file);

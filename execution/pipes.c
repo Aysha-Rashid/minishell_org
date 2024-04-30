@@ -38,24 +38,25 @@ int	check_pipes_n_execute(t_data *data)
 	char	*str;
 
 	if (!quote(data->cmd))
-	{
-		return (ft_error(1, NULL, data->no_path));
-	}
+		return (ft_error(2, NULL, 0));
 	if (parse_com(data->cmd))
 		return (1);
 	str = remove_quotes(data->cmd);
 	builtin_index = check_builtin(str);
 	if (builtin_index >= 0 && !check_redir_pipe(str))
 	{
-		builtin_command(str, data);
-		return (free(str), 0);
+		if (!builtin_command(str, data))
+		{
+			if (g_signal == 1)
+				g_signal = 1;
+			else
+				g_signal = 0;
+			return (free(str), 0);
+		}
 	}
-	else
-	{
-		data->executor = parse_pipeline(data->cmd, data);
-		free(str);
-		execution(data->executor, data);
-	}
+	data->executor = parse_pipeline(data->cmd, data);
+	free(str);
+	execution(data->executor, data);
 	return (free_executor(data->executor), 0);
 }
 
@@ -95,6 +96,9 @@ int	redir(t_executor *executor)
 
 	i = 0;
 	redir = NULL;
+	if (quote_redirection_parse(executor->cmd, i))
+		return (1);
+	i = 0;
 	while (executor->cmd[i])
 	{
 		if (executor->cmd[i] == '>' || executor->cmd[i] == '<')

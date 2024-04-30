@@ -23,7 +23,7 @@ void	heredoc_loop(char *delimiter, int fd)
 		g_signal = IN_HERE;
 		ft_putstr_fd("> ", STDOUT_FILENO);
 		line = get_next_line(STDIN_FILENO);
-		if (!line || !ft_strcmp(line, delimiter))
+		if (!ft_strcmp(line, delimiter))
 		{
 			free(line);
 			break ;

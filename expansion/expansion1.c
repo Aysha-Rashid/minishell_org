@@ -82,8 +82,13 @@ int	ft_expansion3(t_data *data, char *str, int flag)
 	if (j != 0 && str[j] != '\0')
 	{
 		if (str[j] == '?')
+		{
+			if (data->no_path)
+				return (name_error3(status, "No such file or directory", flag),
+					free(status), 1);
 			return (name_error3(status, "command not found", flag),
 				free(status), 1);
+		}
 		else
 		{
 			if (do_expansion(data, str, j, flag))
