@@ -46,10 +46,7 @@ int	invalid_export_loop(char *token, char *name, t_data *data)
 		}
 	}
 	if (error == 1)
-	{
-		not_valid_message(token, name, data);
-		return (1);
-	}
+		return (not_valid_message(token, name, data), 1);
 	return (0);
 }
 

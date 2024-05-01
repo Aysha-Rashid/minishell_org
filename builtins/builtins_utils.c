@@ -27,11 +27,11 @@ t_env	*search_env_variable(t_env *envp, char *key)
 
 int	validate_input(t_data *data, char *token, t_env *current, char *name)
 {
-	if (invalid_unset_loop(token, name, data))
+	if (invalid_identifier(data, token, name) || !current)
+		return (0);
+	else if (invalid_unset_loop(token, name, data))
 		return (0);
 	else if (invalid_export_loop(token, name, data))
-		return (0);
-	else if (invalid_identifier(data, token, name) || !current)
 		return (0);
 	return (1);
 }

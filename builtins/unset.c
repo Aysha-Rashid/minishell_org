@@ -16,8 +16,8 @@ int	invalid_identifier(t_data *data, char *str, char *name)
 {
 	if (!(ft_isalpha(str[0])) && str[0] != '_'
 		&& str[0] != '\"' && str[0] != '\'')
-		not_valid_message(str, name, data);
-	return (g_signal);
+		return (not_valid_message(str, name, data), 1);
+	return (0);
 }
 
 int	invalid_unset_loop(char *token, char *name, t_data *data)
