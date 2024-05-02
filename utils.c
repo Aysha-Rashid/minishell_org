@@ -47,14 +47,12 @@ void	modified_based_quote(char **str)
 	modified_str = NULL;
 	while (str[i])
 	{
+		modified_str = NULL;
 		if (ft_strchr(str[i], '\'') || ft_strchr(str[i], '\"'))
 		{
 			modified_str = remove_quotes(str[i]);
 			if (!modified_str)
-			{
-				free_array(str);
 				return ;
-			}
 			free(str[i]);
 			str[i] = modified_str;
 		}

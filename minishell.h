@@ -94,7 +94,7 @@ int			ft_echo(char *argv, t_data *data);
 int			check_and_write(char *str, t_data *data);
 
 //parse
-int			only_tabs_and_space(char *str);
+int			only_tabs_and_space(char *str, int quote);
 void		failed_execve(char *cmd_file, char **str);
 int			ft_error(int i, char *str, int no_path);
 void		free_executor(t_executor *executor);
@@ -106,7 +106,8 @@ int			free_env_list(t_env *head);
 int			name_error(char *name, char *str, char *message, int flag);
 void		ft_free_all(t_data *data);
 int			ft_specified_error(char *str, int flag);
-void		check_command(char *str, char *cmd, t_data *data);
+void		check_command(char *str, char *cmd,
+				t_executor *executor, t_data *data);
 int			validate_input(t_data *data, char *token,
 				t_env *current, char *name);
 void		name_error3(char *exit_status, char *message, int flag);
@@ -116,10 +117,10 @@ int			invalid_identifier(t_data *data, char *str, char *name);
 void		check_n_execute(char *str, t_data *data);
 int			check_pipes_n_execute(t_data *data);
 int			execution(t_executor *executor, t_data *data);
-int			builtin_command(char *str, t_data *data);
+int			builtin_command(char *str, t_data *data, char *cmd, int in_exec);
 void		prompt_loop(char *str, t_data *data);
 int			check_builtin(char *str);
-void		execute_command(char *cmd, t_data *data);
+void		execute_command(char *cmd, t_data *data, t_executor *executor);
 void		execute_binary_files(char **paths, char **str, char *cmd_file);
 t_executor	*init_executor(t_data *data, char *cmd);
 t_executor	*parse_pipeline(char *cmd, t_data *data);

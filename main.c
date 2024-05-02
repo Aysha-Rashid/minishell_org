@@ -12,12 +12,17 @@
 
 #include "minishell.h"
 
-int	builtin_command(char *str, t_data *data)
+int	builtin_command(char *str, t_data *data, char	*cmd, int in_exec)
 {
 	if (str && (!ft_strncmp(str, "echo", 4)
 			|| (!ft_strncmp(str, "ECHO", 4))
-			|| (!ft_strncmp(str, "echo -n", 7))))
+			|| (!ft_strncmp(str, "echo -n", 7))
+			|| (!ft_strncmp(str, "ECHO -n", 7))))
+	{
+		if (in_exec == 1)
+			return (ft_echo(cmd, data), 0);
 		return (ft_echo(data->cmd, data), 0);
+	}
 	if (str && (!ft_strcmp(str, "env")
 			|| !ft_strcmp(str, "ENV")))
 		return (ft_env(data, str), 0);

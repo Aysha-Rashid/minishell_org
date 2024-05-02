@@ -75,7 +75,7 @@ void	exec_quote_redir(t_executor	*executor, t_data	*data)
 			quote = check_quote(executor->cmd[i], quote);
 		if ((executor->cmd[i] == '<' || executor->cmd[i] == '>')
 			&& (quote == '\'' || quote == '\"'))
-			execute_command(executor->cmd, data);
+			execute_command(executor->cmd, data, executor);
 		i++;
 	}
 }

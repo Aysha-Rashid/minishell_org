@@ -12,17 +12,18 @@
 
 #include "../minishell.h"
 
-void	execute_command(char *cmd, t_data *data)
+void	execute_command(char *cmd, t_data *data, t_executor *executor)
 {
 	char	*str;
 
-	if (only_tabs_and_space(cmd))
+	if (only_tabs_and_space(cmd, 0))
 	{
 		close_and_free_all(data);
 		exit (0);
 	}
 	str = ft_strtrim(cmd, " ");
-	check_command(str, cmd, data);
+	if (!only_tabs_and_space(cmd, 1))
+		check_command(str, cmd, executor, data);
 	if (data->no_path)
 	{
 		ft_error(2, cmd, data->no_path);
@@ -97,7 +98,7 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 	temp = remove_redir_or_files(executor->cmd);
 	free(executor->cmd);
 	executor->cmd = temp;
-	execute_command(executor->cmd, data);
+	execute_command(executor->cmd, data, executor);
 }
 
 int	execution(t_executor *executor, t_data *data)

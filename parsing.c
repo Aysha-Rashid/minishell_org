@@ -106,7 +106,7 @@ char	*cmd_file(char *cmd, char **paths, t_data *data)
 	free(trimmed);
 	modified_based_quote(str);
 	if (str[0] == NULL || str[0][0] == '\0')
-		return (NULL);
+		return (ft_error(2, str[0], data->no_path), free_array(str), NULL);
 	cmd_file = NULL;
 	if (given_path(str[0]))
 	{

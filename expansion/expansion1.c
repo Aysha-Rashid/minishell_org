@@ -66,7 +66,7 @@ int	do_expansion(t_data *data, char *str, int j, int flag)
 		return (0);
 	exp = search_env_variable2(data->envp, str + j);
 	if (!exp)
-		return (free(old), 1);
+		return (free(old), 0);
 	temp = ft_strjoin(old, exp);
 	return (ft_specified_error(temp, flag), free(exp),
 		free(old), free(temp), 1);
@@ -75,25 +75,27 @@ int	do_expansion(t_data *data, char *str, int j, int flag)
 int	ft_expansion3(t_data *data, char *str, int flag)
 {
 	char	*status;
+	char	**cmd;
 	int		j;
 
+	cmd = ft_split(str, ' ');
 	status = ft_itoa(g_signal);
-	j = dollar_sign(str);
-	if (j != 0 && str[j] != '\0')
+	j = dollar_sign(cmd[0]);
+	if (j != 0 && cmd[0][j] != '\0')
 	{
-		if (str[j] == '?')
+		if (cmd[0][j] == '?')
 		{
 			if (data->no_path)
 				return (name_error3(status, "No such file or directory", flag),
-					free(status), 1);
+					free(status), free_array(cmd), 1);
 			return (name_error3(status, "command not found", flag),
-				free(status), 1);
+				free(status), free_array(cmd), 1);
 		}
 		else
 		{
-			if (do_expansion(data, str, j, flag))
-				return (free(status), 1);
+			if (do_expansion(data, cmd[0], j, flag))
+				return (free(status), free_array(cmd), 1);
 		}
 	}
-	return (free(status), 0);
+	return (free(status), free_array(cmd), 0);
 }

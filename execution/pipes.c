@@ -14,7 +14,7 @@
 
 void	check_n_execute(char *str, t_data *data)
 {
-	if (str[0] == '\0' || only_tabs_and_space(str))
+	if (str[0] == '\0' || only_tabs_and_space(str, 0))
 	{
 		free(data->cmd);
 		prompt_loop(str, data);
@@ -37,6 +37,7 @@ int	check_pipes_n_execute(t_data *data)
 	char	builtin_index;
 	char	*str;
 
+	builtin_index = -1;
 	if (!quote(data->cmd))
 		return (ft_error(2, NULL, 0));
 	if (parse_com(data->cmd))
@@ -45,7 +46,7 @@ int	check_pipes_n_execute(t_data *data)
 	builtin_index = check_builtin(str);
 	if (builtin_index >= 0 && !check_redir_pipe(str))
 	{
-		if (!builtin_command(str, data))
+		if (!builtin_command(str, data, NULL, 0))
 		{
 			if (g_signal == 1)
 				g_signal = 1;
@@ -106,7 +107,8 @@ int	redir(t_executor *executor)
 			if (redir)
 				free(redir);
 			redir = get_redir_and_files(executor->cmd + i);
-			if (executor->cmd[i] == '>' && executor->cmd[i + 1] == '>')
+			if ((executor->cmd[i] == '<' && executor->cmd[i + 1] == '<')
+				|| (executor->cmd[i] == '>' && executor->cmd[i + 1] == '>'))
 				i++;
 			if (!open_files(executor->cmd, redir, i, executor))
 				return (free(redir), 0);

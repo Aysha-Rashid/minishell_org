@@ -52,8 +52,7 @@ int	check_and_write(char *str, t_data *data)
 			quote = str[i++];
 			while (i < ft_strlen(str) && str[i] != quote)
 			{
-				if (expansion_or_no(quote, str[i], str, data))
-					return (1);
+				expansion_or_no(quote, str[i], str, data);
 				i++;
 			}
 		}
@@ -98,8 +97,6 @@ int	ft_echo(char *argv, t_data *data)
 	n_option = 0;
 	i = 1;
 	str = ft_split(argv, ' ');
-	if (ft_strcmp(str[0], "echo"))
-		return (free_array(str), 1);
 	if (ft_strncmp(str[1], "-n", 2) == 0)
 	{
 		n_option = 1;
