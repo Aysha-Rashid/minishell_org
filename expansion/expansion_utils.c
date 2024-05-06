@@ -47,6 +47,7 @@ char	*search_env_variable2(t_env *envp, char *key)
 	i = 0;
 	temp = NULL;
 	temp = handle_quote(temp, key);
+	str = NULL;
 	if (!temp)
 		return (NULL);
 	while (envp)
@@ -56,14 +57,11 @@ char	*search_env_variable2(t_env *envp, char *key)
 			while (temp[i] && temp[i] == envp->key[i])
 				i++;
 			if (!ft_isalpha(temp[i]) && !(temp[i] >= '0' && temp[i] <= '9'))
-			{
 				str = ft_strjoin(envp->value, temp + i);
-				return (free(temp), str);
-			}
 		}
 		envp = envp->next;
 	}
-	return (free(temp), NULL);
+	return (free(temp), str);
 }
 
 void	print_after_equal2(char *temp)
@@ -86,7 +84,10 @@ void	print_after_equal2(char *temp)
 		str[j++] = temp[i++];
 	str[j] = '\0';
 	equal_pos = ft_strchr(temp, '=');
-	new = ft_strjoin(str, equal_pos + 1);
+	if (equal_pos != NULL)
+		new = ft_strjoin(str, equal_pos + 1);
+	else		
+		new = ft_strdup(str);
 	ft_putstr_fd(new, 2);
 	free(new);
 	free(str);
@@ -111,6 +112,8 @@ int	ft_specified_error(char *str, int flag)
 {
 	if (!flag)
 	{
+		if (str[0] == '$' && str[1] == '\0')
+			return (0);
 		if (!ft_strncmp(str, "$PATH", 6))
 			name_error2(str, NULL, "No such file or directory", 0);
 		else if (!ft_strncmp(str, "$PWD", 4)

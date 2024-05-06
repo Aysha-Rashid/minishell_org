@@ -80,6 +80,7 @@ int	main(int argc, char **argv, char **env)
 	parse_env(&data, env);
 	find_pwd(&data);
 	prompt_loop(*argv, &data);
-	ft_free_all(&data);
+	// ft_free_all(&data);
 	return (0);
 }
+// signalkill

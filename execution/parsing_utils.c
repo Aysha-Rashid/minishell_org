@@ -12,20 +12,6 @@
 
 #include "../minishell.h"
 
-int	check_pipe_and_redir_quote(char *str, int i)
-{
-	if (str[i] == '\'' || str[i] == '"')
-	{
-		if (str[i + 1] && (str[i + 1] == '|'
-				|| str[i + 1] == '>' || str[i + 1] == '<'))
-			return (1);
-		if (str[i + 2] && (str[i + 2] == '<'
-				|| str[i + 2] == '>'))
-			return (1);
-	}
-	return (0);
-}
-
 int	spec_char(const char str)
 {
 	if (str == '<' || str == '>' || str == '|')
@@ -65,13 +51,6 @@ char	*remove_quotes(char *str)
 	i = 0;
 	j = 0;
 	result = malloc(ft_strlen(str) + 1);
-	if (check_pipe_and_redir_quote(str, i))
-	{
-		i++;
-		result[j] = str[i];
-		result[j + 1] = '\0';
-		return (result);
-	}
 	if (!check_quotes_and_copy(str, i, j, result))
 		return (free(result), str);
 	return (result);

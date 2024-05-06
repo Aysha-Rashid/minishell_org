@@ -50,6 +50,9 @@ int	invalid_unset_loop(char *token, char *name, t_data *data)
 
 int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 {
+	// char	**save_path;
+
+	// save_path = NULL;
 	if (to_remove)
 	{
 		if (prev)
@@ -58,6 +61,15 @@ int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 			data->envp = to_remove->next;
 		if (data->envp && !data->envp->key)
 			return (1);
+		// if (data->envp->path)
+		// 	ft_putendl_fd("comes here", 2);
+		// if (ft_strcmp(to_remove, "LESSOPEN") == 0)
+		// {
+		// 	while (data)
+		// 	save_path = data->envp->path;
+		// 	ft_putendl_fd(save_path, 2);
+
+		// }
 		free(to_remove->key);
 		free(to_remove->value);
 		free(to_remove);
@@ -77,6 +89,11 @@ int	ft_unset(char *str, t_data *data)
 		return (free_array(token), ft_error(2, str, data->no_path), 1);
 	if (!unset_loop(data, current, token))
 		return (free_array(token), 0);
+	// if (ft_strstr(token[22], "PATH"))
+	// {
+		// ft_putendl_fd("comes her", 2);
+		// if (data->envp->path)
+		// 	ft_putendl_fd("PATH STILL EXITS", 2);
 	return (free_array(token), 1);
 }
 
@@ -105,5 +122,5 @@ int	unset_loop(t_data *data, t_env *current, char **token)
 		remove_env_variable(data, remove, prev);
 		i++;
 	}
-	return (free(token[i]), 1);
+	return (1);
 }

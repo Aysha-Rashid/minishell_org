@@ -32,6 +32,7 @@ t_env	*duplicate_node(char *str)
 	new_node->key[key_length] = '\0';
 	new_node->value = ft_strdup(str);
 	new_node->next = NULL;
+	new_node->path = NULL;
 	return (new_node);
 }
 

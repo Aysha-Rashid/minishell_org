@@ -20,6 +20,7 @@ SRC = main.c\
 		execution/free_and_close.c\
 		execution/redirection.c\
 		execution/execution_utils.c\
+		execution/execution_utils2.c\
 		execution/parsing_utils.c\
 		execution/heredoc.c\
 		expansion/expansion1.c\

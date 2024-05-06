@@ -14,19 +14,23 @@
 
 void	check_n_execute(char *str, t_data *data)
 {
+	char	**cmd;
+
 	if (str[0] == '\0' || only_tabs_and_space(str, 0))
 	{
 		free(data->cmd);
 		prompt_loop(str, data);
 	}
-	if (str && (!(ft_strcmp(str, "exit"))))
+	if (str && (!(ft_strncmp(str, "exit", 4))))
 	{
-		ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
-		ft_putendl_fd("exit", 1);
-		if (data->envp->path != NULL)
-			free_array(data->envp->path);
-		ft_free_all(data);
-		exit(0);
+		cmd = ft_split(str, ' ');
+		if (ft_strlen(cmd[0]) == 4)
+		{
+			exit_conditions(cmd, str, data);
+			ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
+			exit_properly(data, cmd, 0);
+		}
+		free_array(cmd);
 	}
 	if (check_pipes_n_execute(data))
 		return ;

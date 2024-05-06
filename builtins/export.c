@@ -75,8 +75,11 @@ int	env_add(char *variable, t_data *env)
 	t_env	*new;
 	t_env	*temp;
 
-	if (!env->envp)
-		return (1);
+	if (ft_strcmp(variable, "PATH=") == 0)
+	{
+		env->no_path = 1;
+		return (0);
+	}
 	value = ft_strdup(variable);
 	if (!value)
 		return (1);
@@ -86,14 +89,22 @@ int	env_add(char *variable, t_data *env)
 	new = malloc(sizeof(t_env));
 	if (!new)
 		return (1);
-	temp = env->envp;
-	while (temp->next != NULL)
-		temp = temp->next;
+	if (env->envp == NULL)
+	{
+		env->envp = new;
+		temp = new;
+	}
+	else
+	{
+		temp = env->envp;
+		while (temp->next != NULL)
+			temp = temp->next;
+	}
 	new->key = key;
 	new->value = value;
-	new->next = NULL;
 	temp->next = new;
-	new->path = NULL;
+	new->next = NULL;
+	// new->path = NULL;
 	return (0);
 }
 
@@ -103,6 +114,8 @@ int	declare_sorted(t_env *head)
 	char	*str;
 	int		i;
 
+	if (!head)
+		return (1);
 	str = env_str(head);
 	temp = ft_split(str, '\n');
 	if (!temp || !str)
@@ -128,8 +141,8 @@ int	ft_export(char *str, t_data *data)
 	char	**token;
 	int		i;
 
-	if (data->envp == NULL)
-		return (0);
+	// if (data->envp == NULL)
+	// 	return (0);
 	token = ft_split(str, ' ');
 	if (!token)
 		return (1);
@@ -142,7 +155,10 @@ int	ft_export(char *str, t_data *data)
 	{
 		if (!already_there(token[i], data)
 			&& validate_input(data, token[i], data->envp, "export"))
-			env_add(token[i], data);
+			{
+				// ft_putendl_fd("here", 2);
+				env_add(token[i], data);
+			}
 		i++;
 	}
 	return (free_array(token), 0);

@@ -27,7 +27,8 @@ t_env	*search_env_variable(t_env *envp, char *key)
 
 int	validate_input(t_data *data, char *token, t_env *current, char *name)
 {
-	if (invalid_identifier(data, token, name) || !current)
+	(void)current;
+	if (invalid_identifier(data, token, name))
 		return (0);
 	else if (invalid_unset_loop(token, name, data))
 		return (0);
@@ -45,12 +46,17 @@ size_t	len_of_values(t_env *lst)
 	current = lst;
 	while (current)
 	{
-		if (current->value)
-			total_length += ft_strlen(current->value);
-		if (current->next)
-			total_length++;
-		current = current->next;
-	}
+        if (current->value)
+		{
+            total_length += ft_strlen(current->value);
+            total_length++;
+        }
+        current = current->next;
+    }
+    if (total_length)
+        total_length--;
+	else
+		return (total_length);
 	return (total_length);
 }
 

@@ -14,12 +14,28 @@
 
 int	check_unset_arg(char *token, t_data *data)
 {
-	if (ft_strcmp("PATH", token) == 0)
+	t_env *envp;
+
+	envp = data->envp;
+	while (envp)
 	{
-		if (!data->envp)
+		if (ft_strcmp("PATH", token) == 0 && ft_strcmp("PATH", envp->key) == 0)
+		{
+			// if (envp)
+			// {
+
+			// }
+			// if (data->envp->path)
+			// {
+			// 	ft_putendl_fd("comes here", 2);
+			// 	free_array(envp->path);
+			// }
+			if (!envp)
+				return (0);
+			data->no_path = 1;
 			return (0);
-		data->no_path = 1;
-		return (0);
+		}
+		envp = envp->next;
 	}
 	return (1);
 }
@@ -77,9 +93,9 @@ char	*ft_strcpy(char	*dest, char *src)
 
 void	ft_free_all(t_data *data)
 {
+	if (data->envp)
+		free_env_list(data->envp);
 	free(data->pwd);
 	free(data->old_pwd);
-	if (data->envp != NULL)
-		free_env_list(data->envp);
 	free(data->cmd);
 }
