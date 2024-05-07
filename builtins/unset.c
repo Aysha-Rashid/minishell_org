@@ -89,11 +89,6 @@ int	ft_unset(char *str, t_data *data)
 		return (free_array(token), ft_error(2, str, data->no_path), 1);
 	if (!unset_loop(data, current, token))
 		return (free_array(token), 0);
-	// if (ft_strstr(token[22], "PATH"))
-	// {
-		// ft_putendl_fd("comes her", 2);
-		// if (data->envp->path)
-		// 	ft_putendl_fd("PATH STILL EXITS", 2);
 	return (free_array(token), 1);
 }
 

@@ -60,14 +60,19 @@ int	do_expansion(t_data *data, char *str, int j, int flag)
 	char	*temp;
 	char	*old;
 	char	*exp;
+	char	*withoutquote;
 
+	temp = NULL;
 	old = (char *)malloc((j + 1) * sizeof(char));
 	if (!init_expan(old, str, j))
 		return (0);
 	exp = search_env_variable2(data->envp, str + j);
 	if (exp == NULL)
 		return (ft_specified_error(old, 0), free(old), 0);
-	temp = ft_strjoin(old, exp);
+	withoutquote = NULL;
+	withoutquote = handle_quote(withoutquote, old);
+	// ft_putendl_fd(withoutquote, 2);
+	temp = ft_strjoin(withoutquote, exp);
 	return (ft_specified_error(temp, flag), free(exp),
 		free(old), free(temp), 1);
 }

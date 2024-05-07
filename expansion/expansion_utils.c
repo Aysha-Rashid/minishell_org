@@ -24,8 +24,6 @@ char	*handle_quote(char *temp, char *key)
 	temp = malloc(sizeof(char) * (len + 1));
 	while (key[i])
 	{
-		while (i < len - 1)
-			temp[j++] = key[i++];
 		if (key[i] != '\"')
 		{
 			if (key[i] == '\'')
@@ -33,36 +31,64 @@ char	*handle_quote(char *temp, char *key)
 			temp[j++] = key[i];
 		}
 		i++;
+		while (i < len)
+			temp[j++] = key[i++];
 	}
 	temp[j] = '\0';
 	return (temp);
 }
 
-char	*search_env_variable2(t_env *envp, char *key)
+char *search_env_variable2(t_env *envp, char *key)
 {
 	char	*temp;
 	char	*str;
-	int		i;
+	t_env	*current_envp;
+	size_t	i;
 
 	i = 0;
 	temp = NULL;
 	temp = handle_quote(temp, key);
 	str = NULL;
+	size_t j = 0;
 	if (!temp)
 		return (NULL);
-	while (envp)
+	while (temp[i])
 	{
-		if (ft_strncmp(envp->key, temp, ft_strlen(envp->key)) == 0)
+		if (temp[i] == '$' && temp[i] == ' ')
+			i++;
+		current_envp = envp;
+		while (current_envp)
 		{
-			while (temp[i] && temp[i] == envp->key[i])
-				i++;
-			if (!ft_isalpha(temp[i]) && !(temp[i] >= '0' && temp[i] <= '9'))
-				str = ft_strjoin(envp->value, temp + i);
+			if (ft_strncmp(current_envp->key, temp + i, ft_strlen(current_envp->key)) == 0)
+			{
+				while (temp[i] && (ft_isalnum(temp[i]) || temp[i] == '_'))
+					i++;
+				if (str == NULL)
+				{
+					// j = 0;
+					str = strdup(current_envp->value);
+				}
+				else
+				{
+					char *new_value = ft_strdup(current_envp->value);
+					int key_length = strlen(current_envp->key);
+					j = 0;
+					j += key_length + 1;
+					char *temp_str = str;
+					str = ft_strjoin(temp_str, new_value + j);
+					free(temp_str);
+					free(new_value);
+				}
+				break;
+			}
+			current_envp = current_envp->next;
 		}
-		envp = envp->next;
+		i++;
 	}
-	return (free(temp), str);
+	free(temp);
+	return str;
 }
+
 
 void	print_after_equal2(char *temp)
 {
@@ -114,7 +140,7 @@ int	ft_specified_error(char *str, int flag)
 	{
 		if (str[0] == '$' && str[1] == '\0')
 			return (0);
-		if (!ft_strncmp(str, "$PATH", 6))
+		if (!ft_strncmp(str, "$PATH", 5))
 			name_error2(str, NULL, "No such file or directory", 0);
 		else if (!ft_strncmp(str, "$PWD", 4)
 			|| !ft_strncmp(str, "$OLDPWD", 7) || !ft_strncmp(str, "$HOME", 5))

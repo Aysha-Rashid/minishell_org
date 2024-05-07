@@ -8,7 +8,7 @@ void	exit_properly(t_data *data, char **cmd, int exit_status)
 	{
 		if (data->envp->path)
 		{
-			ft_putendl_fd("comes here", 2);
+			ft_putendl_fd("come here", 2);
 			free_array(data->envp->path);
 		}
 	}

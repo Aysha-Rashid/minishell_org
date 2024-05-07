@@ -56,8 +56,6 @@ int	check_and_write(char *str, t_data *data)
 			while (i < ft_strlen(str) && str[i] != quote)
 			{
 				expansion_or_no(quote, str[i], str, data);
-				while (str[++i] != '$' && str[i] != '\0')
-					i++;
 				i++;
 			}
 		}
