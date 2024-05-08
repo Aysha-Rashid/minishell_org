@@ -42,6 +42,7 @@ char *search_env_variable2(t_env *envp, char *key)
 {
 	char	*temp;
 	char	*str;
+	char	*temp_str;
 	t_env	*current_envp;
 	size_t	i;
 
@@ -54,7 +55,7 @@ char *search_env_variable2(t_env *envp, char *key)
 		return (NULL);
 	while (temp[i])
 	{
-		if (temp[i] == '$' && temp[i] == ' ')
+		if (temp[i] == '$' && temp[i] != ' ')
 			i++;
 		current_envp = envp;
 		while (current_envp)
@@ -69,10 +70,10 @@ char *search_env_variable2(t_env *envp, char *key)
 					else
 					{
 						char *new_value = ft_strdup(current_envp->value);
-						int key_length = strlen(current_envp->key);
+						// int key_length = strlen(current_envp->key);
 						j = 0;
-						j += key_length + 1;
-						char *temp_str = str;
+						j = ft_strlen(current_envp->key) + 1;
+						temp_str = str;
 						str = ft_strjoin(temp_str, new_value + j);
 						free(temp_str);
 						free(new_value);
@@ -81,6 +82,12 @@ char *search_env_variable2(t_env *envp, char *key)
 				break;
 			}
 			current_envp = current_envp->next;
+		}
+		if ((temp[i] != '$' && temp[i] != '"') || (temp[i] == '$' && temp[i + 1] == ' '))
+		{
+			temp_str = str;
+			str = ft_strjoin(temp_str, (char[]){temp[i], '\0'});
+			free(temp_str);
 		}
 		i++;
 	}
