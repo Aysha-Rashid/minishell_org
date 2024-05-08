@@ -59,10 +59,10 @@ int	handle_eof(char *str, t_data *data)
 			free(data->pwd);
 		if (data->old_pwd)
 			free(data->old_pwd);
+		if (data->path)
+			free_array(data->path);
 		if (data->envp)
 		{
-			if (data->envp->path)
-				free_array(data->envp->path);
 			free_env_list(data->envp);
 		}
 		ft_putstr_fd("exit\n", 2);
@@ -79,6 +79,9 @@ void	check_signal(char *input, t_data *data)
 
 void	ft_signals(void)
 {
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, sigint_handler);
+	if (g_signal != IN_HERE)
+	{
+		signal(SIGINT, sigint_handler);
+		signal(SIGQUIT, sigint_handler);
+	}
 }

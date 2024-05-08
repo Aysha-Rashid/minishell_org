@@ -61,23 +61,22 @@ char *search_env_variable2(t_env *envp, char *key)
 		{
 			if (ft_strncmp(current_envp->key, temp + i, ft_strlen(current_envp->key)) == 0)
 			{
-				while (temp[i] && (ft_isalnum(temp[i]) || temp[i] == '_'))
-					i++;
-				if (str == NULL)
+				i = i + ft_strlen(current_envp->key);
+				if (!ft_isalpha(temp[i]) || !ft_isalnum(temp[i]))
 				{
-					// j = 0;
-					str = strdup(current_envp->value);
-				}
-				else
-				{
-					char *new_value = ft_strdup(current_envp->value);
-					int key_length = strlen(current_envp->key);
-					j = 0;
-					j += key_length + 1;
-					char *temp_str = str;
-					str = ft_strjoin(temp_str, new_value + j);
-					free(temp_str);
-					free(new_value);
+					if (str == NULL)
+						str = strdup(current_envp->value);
+					else
+					{
+						char *new_value = ft_strdup(current_envp->value);
+						int key_length = strlen(current_envp->key);
+						j = 0;
+						j += key_length + 1;
+						char *temp_str = str;
+						str = ft_strjoin(temp_str, new_value + j);
+						free(temp_str);
+						free(new_value);
+					}
 				}
 				break;
 			}
@@ -88,7 +87,6 @@ char *search_env_variable2(t_env *envp, char *key)
 	free(temp);
 	return str;
 }
-
 
 void	print_after_equal2(char *temp)
 {

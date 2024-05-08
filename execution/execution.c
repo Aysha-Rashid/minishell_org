@@ -24,12 +24,13 @@ void	execute_command(char *cmd, t_data *data, t_executor *executor)
 	str = ft_strtrim(cmd, " ");
 	if (!only_tabs_and_space(cmd, 1))
 		check_command(str, cmd, executor, data);
-	if (data->no_path)
+	if (data->no_path || !data->path)
 	{
 		ft_error(2, cmd, data->no_path);
 		exit_and_free(data, 127, str);
 	}
-	cmd_file(cmd, data->envp->path, data);
+	check_exit(data, str);
+	cmd_file(cmd, data->path, data);
 	free(str);
 	close_and_free_all(data);
 	exit(127);

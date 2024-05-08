@@ -3,15 +3,8 @@
 
 void	exit_properly(t_data *data, char **cmd, int exit_status)
 {
-	ft_putendl_fd("exit", 1);
-	if (data->envp)
-	{
-		if (data->envp->path)
-		{
-			ft_putendl_fd("come here", 2);
-			free_array(data->envp->path);
-		}
-	}
+	if (data->path)
+		free_array(data->path);
 	ft_free_all(data);
 	free_array(cmd);
 	exit(exit_status);
@@ -27,7 +20,7 @@ void	check_dollar_or_no(char **cmd, t_data *data)
 	}
 	else
 		name_error(cmd[0], cmd[1], ": numeric argument required", 0);
-	exit_properly(data, cmd, 1);
+	exit_properly(data, cmd, 255);
 }
 
 void	exit_conditions(char **cmd, char *str, t_data *data)
@@ -42,10 +35,32 @@ void	exit_conditions(char **cmd, char *str, t_data *data)
 			name_error(cmd[0], NULL, "too many arguments", 0);
 			free_array(cmd);
 			free(data->cmd);
+			g_signal = 1;
 			prompt_loop(str, data);
 		}
 		else if (!ft_isdigit(cmd[1][i]))
 			check_dollar_or_no(cmd, data);
 		i++;
+	}
+}
+
+void    check_exit(t_data *data, char *cmd)
+{
+	char	**split;
+
+ 	if (cmd && (!(ft_strncmp(cmd, "exit", 4))))
+	{
+		split = ft_split(cmd, ' ');
+		if (ft_strlen(split[0]) == 4)
+		{
+			exit_conditions(split, cmd, data);
+			free(cmd);
+			if (split[1])
+				exit_properly(data, split, ft_atoi(split[1]));
+			if (data->executor)
+				free_executor(data->executor);
+			exit_properly(data, split, 0);
+		}
+		free_array(split);
 	}
 }

@@ -21,14 +21,18 @@ void	check_n_execute(char *str, t_data *data)
 		free(data->cmd);
 		prompt_loop(str, data);
 	}
-	if (str && (!(ft_strncmp(str, "exit", 4))))
+	if (str && (!(ft_strncmp(str, "exit", 4))) && !check_redir_pipe(str))
 	{
 		cmd = ft_split(str, ' ');
 		if (ft_strlen(cmd[0]) == 4)
 		{
 			exit_conditions(cmd, str, data);
 			ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
+			if (cmd[1])
+				exit_properly(data, cmd, ft_atoi(cmd[1]));
+			ft_putendl_fd("exit", 2);
 			exit_properly(data, cmd, 0);
+			rl_clear_history();
 		}
 		free_array(cmd);
 	}

@@ -19,22 +19,22 @@ int	parse_env(t_data *data, char **env)
 
 	data->envp = allocate_env(env);
 	temp = find_paths_and_split(env);
-	data->envp->path = ft_split(temp, ':');
+	data->path = ft_split(temp, ':');
 	free(temp);
 	i = 0;
-	if (!data->envp || !data->envp->path)
+	if (!data->envp || !data->path)
 	{
 		free_env_list(data->envp);
 		ft_error(2, "env", 1);
 		exit(0);
 	}
-	while (data->envp->path[i])
+	while (data->path[i])
 	{
-		if (data->envp->path[i][ft_strlen(data->envp->path[i]) - 1] != '/')
+		if (data->path[i][ft_strlen(data->path[i]) - 1] != '/')
 		{
-			temp = ft_strjoin(data->envp->path[i], "/");
-			free(data->envp->path[i]);
-			data->envp->path[i] = temp;
+			temp = ft_strjoin(data->path[i], "/");
+			free(data->path[i]);
+			data->path[i] = temp;
 		}
 		i++;
 	}

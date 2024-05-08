@@ -25,7 +25,7 @@ void	free_executor(t_executor *executor)
 void	close_and_free_all(t_data *data)
 {
 	free_executor(data->executor);
-	free_array(data->envp->path);
+	free_array(data->path);
 	ft_free_all(data);
 }
 

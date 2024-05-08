@@ -28,7 +28,7 @@
 
 typedef struct s_env
 {
-	char			**path;
+	// char			**path;
 	char			*value;
 	char			*key;
 	struct s_env	*next;
@@ -47,6 +47,7 @@ typedef struct s_executor
 typedef struct s_data
 {
 	int				no_path;
+	char			**path;
 	char			*cmd;
 	char			*pwd;
 	char			*old_pwd;
@@ -173,4 +174,5 @@ int			parse_com(char *cmd);
 void		modified_based_quote(char **str);
 
 void		close_exec_files(int fdin, int fdout);
+void		check_exit(t_data *data, char *cmd);
 extern int	g_signal;
