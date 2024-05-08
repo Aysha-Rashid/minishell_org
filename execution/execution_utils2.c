@@ -44,11 +44,11 @@ void	exit_conditions(char **cmd, char *str, t_data *data)
 	}
 }
 
-void    check_exit(t_data *data, char *cmd)
+void	check_exit(t_data *data, char *cmd)
 {
 	char	**split;
 
- 	if (cmd && (!(ft_strncmp(cmd, "exit", 4))))
+	if (cmd && (!(ft_strncmp(cmd, "exit", 4))))
 	{
 		split = ft_split(cmd, ' ');
 		if (ft_strlen(split[0]) == 4)

@@ -104,7 +104,6 @@ int	env_add(char *variable, t_data *env)
 	new->value = value;
 	temp->next = new;
 	new->next = NULL;
-	// new->path = NULL;
 	return (0);
 }
 
@@ -141,8 +140,6 @@ int	ft_export(char *str, t_data *data)
 	char	**token;
 	int		i;
 
-	// if (data->envp == NULL)
-	// 	return (0);
 	token = ft_split(str, ' ');
 	if (!token)
 		return (1);
@@ -155,10 +152,7 @@ int	ft_export(char *str, t_data *data)
 	{
 		if (!already_there(token[i], data)
 			&& validate_input(data, token[i], data->envp, "export"))
-			{
-				// ft_putendl_fd("here", 2);
-				env_add(token[i], data);
-			}
+			env_add(token[i], data);
 		i++;
 	}
 	return (free_array(token), 0);

@@ -50,9 +50,6 @@ int	invalid_unset_loop(char *token, char *name, t_data *data)
 
 int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 {
-	// char	**save_path;
-
-	// save_path = NULL;
 	if (to_remove)
 	{
 		if (prev)
@@ -61,15 +58,6 @@ int	remove_env_variable(t_data *data, t_env *to_remove, t_env *prev)
 			data->envp = to_remove->next;
 		if (data->envp && !data->envp->key)
 			return (1);
-		// if (data->envp->path)
-		// 	ft_putendl_fd("comes here", 2);
-		// if (ft_strcmp(to_remove, "LESSOPEN") == 0)
-		// {
-		// 	while (data)
-		// 	save_path = data->envp->path;
-		// 	ft_putendl_fd(save_path, 2);
-
-		// }
 		free(to_remove->key);
 		free(to_remove->value);
 		free(to_remove);
