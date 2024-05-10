@@ -23,19 +23,27 @@ char	*handle_quote(char *temp, char *key)
 	len = ft_strlen(key);
 	temp = malloc(sizeof(char) * (len + 1));
 	while (key[i])
-	{
-		if (key[i] != '\"')
-		{
-			if (key[i] == '\'')
-				return (free(temp), NULL);
-			temp[j++] = key[i];
-		}
-		i++;
-		while (i < len)
-			temp[j++] = key[i++];
-	}
-	temp[j] = '\0';
-	return (temp);
+    {
+        if (key[i] == '\"')
+        {
+            i++;
+            while (key[i] && key[i] != '\"')
+			{
+				// if (key[i] == '$')
+				// 	i++;
+                temp[j++] = key[i++];
+			}
+            if (key[i] == '\"')
+                i++;
+        }
+        else if (key[i] == '\'')
+            return (free(temp), NULL);
+        else
+            temp[j++] = key[i++];
+    }
+    temp[j] = '\0';
+	// ft_putendl_fd(temp, 2);
+    return temp;
 }
 
 char *search_env_variable2(t_env *envp, char *key)
@@ -49,28 +57,35 @@ char *search_env_variable2(t_env *envp, char *key)
 	i = 0;
 	temp = NULL;
 	temp = handle_quote(temp, key);
+	if (temp == NULL)
+		return NULL;
 	str = NULL;
 	size_t j = 0;
 	if (!temp)
 		return (NULL);
 	while (temp[i])
 	{
-		if (temp[i] == '$' && temp[i] != ' ')
+		if (temp[i] == '$' && temp[i + 1] != ' ')
 			i++;
+		else if (temp[i] == '$' && temp[i + 1] == ' ')
+		{
+			temp_str = str;
+			str = ft_strjoin(temp_str, "$");
+			free(temp_str);
+		}
 		current_envp = envp;
 		while (current_envp)
 		{
 			if (ft_strncmp(current_envp->key, temp + i, ft_strlen(current_envp->key)) == 0)
 			{
-				i = i + ft_strlen(current_envp->key);
+				i += ft_strlen(current_envp->key);
 				if (!ft_isalpha(temp[i]) || !ft_isalnum(temp[i]))
 				{
-					if (str == NULL)
-						str = strdup(current_envp->value);
+			 		if (str == NULL)
+						str = ft_strdup(current_envp->value);
 					else
 					{
 						char *new_value = ft_strdup(current_envp->value);
-						// int key_length = strlen(current_envp->key);
 						j = 0;
 						j = ft_strlen(current_envp->key) + 1;
 						temp_str = str;
@@ -78,12 +93,15 @@ char *search_env_variable2(t_env *envp, char *key)
 						free(temp_str);
 						free(new_value);
 					}
+					break;
 				}
+				while(temp[i] != '$')
+					i++;;
 				break;
 			}
 			current_envp = current_envp->next;
 		}
-		if ((temp[i] != '$' && temp[i] != '"') || (temp[i] == '$' && temp[i + 1] == ' '))
+		if (temp[i] && temp[i] != '"' && temp[i] != '$')
 		{
 			temp_str = str;
 			str = ft_strjoin(temp_str, (char[]){temp[i], '\0'});
@@ -150,6 +168,8 @@ int	ft_specified_error(char *str, int flag)
 		else if (!ft_strncmp(str, "$PWD", 4)
 			|| !ft_strncmp(str, "$OLDPWD", 7) || !ft_strncmp(str, "$HOME", 5))
 			name_error2(str, NULL, "is a directory", 0);
+		// else if (str[0] == '$' && str[1])
+		// 	name_error(str, NULL, "command not found", 0);
 		else
 			name_error2(str, NULL, "command not found", 0);
 	}

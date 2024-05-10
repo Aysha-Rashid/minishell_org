@@ -14,22 +14,13 @@
 
 int	check_unset_arg(char *token, t_data *data)
 {
-	t_env *envp;
+	t_env	*envp;
 
 	envp = data->envp;
 	while (envp)
 	{
 		if (ft_strcmp("PATH", token) == 0 && ft_strcmp("PATH", envp->key) == 0)
 		{
-			// if (envp)
-			// {
-
-			// }
-			// if (data->envp->path)
-			// {
-			// 	ft_putendl_fd("comes here", 2);
-			// 	free_array(envp->path);
-			// }
 			if (!envp)
 				return (0);
 			data->no_path = 1;

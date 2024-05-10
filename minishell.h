@@ -175,4 +175,5 @@ void		modified_based_quote(char **str);
 
 void		close_exec_files(int fdin, int fdout);
 void		check_exit(t_data *data, char *cmd);
+void		new_variable(t_env *new, t_env *temp, char *key, char *value);
 extern int	g_signal;

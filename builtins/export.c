@@ -75,11 +75,6 @@ int	env_add(char *variable, t_data *env)
 	t_env	*new;
 	t_env	*temp;
 
-	if (ft_strcmp(variable, "PATH=") == 0)
-	{
-		env->no_path = 1;
-		return (0);
-	}
 	value = ft_strdup(variable);
 	if (!value)
 		return (1);
@@ -87,8 +82,6 @@ int	env_add(char *variable, t_data *env)
 	if (!key)
 		return (free(value), 1);
 	new = malloc(sizeof(t_env));
-	if (!new)
-		return (1);
 	if (env->envp == NULL)
 	{
 		env->envp = new;
@@ -100,10 +93,7 @@ int	env_add(char *variable, t_data *env)
 		while (temp->next != NULL)
 			temp = temp->next;
 	}
-	new->key = key;
-	new->value = value;
-	temp->next = new;
-	new->next = NULL;
+	new_variable(new, temp, key, value);
 	return (0);
 }
 

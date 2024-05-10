@@ -46,15 +46,15 @@ size_t	len_of_values(t_env *lst)
 	current = lst;
 	while (current)
 	{
-        if (current->value)
+		if (current->value)
 		{
-            total_length += ft_strlen(current->value);
-            total_length++;
-        }
-        current = current->next;
-    }
-    if (total_length)
-        total_length--;
+			total_length += ft_strlen(current->value);
+			total_length++;
+		}
+		current = current->next;
+	}
+	if (total_length)
+		total_length--;
 	else
 		return (total_length);
 	return (total_length);

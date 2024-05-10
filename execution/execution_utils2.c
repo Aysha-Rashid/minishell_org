@@ -64,3 +64,11 @@ void	check_exit(t_data *data, char *cmd)
 		free_array(split);
 	}
 }
+
+void	new_variable(t_env *new, t_env *temp, char *key, char *value)
+{
+	new->key = key;
+	new->value = value;
+	temp->next = new;
+	new->next = NULL;
+}
