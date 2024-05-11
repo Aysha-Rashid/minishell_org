@@ -29,14 +29,13 @@ void	name_error3(char *exit_status, char *message, int flag)
 
 int	expansion_or_no(char quote, char index, char *str, t_data *data)
 {
-	if (quote == '\"' && index == '$')
+	(void) index;
+	if (quote == '\"' )
 	{
-		ft_expansion3(data, str, 2);
-		return (1);
+		if (ft_expansion3(data, str, 2))
+			return (1);
 	}
-	else
-		return (ft_putchar_fd(index, 1), 1);
-	return (0);
+	return (ft_putchar_fd(index, 1), 0);
 }
 
 int	check_and_write(char *str, t_data *data)
@@ -55,7 +54,8 @@ int	check_and_write(char *str, t_data *data)
 			quote = str[i++];
 			while (i < ft_strlen(str) && str[i] != quote)
 			{
-				return (expansion_or_no(quote, str[i], str, data));
+				if (expansion_or_no(quote, str[i], str, data))
+					return (0);
 				i++;
 			}
 		}

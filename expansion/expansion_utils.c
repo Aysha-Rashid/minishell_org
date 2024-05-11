@@ -36,13 +36,14 @@ char	*handle_quote(char *temp, char *key)
             if (key[i] == '\"')
                 i++;
         }
-        else if (key[i] == '\'')
-            return (free(temp), NULL);
         else
+		{
+			if (key[i] == '\'')
+				return (free(temp), NULL);
             temp[j++] = key[i++];
+		}
     }
     temp[j] = '\0';
-	// ft_putendl_fd(temp, 2);
     return temp;
 }
 
@@ -58,21 +59,23 @@ char *search_env_variable2(t_env *envp, char *key)
 	temp = NULL;
 	temp = handle_quote(temp, key);
 	if (temp == NULL)
+	{
 		return NULL;
+	}
 	str = NULL;
 	size_t j = 0;
 	if (!temp)
 		return (NULL);
 	while (temp[i])
 	{
-		if (temp[i] == '$' && temp[i + 1] != ' ')
-			i++;
-		else if (temp[i] == '$' && temp[i + 1] == ' ')
+		if (temp[i] == '$' && temp[i + 1] == ' ')
 		{
 			temp_str = str;
 			str = ft_strjoin(temp_str, "$");
 			free(temp_str);
 		}
+		else if (temp[i] == '$' && temp[i + 1] != ' ')
+			i++;
 		current_envp = envp;
 		while (current_envp)
 		{
@@ -81,7 +84,7 @@ char *search_env_variable2(t_env *envp, char *key)
 				i += ft_strlen(current_envp->key);
 				if (!ft_isalpha(temp[i]) || !ft_isalnum(temp[i]))
 				{
-			 		if (str == NULL)
+					if (str == NULL)
 						str = ft_strdup(current_envp->value);
 					else
 					{
@@ -96,18 +99,21 @@ char *search_env_variable2(t_env *envp, char *key)
 					break;
 				}
 				while(temp[i] != '$')
-					i++;;
+					i++;
 				break;
 			}
 			current_envp = current_envp->next;
 		}
 		if (temp[i] && temp[i] != '"' && temp[i] != '$')
 		{
+			if (!str)
+				str = ft_strdup("");
 			temp_str = str;
 			str = ft_strjoin(temp_str, (char[]){temp[i], '\0'});
 			free(temp_str);
 		}
-		i++;
+		if (temp[i] != '$' && temp[i] != '\'')
+			i++;
 	}
 	free(temp);
 	return str;
