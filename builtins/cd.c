@@ -84,8 +84,11 @@ int	ft_cd(char *str, t_data *data)
 		changed = chdir(temp[1]);
 		if (changed != 0)
 		{
-			name_error("cd", temp[1],
-				": No such file or directory ", 0);
+			if (ft_strchr(temp[1], '$'))
+				ft_expansion3(data, temp[1], 2);
+			else
+				name_error("cd", temp[1],
+					": No such file or directory ", 0);
 			g_signal = 1;
 			return (free_array(temp), 0);
 		}

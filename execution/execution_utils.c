@@ -35,6 +35,11 @@ void	check_command(char *str, char *cmd, t_executor *executor, t_data *data)
 		return ;
 	if (ft_strchr(cmd, '$') || (ft_strchr(cmd, '?') && ft_strchr(cmd, '$')))
 	{
+		if (cmd[0] == '$' && cmd[1] == '\0')
+		{
+			ft_error(2, str, 0);
+			exit_and_free(data, 127, str);
+		}
 		if (ft_expansion3(data, str, 0) && !ft_strchr(cmd, '?'))
 			exit_and_free(data, 126, str);
 		else if (ft_strchr(cmd, '$') && ft_strchr(cmd, '?'))

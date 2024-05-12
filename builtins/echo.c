@@ -29,7 +29,6 @@ void	name_error3(char *exit_status, char *message, int flag)
 
 int	expansion_or_no(char quote, char index, char *str, t_data *data)
 {
-	(void) index;
 	if (quote == '\"' )
 	{
 		if (ft_expansion3(data, str, 2))

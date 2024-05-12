@@ -12,69 +12,68 @@
 
 #include "../minishell.h"
 
-char	*handle_quote(char *temp, char *key)
+void	joining_str(char *str, char *word)
 {
-	int	len;
-	int	i;
-	int	j;
+	char *temp_str;
+
+	temp_str = str;
+	str = ft_strjoin(temp_str, word);
+}
+
+char	*handle_quote(char *key)
+{
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	char	*temp;
 
 	i = 0;
 	j = 0;
 	len = ft_strlen(key);
 	temp = malloc(sizeof(char) * (len + 1));
+	if (!temp)
+		return (NULL);
 	while (key[i])
-    {
-        if (key[i] == '\"')
-        {
-            i++;
-            while (key[i] && key[i] != '\"')
-			{
-				// if (key[i] == '$')
-				// 	i++;
-                temp[j++] = key[i++];
-			}
-            if (key[i] == '\"')
-                i++;
-        }
-        else
+	{
+		while (i < len - 1)
+			temp[j++] = key[i++];
+		if (key[i] != '\"')
 		{
-			if (key[i] == '\'')
-				return (free(temp), NULL);
-            temp[j++] = key[i++];
+			if (key[i] == '\'' && key[i + 1] == '\0')
+				return ( NULL);
+			temp[j++] = key[i];
 		}
-    }
-    temp[j] = '\0';
-    return temp;
+		i++;
+	}
+	temp[j] = '\0';
+	return (temp);
 }
 
 char *search_env_variable2(t_env *envp, char *key)
 {
 	char	*temp;
 	char	*str;
+	char	*new_value;
 	char	*temp_str;
 	t_env	*current_envp;
 	size_t	i;
+	size_t	j;
 
 	i = 0;
-	temp = NULL;
-	temp = handle_quote(temp, key);
-	if (temp == NULL)
-	{
-		return NULL;
-	}
-	str = NULL;
-	size_t j = 0;
+	temp = handle_quote(key);
 	if (!temp)
 		return (NULL);
-	while (temp[i])
+	str = NULL;
+	while (ft_strlen(key) > i)
 	{
-		if (temp[i] == '$' && temp[i + 1] == ' ')
+		if (temp[i] == '$' && (temp[i + 1] == ' ' || temp[i + 1] == '\0'))
 		{
 			temp_str = str;
-			str = ft_strjoin(temp_str, "$");
+			str = ft_strjoin(str, "$");
 			free(temp_str);
+			i++;
 		}
-		else if (temp[i] == '$' && temp[i + 1] != ' ')
+		else if (temp[i] == '$' && temp[i + 1] != ' ' &&  temp[i + 1] != '\0')
 			i++;
 		current_envp = envp;
 		while (current_envp)
@@ -82,23 +81,22 @@ char *search_env_variable2(t_env *envp, char *key)
 			if (ft_strncmp(current_envp->key, temp + i, ft_strlen(current_envp->key)) == 0)
 			{
 				i += ft_strlen(current_envp->key);
-				if (!ft_isalpha(temp[i]) || !ft_isalnum(temp[i]))
+				if (!ft_isalpha(temp[i]) && !ft_isalnum(temp[i]))
 				{
 					if (str == NULL)
 						str = ft_strdup(current_envp->value);
 					else
 					{
-						char *new_value = ft_strdup(current_envp->value);
-						j = 0;
+						new_value = ft_strdup(current_envp->value);
 						j = ft_strlen(current_envp->key) + 1;
 						temp_str = str;
 						str = ft_strjoin(temp_str, new_value + j);
-						free(temp_str);
 						free(new_value);
+						free(temp_str);
 					}
 					break;
 				}
-				while(temp[i] != '$')
+				while (temp[i] && temp[i] != '$')
 					i++;
 				break;
 			}
@@ -110,13 +108,11 @@ char *search_env_variable2(t_env *envp, char *key)
 				str = ft_strdup("");
 			temp_str = str;
 			str = ft_strjoin(temp_str, (char[]){temp[i], '\0'});
-			free(temp_str);
+            free(temp_str);
 		}
-		if (temp[i] != '$' && temp[i] != '\'')
-			i++;
+		i++;
 	}
-	free(temp);
-	return str;
+	return (free(temp), str);
 }
 
 void	print_after_equal2(char *temp)
@@ -158,8 +154,16 @@ int	name_error2(char *name, char *str, char *message, int flag)
 		ft_putstr_fd(str, STDERR_FILENO);
 		ft_putendl_fd(message, STDERR_FILENO);
 	}
-	else
+	else if (flag == 1)
 		print_after_equal2(name);
+	else if (flag == 2)
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		print_after_equal2(name);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(str, STDERR_FILENO);
+		ft_putendl_fd("No such file or Directory", STDERR_FILENO);
+	}
 	return (0);
 }
 

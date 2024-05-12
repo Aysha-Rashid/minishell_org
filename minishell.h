@@ -87,7 +87,7 @@ char		*ft_strcpy(char	*dest, char *src);
 //signals
 void		sigint_handler(int signum);
 int			handle_eof(char *str, t_data *data);
-char		*handle_quote(char *temp, char *key);
+char		*handle_quote(char *key);
 void		ft_signals(void);
 void		check_signal(char *input, t_data *data);
 

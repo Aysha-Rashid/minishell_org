@@ -80,7 +80,7 @@ static void	split_into_substrings(char **str, const char *s, char c)
 		start = i;
 		while (s[i] && (s[i] != c || quote != 0))
 		{
-			if ((s[i] == '\'' || s[i] == '\"') && (i == 0 || s[i - 1] != '\\'))
+			if ((s[i] == '\'' || s[i] == '\"') && (i == 0 ))
 				quote = check_quote(s[i], quote);
 			i++;
 		}
@@ -107,12 +107,13 @@ char	**ft_split(char const *s, char c)
 }
 
 // #include <stdio.h>
-// int main()
+// int main(int argc, char **argv)
 // {
-//     char *str;
-//     str = "'     hello'";
+//     // char *str;
+//     // str = "'     hello     "BRUH"   GDFHGF '    ";
+// 	(void)argc;
 //     char **split;
-//     split = ft_split(str, ' ');
+//     split = ft_split(argv[1], ' ');
 //     int i =0;
 //     while(split[i])
 //     {

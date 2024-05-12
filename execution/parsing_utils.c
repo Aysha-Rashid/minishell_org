@@ -36,7 +36,8 @@ char	*check_quotes_and_copy(char *str, int i, int j, char *result)
 			if (i < len)
 				i++;
 		}
-		result[j++] = str[i++];
+		else
+			result[j++] = str[i++];
 	}
 	result[j] = '\0';
 	return (result);
