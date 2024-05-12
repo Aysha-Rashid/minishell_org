@@ -161,7 +161,7 @@ void		init_pipe_n_signal(int *prev_pipe);
 //get_next_line
 char		*remaining(char *buffer);
 char		*new_line(char *str);
-char		*get_next_line(int fd);
+char		*get_next_line(int fd, char *delimiter);
 char		*read_lines(int fd, char *store);
 char		*ft_get_strdup(char	*s1);
 char		*ft_get_strjoin(char *s1, char *s2);

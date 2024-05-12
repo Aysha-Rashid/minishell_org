@@ -68,9 +68,7 @@ int	do_expansion(t_data *data, char *str, int j, int flag)
 		return (0);
 	exp = search_env_variable2(data->envp, str + j);
 	if (exp == NULL || exp[0] == '\0')
-	{
 		return (free(old), 0);
-	}
 	withoutquote = NULL;
 	withoutquote = remove_quotes(old);
 	temp = ft_strjoin(withoutquote, exp);

@@ -81,7 +81,9 @@ void	child_process(t_data *data, t_executor *executor, int *prev, int *cur)
 
 	exec_quote_redir(executor, data);
 	if (ft_strstr(executor->cmd, "<<"))
+	{
 		executor->heredoc = heredoc(executor, data);
+	}
 	if (ft_strchr(executor->cmd, '<'))
 		dup_check(executor->in, STDIN_FILENO);
 	else if (prev[0] != STDIN_FILENO)

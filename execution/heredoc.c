@@ -22,8 +22,8 @@ void	heredoc_loop(char *delimiter, int fd)
 	{
 		g_signal = IN_HERE;
 		ft_putstr_fd("> ", STDOUT_FILENO);
-		line = get_next_line(STDIN_FILENO);
-		if (!ft_strcmp(line, delimiter))
+		line = get_next_line(STDIN_FILENO, delimiter);
+		if (line == NULL || !ft_strcmp(line, delimiter))
 		{
 			free(line);
 			break ;
@@ -64,7 +64,6 @@ int	heredoc(t_executor *executor, t_data *data)
 {
 	char	*temp;
 	int		i;
-	int		fd;
 	char	*delimiter;
 
 	i = 0;
@@ -73,14 +72,10 @@ int	heredoc(t_executor *executor, t_data *data)
 	delimiter = find_delimiter(delimiter, data, i, temp);
 	if (!delimiter)
 		return (0);
-	fd = open(".heredoc_temp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd < 0)
-		return (free(delimiter), 0);
-	heredoc_loop(delimiter, fd);
-	close(fd);
-	executor->in = open(".heredoc_temp", O_RDONLY);
+	executor->in = open(".heredoc_temp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (executor->in < 0)
 		return (free(delimiter), 0);
+	heredoc_loop(delimiter, executor->in);
 	if (unlink(".heredoc_temp") == -1)
 		return (perror("unlink"), 1);
 	return (free(delimiter), 1);

@@ -154,9 +154,11 @@ int	name_error2(char *name, char *str, char *message, int flag)
 		ft_putstr_fd(str, STDERR_FILENO);
 		ft_putendl_fd(message, STDERR_FILENO);
 	}
-	else if (flag == 1)
+	if (flag == 1)
+	{
 		print_after_equal2(name);
-	else if (flag == 2)
+	}
+	if (flag == 2)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		print_after_equal2(name);

@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, char *delimiter)
 {
 	static char	*buffer;
 	char		*line;
-
+	(void)delimiter;
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= 2147483647)
 		return (NULL);
 	buffer = read_lines(fd, buffer);
@@ -24,6 +24,8 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = new_line(buffer);
 	buffer = remaining(buffer);
+	if (!ft_strcmp(line, delimiter))
+		return (free(buffer), line);
 	return (line);
 }
 
@@ -33,7 +35,7 @@ char	*read_lines(int fd, char *store)
 	int		bytes;
 
 	bytes = 1;
-	buffer = malloc(BUFFER_SIZE + 1);
+	buffer = malloc(BUFFER_SIZE);
 	if (store == NULL)
 		store = ft_get_strdup("");
 	while (bytes > 0)
@@ -97,10 +99,10 @@ char	*remaining(char *buffer)
 		free(buffer);
 		return (NULL);
 	}
-	line = malloc(ft_strlen(buffer) - i + 1);
+	line = malloc(ft_strlen(buffer) - i);
+	i++;
 	if (line == NULL)
 		return (NULL);
-	i++;
 	while (buffer[i] != '\0')
 		line[j++] = buffer[i++];
 	line[j] = '\0';

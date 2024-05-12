@@ -93,7 +93,6 @@ int	ft_cd(char *str, t_data *data)
 			return (free_array(temp), 0);
 		}
 	}
-	change_pwd(data);
-	add_pwd_to_env(data, temp[1]);
-	return (free_array(temp), 0);
+	return (change_pwd(data), add_pwd_to_env(data, temp[1]),
+	free_array(temp), 0);
 }
