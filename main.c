@@ -14,7 +14,7 @@
 
 int	builtin_command(char *str, t_data *data, char	*cmd, int in_exec)
 {
-	if (str && (!ft_strncmp(str, "echo", 4)
+	if (str && ((!ft_strncmp(str, "echo", 4))
 			|| (!ft_strncmp(str, "ECHO", 4))
 			|| (!ft_strncmp(str, "echo -n", 7))
 			|| (!ft_strncmp(str, "ECHO -n", 7))))
@@ -80,7 +80,5 @@ int	main(int argc, char **argv, char **env)
 	parse_env(&data, env);
 	find_pwd(&data);
 	prompt_loop(*argv, &data);
-	// ft_free_all(&data);
 	return (0);
 }
-// signalkill
