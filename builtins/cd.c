@@ -20,8 +20,6 @@ int	find_current_path(t_data *data, char *str)
 
 	ret = -1;
 	temp = NULL;
-	if (data->no_path)
-		return (0);
 	temp_env = data->envp;
 	while (temp_env)
 	{
@@ -68,6 +66,16 @@ void	add_pwd_to_env(t_data *data, char *str)
 		ft_putendl_fd(data->pwd, 1);
 }
 
+void	dollar_sign_or_invalid_file(t_data *data, char *str)
+{
+	if (ft_strchr(str, '$'))
+		ft_expansion3(data, str, 2);
+	else
+		name_error("cd", str,
+			": No such file or directory ", 0);
+	g_signal = 1;
+}
+
 int	ft_cd(char *str, t_data *data)
 {
 	char	**temp;
@@ -86,15 +94,10 @@ int	ft_cd(char *str, t_data *data)
 		changed = chdir(temp[1]);
 		if (changed != 0)
 		{
-			if (ft_strchr(temp[1], '$'))
-				ft_expansion3(data, temp[1], 2);
-			else
-				name_error("cd", temp[1],
-					": No such file or directory ", 0);
-			g_signal = 1;
+			dollar_sign_or_invalid_file(data, temp[1]);
 			return (free_array(temp), 0);
 		}
 	}
 	return (change_pwd(data), add_pwd_to_env(data, temp[1]),
-	free_array(temp), 0);
+		free_array(temp), 0);
 }
