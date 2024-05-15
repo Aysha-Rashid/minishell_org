@@ -80,7 +80,7 @@ static void	split_into_substrings(char **str, const char *s, char c)
 		start = i;
 		while (s[i] && (s[i] != c || quote != 0))
 		{
-			if ((s[i] == '\'' || s[i] == '\"') && (i == 0 ))
+			if ((s[i] == '\'' || s[i] == '\"') && (i == 0))
 				quote = check_quote(s[i], quote);
 			i++;
 		}
@@ -125,7 +125,6 @@ char	**ft_split(char const *s, char c)
 //         free(split[i++]);
 //     free(split);
 // }
-
 // // //     while(split[i])
 //         free(split[i++]);
 //     free(split);

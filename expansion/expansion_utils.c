@@ -12,14 +12,6 @@
 
 #include "../minishell.h"
 
-void	joining_str(char *str, char *word)
-{
-	char *temp_str;
-
-	temp_str = str;
-	str = ft_strjoin(temp_str, word);
-}
-
 char	*handle_quote(char *key)
 {
 	size_t	len;
@@ -40,7 +32,7 @@ char	*handle_quote(char *key)
 		if (key[i] != '\"')
 		{
 			if (key[i] == '\'' && key[i + 1] == '\0')
-				return ( NULL);
+				return (NULL);
 			temp[j++] = key[i];
 		}
 		i++;
@@ -49,68 +41,31 @@ char	*handle_quote(char *key)
 	return (temp);
 }
 
-char *search_env_variable2(t_env *envp, char *key)
+char	*search_env_variable2(t_env *envp, char *key)
 {
 	char	*temp;
 	char	*str;
-	char	*new_value;
-	char	*temp_str;
 	t_env	*current_envp;
 	size_t	i;
-	size_t	j;
 
-	i = 0;
+	i = -1;
 	temp = handle_quote(key);
 	if (!temp)
 		return (NULL);
 	str = NULL;
-	while (ft_strlen(key) > i)
+	while (ft_strlen(key) > ++i)
 	{
 		if (temp[i] == '$' && (temp[i + 1] == ' ' || temp[i + 1] == '\0'))
 		{
-			temp_str = str;
-			str = ft_strjoin(str, "$");
-			free(temp_str);
+			str = ft_strjoin_free(str, "$");
 			i++;
 		}
-		else if (temp[i] == '$' && temp[i + 1] != ' ' &&  temp[i + 1] != '\0')
+		if (temp[i] == '$' && temp[i + 1] != ' ' && temp[i + 1] != '\0')
 			i++;
 		current_envp = envp;
-		while (current_envp)
-		{
-			if (ft_strncmp(current_envp->key, temp + i, ft_strlen(current_envp->key)) == 0)
-			{
-				i += ft_strlen(current_envp->key);
-				if (!ft_isalpha(temp[i]) && !ft_isalnum(temp[i]))
-				{
-					if (str == NULL)
-						str = ft_strdup(current_envp->value);
-					else
-					{
-						new_value = ft_strdup(current_envp->value);
-						j = ft_strlen(current_envp->key) + 1;
-						temp_str = str;
-						str = ft_strjoin(temp_str, new_value + j);
-						free(new_value);
-						free(temp_str);
-					}
-					break;
-				}
-				while (temp[i] && temp[i] != '$')
-					i++;
-				break;
-			}
-			current_envp = current_envp->next;
-		}
+		envp_loop(current_envp, &str, temp, &i);
 		if (temp[i] && temp[i] != '"' && temp[i] != '$')
-		{
-			if (!str)
-				str = ft_strdup("");
-			temp_str = str;
-			str = ft_strjoin(temp_str, (char[]){temp[i], '\0'});
-            free(temp_str);
-		}
-		i++;
+			str = ft_strjoin_free(str, (char []){temp[i], '\0'});
 	}
 	return (free(temp), str);
 }
@@ -137,7 +92,7 @@ void	print_after_equal2(char *temp)
 	equal_pos = ft_strchr(temp, '=');
 	if (equal_pos != NULL)
 		new = ft_strjoin(str, equal_pos + 1);
-	else		
+	else
 		new = ft_strdup(str);
 	ft_putstr_fd(new, 2);
 	free(new);
@@ -180,8 +135,6 @@ int	ft_specified_error(char *str, int flag)
 		else if (!ft_strncmp(str, "$PWD", 4)
 			|| !ft_strncmp(str, "$OLDPWD", 7) || !ft_strncmp(str, "$HOME", 5))
 			name_error2(str, NULL, "is a directory", 0);
-		// else if (str[0] == '$' && str[1])
-		// 	name_error(str, NULL, "command not found", 0);
 		else
 			name_error2(str, NULL, "command not found", 0);
 	}

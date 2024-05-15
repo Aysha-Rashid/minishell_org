@@ -25,7 +25,7 @@ int	find_current_path(t_data *data, char *str)
 	temp_env = data->envp;
 	while (temp_env)
 	{
-		if ((ft_strncmp(temp_env->value, str, ft_strlen(str)) == 0))
+		if ((ft_strncmp(temp_env->value, str, ft_strlen(temp_env->key)) == 0))
 		{
 			temp = ft_substr(temp_env->value, ft_strlen(str),
 					ft_strlen(temp_env->value) - ft_strlen(str));
@@ -35,8 +35,10 @@ int	find_current_path(t_data *data, char *str)
 	}
 	ret = chdir(temp);
 	if (ret != 0)
+	{
 		return (name_error("cd", data->old_pwd,
 				": No such file or directory", 0), free(temp), 1);
+	}
 	return (free(temp), ret);
 }
 

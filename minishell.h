@@ -176,4 +176,6 @@ void		modified_based_quote(char **str);
 void		close_exec_files(int fdin, int fdout);
 void		check_exit(t_data *data, char *cmd);
 void		new_variable(t_env *new, t_env *temp, char *key, char *value);
+char		*ft_strjoin_free(char *str1, const char *str2);
+void		envp_loop(t_env *envp, char **str, char *temp, size_t *i);
 extern int	g_signal;

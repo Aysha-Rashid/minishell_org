@@ -16,7 +16,7 @@ char	*get_next_line(int fd, char *delimiter)
 {
 	static char	*buffer;
 	char		*line;
-	(void)delimiter;
+
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= 2147483647)
 		return (NULL);
 	buffer = read_lines(fd, buffer);
@@ -24,8 +24,11 @@ char	*get_next_line(int fd, char *delimiter)
 		return (NULL);
 	line = new_line(buffer);
 	buffer = remaining(buffer);
-	if (!ft_strcmp(line, delimiter))
-		return (free(buffer), line);
+	if (line && line[0] != '\0')
+	{
+		if (!ft_strcmp(line, delimiter))
+			return (free(buffer), line);
+	}
 	return (line);
 }
 

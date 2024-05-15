@@ -18,9 +18,9 @@ void	heredoc_loop(char *delimiter, int fd)
 
 	line = NULL;
 	signal(SIGQUIT, SIG_IGN);
+	g_signal = IN_HERE;
 	while (1)
 	{
-		g_signal = IN_HERE;
 		ft_putstr_fd("> ", STDOUT_FILENO);
 		line = get_next_line(STDIN_FILENO, delimiter);
 		if (line == NULL || !ft_strcmp(line, delimiter))

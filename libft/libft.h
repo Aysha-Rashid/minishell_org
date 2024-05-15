@@ -40,6 +40,7 @@ char	*ft_strmapi(char	const	*s, char (*f)(unsigned	int, char));
 char	**ft_split(char	const	*s, char c);
 char	*ft_strncpy(char *dest, const char *src, unsigned int n);
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
+char	*ft_strcat(char *dest, const char *src);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *str);
 long	ft_atoi(const char	*str);

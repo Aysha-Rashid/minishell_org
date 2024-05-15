@@ -38,3 +38,21 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 	else
 		return (s_len + dstsize);
 }
+
+char	*ft_strcat(char *dest, const char *src)
+{
+	size_t	dest_len;
+	size_t	i;
+
+	i = 0;
+	dest_len = 0;
+	while (dest[dest_len] != '\0')
+		dest_len++;
+	while (src[i] != '\0')
+	{
+		dest[dest_len + i] = src[i];
+		i++;
+	}
+	dest[dest_len + i] = '\0';
+	return (dest);
+}

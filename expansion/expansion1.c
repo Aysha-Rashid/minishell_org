@@ -73,7 +73,7 @@ int	do_expansion(t_data *data, char *str, int j, int flag)
 	withoutquote = remove_quotes(old);
 	temp = ft_strjoin(withoutquote, exp);
 	return (ft_specified_error(temp, flag), free(exp),
-		free(old), free(temp), free(withoutquote),1);
+		free(old), free(temp), free(withoutquote), 1);
 }
 
 int	ft_expansion3(t_data *data, char *str, int flag)

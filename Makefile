@@ -25,6 +25,7 @@ SRC = main.c\
 		execution/heredoc.c\
 		expansion/expansion1.c\
 		expansion/expansion_utils.c\
+		expansion/expansion_utils2.c\
 
 OBJ = $(SRC:.c=.o)
 
