@@ -36,7 +36,7 @@ static int	count_substrings(const char *s, char c)
 		while (s[i] && (s[i] != c || quote != 0))
 		{
 			count++;
-			if ((s[i] == '\'' || s[i] == '\"') && (i == 0 || s[i - 1] != '\\'))
+			if (s[i] == '\'' || s[i] == '\"')
 				quote = check_quote(s[i], quote);
 			i++;
 		}
@@ -80,7 +80,7 @@ static void	split_into_substrings(char **str, const char *s, char c)
 		start = i;
 		while (s[i] && (s[i] != c || quote != 0))
 		{
-			if ((s[i] == '\'' || s[i] == '\"') && (i == 0))
+			if (s[i] == '\'' || s[i] == '\"')
 				quote = check_quote(s[i], quote);
 			i++;
 		}
