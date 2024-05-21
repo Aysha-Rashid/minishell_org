@@ -49,7 +49,7 @@ int	check_pipes_n_execute(t_data *data)
 	if (!quote(data->cmd))
 		return (ft_error(2, NULL, 0));
 	if (parse_com(data->cmd))
-		return (1);
+		return (g_signal = 258, 1);
 	str = remove_quotes(data->cmd);
 	builtin_index = check_builtin(str);
 	if (builtin_index >= 0 && !check_redir_pipe(str))

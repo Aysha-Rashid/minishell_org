@@ -71,7 +71,7 @@ int	parse_com(char *cmd)
 		if (cmd[i] == ' ' || cmd[i] == '\t')
 			i++;
 		if (cmd[i] == '|' && (i == 0 || cmd[i + 1] == '\0'))
-			return (name_error(NULL, message, "`|'", 0), 1);
+			return (name_error(NULL, message, &cmd[i], 0), 1);
 		if (((cmd[i] == '>' && cmd[i + 1] == '>') || (cmd[i] == '<'
 					&& cmd[i + 1] == '<')) && (cmd[i + 3]
 				&& spec_char(cmd[i + 3])))
