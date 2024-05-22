@@ -45,7 +45,7 @@ void	sigint_handler(int signum)
 	{
 		g_signal = 1;
 		ft_putstr_fd("\n", 2);
-		// rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}

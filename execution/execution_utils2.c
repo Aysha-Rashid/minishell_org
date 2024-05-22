@@ -10,17 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "../minishell.h"
 
 void	exit_properly(t_data *data, char **cmd, int exit_status)
 {
+	int num;
 	if (data->path)
 		free_array(data->path);
 	ft_free_all(data);
-	if (!ft_strncmp(cmd[1], "-", 1) && !ft_strchr(cmd[1] + 1, '-'))
-		exit(256 + ft_atoi(cmd[1]));
+	if (cmd[1] != NULL&& !ft_strncmp(cmd[1], "-", 1) && !ft_strchr(cmd[1] + 1, '-'))
+	{
+		num = 256 + ft_atoi(cmd[1]);
+		free_array(cmd);
+		exit(num);
+	}
 	free_array(cmd);
 	exit(exit_status);
 }
@@ -33,7 +36,8 @@ void	check_dollar_or_no(char **cmd, t_data *data)
 		ft_expansion3(data, cmd[1], 1);
 		ft_putendl_fd(": numberic argument required", 2);
 	}
-	else if ((!ft_isdigit(cmd[1][0]) && cmd[1][0] != '-' && cmd[1][0] != '+') || ft_strchr(cmd[1] + 1, '-') || ft_strchr(cmd[1] + 1, '+'))
+	else if ((!ft_isdigit(cmd[1][0]) && cmd[1][0] != '-' && cmd[1][0] != '+')
+		|| ft_strchr(cmd[1] + 1, '-') || ft_strchr(cmd[1] + 1, '+'))
 		name_error(cmd[0], cmd[1], ": numeric argument required", 0);
 	if (cmd[1][0] != '+' || ft_strchr(cmd[1] + 1, '+'))
 		exit_properly(data, cmd, 255);

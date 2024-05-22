@@ -32,7 +32,6 @@ void	check_n_execute(char *str, t_data *data)
 				exit_properly(data, cmd, ft_atoi(cmd[1]));
 			ft_putendl_fd("exit", 2);
 			exit_properly(data, cmd, 0);
-			// rl_clear_history();
 		}
 		free_array(cmd);
 	}
