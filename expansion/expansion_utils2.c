@@ -62,3 +62,11 @@ void	envp_loop(t_env *envp, char **str, char *temp, size_t *i)
 		envp = envp->next;
 	}
 }
+
+void	new_variable(t_env *new, t_env *temp, char *key, char *value)
+{
+	new->key = key;
+	new->value = value;
+	temp->next = new;
+	new->next = NULL;
+}

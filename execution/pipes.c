@@ -26,7 +26,7 @@ void	check_n_execute(char *str, t_data *data)
 		cmd = ft_split(str, ' ');
 		if (ft_strlen(cmd[0]) == 4)
 		{
-			exit_conditions(cmd, str, data);
+			exit_conditions(cmd, data);
 			ft_putendl_fd("\033[0;32msee you around 😮‍💨!\033[0m", 1);
 			if (cmd[1])
 				exit_properly(data, cmd, ft_atoi(cmd[1]));

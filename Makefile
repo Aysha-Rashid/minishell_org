@@ -31,17 +31,12 @@ OBJ = $(SRC:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
-# 033 is a esc in octal ascii, 0 sets all the text attributes to 0 and 32 is green
-
+CFLAGS = -Wall -Wextra -Werror -g3
 COLOUR_GREEN=\033[0;32m
 COLOUR_END=\033[0m
 
 LIBFT = -L${LIBFTPATH} -lft
 LIBFTPATH = libft
-
-# FT_PRINTF = -L${FT_PRINTFPATH} -lft
-# FT_PRINTFPATH = ft_printf
 
 $(NAME): $(OBJ)
 	@ cd $(LIBFTPATH) && make all

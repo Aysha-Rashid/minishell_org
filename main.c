@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int	g_signal;
+
 int	builtin_command(char *str, t_data *data, char	*cmd, int in_exec)
 {
 	if (str && ((!ft_strncmp(str, "echo", 4))

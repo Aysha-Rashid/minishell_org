@@ -14,11 +14,13 @@
 
 void	exit_properly(t_data *data, char **cmd, int exit_status)
 {
-	int num;
+	int	num;
+
 	if (data->path)
 		free_array(data->path);
 	ft_free_all(data);
-	if (cmd[1] != NULL&& !ft_strncmp(cmd[1], "-", 1) && !ft_strchr(cmd[1] + 1, '-'))
+	if (cmd[1] != NULL && !ft_strncmp(cmd[1], "-", 1)
+		&& !ft_strchr(cmd[1] + 1, '-'))
 	{
 		num = 256 + ft_atoi(cmd[1]);
 		free_array(cmd);
@@ -43,7 +45,7 @@ void	check_dollar_or_no(char **cmd, t_data *data)
 		exit_properly(data, cmd, 255);
 }
 
-void	exit_conditions(char **cmd, char *str, t_data *data)
+void	exit_conditions(char **cmd, t_data *data)
 {
 	int	i;
 
@@ -56,7 +58,25 @@ void	exit_conditions(char **cmd, char *str, t_data *data)
 			free_array(cmd);
 			free(data->cmd);
 			g_signal = 1;
-			prompt_loop(str, data);
+			prompt_loop(NULL, data);
+		}
+		else if (!ft_isdigit(cmd[1][i]))
+			check_dollar_or_no(cmd, data);
+		i++;
+	}
+}
+
+void	exec_exit_conditions(char **cmd, t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[1] && cmd[1][i] != '\0')
+	{
+		if (ft_isdigit(cmd[1][i]) && cmd[2])
+		{
+			name_error(cmd[0], NULL, "too many arguments", 0);
+			exit_properly(data, cmd, 1);
 		}
 		else if (!ft_isdigit(cmd[1][i]))
 			check_dollar_or_no(cmd, data);
@@ -73,22 +93,14 @@ void	check_exit(t_data *data, char *cmd)
 		split = ft_split(cmd, ' ');
 		if (ft_strlen(split[0]) == 4)
 		{
-			exit_conditions(split, cmd, data);
-			free(cmd);
-			if (split[1])
-				exit_properly(data, split, ft_atoi(split[1]));
 			if (data->executor)
 				free_executor(data->executor);
+			free(cmd);
+			exec_exit_conditions(split, data);
+			if (split[1])
+				exit_properly(data, split, ft_atoi(split[1]));
 			exit_properly(data, split, 0);
 		}
 		free_array(split);
 	}
-}
-
-void	new_variable(t_env *new, t_env *temp, char *key, char *value)
-{
-	new->key = key;
-	new->value = value;
-	temp->next = new;
-	new->next = NULL;
 }
