@@ -107,7 +107,8 @@ int	ft_echo(char *argv, t_data *data)
 	while (str[i] != NULL)
 	{
 		check_and_write(str[i], data);
-		ft_putchar_fd(' ', 1);
+		if (str[i + 1] != NULL)
+			ft_putchar_fd(' ', 1);
 		i++;
 	}
 	if (n_option == 0)
