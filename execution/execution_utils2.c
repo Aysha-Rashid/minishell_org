@@ -37,6 +37,7 @@ void	check_dollar_or_no(char **cmd, t_data *data)
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_expansion3(data, cmd[1], 1);
 		ft_putendl_fd(": numberic argument required", 2);
+
 	}
 	else if ((!ft_isdigit(cmd[1][0]) && cmd[1][0] != '-' && cmd[1][0] != '+')
 		|| ft_strchr(cmd[1] + 1, '-') || ft_strchr(cmd[1] + 1, '+'))

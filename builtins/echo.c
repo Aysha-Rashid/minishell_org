@@ -99,6 +99,8 @@ int	ft_echo(char *argv, t_data *data)
 	n_option = 0;
 	i = 1;
 	str = ft_split(argv, ' ');
+	if (!str[1])
+		return(free_array(str), 0);
 	if (ft_strncmp(str[1], "-n", 2) == 0)
 	{
 		n_option = 1;

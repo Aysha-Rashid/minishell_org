@@ -68,6 +68,10 @@ void	print_after_equal(char *temp)
 	ft_putendl_fd("\"", 1);
 }
 
+// hello=there 
+//equal = 5;
+// str = 11;
+// 11 - 5 
 char	*ft_strcpy(char	*dest, char *src)
 {
 	int	i;

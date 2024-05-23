@@ -43,20 +43,21 @@ void	sorted_env(char **env)
 int	already_there(char *variable, t_data *data)
 {
 	t_env	*current;
+	// char	*equal_pos;
 
+	// equal_pos = NULL;
 	current = data->envp;
 	if (!data->envp)
 		return (0);
 	while (current)
 	{
-		if (!(ft_strncmp(current->key, variable, ft_strlen(current->key))))
+		if (!(ft_strncmp(current->key, variable, ft_strlen(variable) - ft_strlen(current->key))))
 		{
 			if (ft_strchr(variable, '='))
 			{
 				if (!(ft_strncmp("PATH=", variable, ft_strlen(current->value))))
 					data->no_path = 1;
-				free(current->key);
-				free(current->value);
+				(free(current->key), free(current->value));
 				current->value = ft_strdup(variable);
 				current->key = ft_strndup(variable,
 						ft_strchr(variable, '=') - variable);
